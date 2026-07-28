@@ -128,6 +128,27 @@ if (rootPackageJson.files?.join(",") !== "dist/,README.md") {
   failures.push("Root npm package must publish only dist/ and README.md");
 }
 
+const agentsRules = await readText("AGENTS.md");
+const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
+const customizationKnowledge = await readText(
+  "skills/ke-engineer-binh/references/javascript-customization.md",
+);
+if (!agentsRules.includes("MCP is the default channel, not the exclusive channel")) {
+  failures.push("AGENTS.md: MCP-first fallback contract is missing");
+}
+if (!engineerSkill.includes("without another channel-choice review")) {
+  failures.push("ke-engineer-binh: approved REST execution contract is missing");
+}
+for (const statement of [
+  "configuration staging area, not a second runnable App",
+  "After deploy:",
+  "starting a new chat will not create that tool",
+]) {
+  if (!customizationKnowledge.includes(statement)) {
+    failures.push(`javascript-customization.md: missing contract: ${statement}`);
+  }
+}
+
 const textExtensions = new Set([
   ".md",
   ".yaml",

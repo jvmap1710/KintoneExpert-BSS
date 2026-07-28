@@ -16,10 +16,13 @@ deliverable, use `$ke-document-writer` and store standalone HTML only in
 hand-offs.
 
 Both the full delivery flow and Demo Fast Track use the active `kintone` MCP
-tools directly. If the tools are not available, stop at MCP preflight and guide
-the user through configuration checks. Never replace MCP with `node_modules`
-inspection, shell JSON-RPC, web research for internal schemas, or an unapproved
-REST call.
+tools by default. If the whole MCP server is not available, stop at MCP
+preflight and guide the user through configuration checks. If MCP is loaded
+but lacks a required supported operation, expose the capability gap and offer
+an official UI/tool or scoped REST path. Never replace MCP with `node_modules`
+inspection, shell JSON-RPC, web research for internal schemas, or an
+unapproved REST call. Once REST is explicitly approved for the named operation,
+continue that scoped path and retain the normal deployment approval gate.
 
 Before execution, display the experts who will actually participate. At each
 phase start, the active expert identifies themself using

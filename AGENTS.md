@@ -18,12 +18,14 @@ server. Use the `kintone` MCP tools for Kintone operations.
 Never place credentials, API tokens, passwords, downloaded attachments, or
 personal Kintone data in tracked files or terminal output.
 
-## MCP-only execution boundary
+## MCP-first execution boundary
 
 Demo/PoC and customer implementations use the `kintone` MCP tools exposed in
 the active Codex session. Before Kintone work, confirm those tools are
-available. If they are missing, stop and ask the user to run the configuration
-checks, reopen/trust the project, and start a fresh chat.
+available. If the whole MCP server is missing or failed to load, stop and ask
+the user to run the configuration checks, reopen/trust the project, and start
+a fresh chat. Do not recommend a fresh chat when MCP is loaded and its
+published tool list simply does not include the required operation.
 
 Do not inspect or modify `node_modules`, MCP `dist/` files, or package source to
 discover tool names or schemas. Do not construct JSON-RPC calls in the shell,
@@ -32,12 +34,20 @@ unapproved fallback. Use only the schema exposed by the active MCP tool. If a
 tool is unavailable, times out, or still fails after one corrected call, report
 the exact failure and stop instead of reverse-engineering the runtime.
 
-An MCP capability gap is not a Kintone platform limitation. If the active MCP
-tools genuinely do not expose a supported Kintone operation, explain the gap
-and ask the user to choose an official UI/tool path or an explicitly approved
-REST API path. Do not switch silently. An approved REST path becomes a new
-reviewed implementation step and still follows preview, read-back,
-confirmation, deployment, and secret-handling rules.
+MCP is the default channel, not the exclusive channel. An MCP capability gap
+is not a Kintone platform limitation. If the active MCP tools genuinely do not
+expose a supported Kintone operation, explain the gap once and offer an
+official UI/tool path or the official REST API. Do not switch silently. When
+the user approves REST for the named app and operation, that approval
+authorizes the scoped REST implementation; proceed without repeatedly asking
+the user to return to MCP or review the channel choice. REST still follows
+read-back, change-summary, deployment-approval, and secret-handling rules.
+
+Kintone `preview` REST endpoints edit or read pre-live App settings. They do
+not provide a preview URL or a runtime form where records and JavaScript can be
+tested. Verify the pending configuration before deployment, obtain explicit
+deployment approval, deploy and poll to `SUCCESS`, then perform runtime tests
+against the live App with synthetic data.
 
 ## Visible expert and role closure
 
