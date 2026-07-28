@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.12 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.13 install
 ```
 
 Installer sẽ:
