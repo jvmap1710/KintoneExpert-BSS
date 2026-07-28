@@ -26,6 +26,7 @@ async function readText(relativePath) {
 for (const required of [
   "AGENTS.md",
   "README.md",
+  "package.json",
   ".codex/config.toml",
   "projects/_template/PROJECT.md",
   "projects/_template/input/.gitkeep",
@@ -35,6 +36,7 @@ for (const required of [
   "examples/sample-data/purchase-requests.csv",
   "scripts/init-customer-project.ps1",
   "scripts/export-markdown-html.mjs",
+  "scripts/setup.mjs",
 ]) {
   await requirePath(required);
 }

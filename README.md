@@ -12,20 +12,20 @@ git clone https://github.com/jvmap1710/KintoneExpert-BSS.git
 Set-Location KintoneExpert-BSS
 ```
 
-Install the Kintone MCP runtime and verify the kit:
+Install the kit, verify it, and create the local configuration:
 
 ```powershell
-npm --prefix platform/ke-kintone-mcp ci
-node scripts/validate-kit.mjs
-Copy-Item platform/ke-kintone-mcp/.env.example platform/ke-kintone-mcp/.env
+npm install
+npm run validate
+npm run setup
 ```
 
 Add the customer-specific Kintone credentials to
 `platform/ke-kintone-mcp/.env`, then test the configuration:
 
 ```powershell
-npm --prefix platform/ke-kintone-mcp run check
-npm --prefix platform/ke-kintone-mcp run test:connection
+npm run kintone:check
+npm run kintone:test
 ```
 
 Open this repository in Codex and trust the project when prompted. Start the
@@ -33,7 +33,7 @@ conversation with `hello`; KE Router will present the available entry flows.
 For a full-cycle customer project, create its isolated workspace first:
 
 ```powershell
-./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
+npm run init -- -ProjectSlug acme-purchase-request `
   -DisplayName "ACME Purchase Request"
 ```
 
@@ -50,16 +50,17 @@ are excluded from Git.
 
 ## Setup
 
-1. Install dependencies for the Kintone runtime:
+1. Install all dependencies:
 
    ```powershell
-   npm --prefix platform/ke-kintone-mcp ci
+   npm install
    ```
 
-2. Create the local credential file:
+2. Validate the kit and create the local credential file:
 
    ```powershell
-   Copy-Item platform/ke-kintone-mcp/.env.example platform/ke-kintone-mcp/.env
+   npm run validate
+   npm run setup
    ```
 
 3. Edit `.env` and set `KINTONE_BASE_URL`, then choose exactly one:
@@ -70,8 +71,8 @@ are excluded from Git.
 4. Validate the local configuration:
 
    ```powershell
-   npm --prefix platform/ke-kintone-mcp run check
-   npm --prefix platform/ke-kintone-mcp run test:connection
+   npm run kintone:check
+   npm run kintone:test
    ```
 
 5. Restart Codex, open this folder, and trust the project when prompted.
@@ -99,7 +100,7 @@ Clone this repository for the customer engagement, then initialize an isolated
 project workspace:
 
 ```powershell
-./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
+npm run init -- -ProjectSlug acme-purchase-request `
   -DisplayName "ACME Purchase Request"
 ```
 
@@ -127,14 +128,15 @@ written to `attachments/`, which is excluded from Git.
 ## Useful commands
 
 ```powershell
-node scripts/validate-kit.mjs
-npm --prefix platform/ke-kintone-mcp run check
-npm --prefix platform/ke-kintone-mcp run test:connection
-npm --prefix platform/ke-kintone-mcp run mcp:kintone
+npm run validate
+npm run setup
+npm run kintone:check
+npm run kintone:test
+npm run mcp:kintone
 codex mcp list
 ```
 
-`npm --prefix platform/ke-kintone-mcp run mcp:kintone` is a stdio server and normally appears to wait silently;
+`npm run mcp:kintone` is a stdio server and normally appears to wait silently;
 Codex starts and communicates with it automatically.
 
 ## Project layout

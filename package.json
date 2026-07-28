@@ -1,0 +1,18 @@
+{
+  "name": "kintone-expert-bss",
+  "version": "1.0.0",
+  "private": true,
+  "description": "KE Kit for running a Kintone expert team in Codex",
+  "scripts": {
+    "postinstall": "npm --prefix platform/ke-kintone-mcp ci",
+    "setup": "node scripts/setup.mjs",
+    "validate": "node scripts/validate-kit.mjs",
+    "kintone:check": "npm --prefix platform/ke-kintone-mcp run check",
+    "kintone:test": "npm --prefix platform/ke-kintone-mcp run test:connection",
+    "mcp:kintone": "npm --prefix platform/ke-kintone-mcp run mcp:kintone",
+    "init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-customer-project.ps1"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
