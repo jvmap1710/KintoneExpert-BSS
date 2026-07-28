@@ -1,223 +1,92 @@
-# KE — Kintone Expert
+# KE — Kintone Expert Kit
 
-Project-scoped setup for controlling Kintone from Codex through Cybozu's
-official local MCP server.
+KE là bộ Kit giúp Codex làm việc như một nhóm chuyên gia triển khai Kintone:
 
-## Quick start
+- **Tí — PM:** phạm vi, kế hoạch và điều phối.
+- **Tèo — BA:** khảo sát, quy trình và yêu cầu nghiệp vụ.
+- **Sơn — SA:** kiến trúc giải pháp, dữ liệu và tích hợp.
+- **Bình — Engineer:** cấu hình, phát triển và triển khai Kintone.
+- **Mít — Tester:** test case, UAT và kiểm tra phát hành.
+- **Cò — Expert Panel:** thảo luận phương án và rủi ro đa chuyên gia.
 
-Prerequisite: Node.js 22 or newer.
+KE hỗ trợ Demo/PoC, triển khai dự án khách hàng, kiểm tra app hiện có và tư
+vấn giải pháp. Kit sử dụng Kintone MCP chính thức để kết nối Codex với Kintone.
 
-Open a terminal in the customer project and install the public GitHub release:
+## Cài đặt
+
+Yêu cầu:
+
+- Node.js 22 trở lên.
+- Codex CLI hoặc Codex app.
+- Tài khoản Kintone phù hợp với phạm vi công việc.
+
+Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.2 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.3 install
 ```
 
-Follow the installer prompt. It adds KE Kit to the current project, preserves
-existing project instructions/configuration, installs the Kintone MCP runtime,
-and creates a local `.env` without overwriting an existing one.
+Installer sẽ:
 
-For non-interactive installation:
+1. Cài các skill và hướng dẫn vận hành của KE.
+2. Cài Kintone MCP runtime.
+3. Tạo file cấu hình `.env` mẫu nhưng không ghi sẵn credentials.
+4. Giữ nguyên nội dung có sẵn trong `AGENTS.md`, `.gitignore` và
+   `.codex/config.toml`.
 
-```powershell
-npx kintone-expert-bss install --directory C:\path\to\customer-project --yes
+## Kết nối Kintone
+
+Mở file:
+
+```text
+platform/ke-kintone-mcp/.env
 ```
 
-Use `--skip-deps` when dependencies are managed separately. The installer
-stops on conflicting KE-managed files by default; review conflicts before
-using `--force`.
+Điền `KINTONE_BASE_URL` và chọn một phương thức xác thực:
 
-The release package contains one generated installer file. Skills,
-templates, configuration, documentation, and MCP runtime metadata are
-compressed into that CLI instead of being shipped as a loose payload tree.
-`AGENTS.md` and `KE-HELP.md` are intentionally installed at the project root.
+- `KINTONE_USERNAME` + `KINTONE_PASSWORD`; hoặc
+- `KINTONE_API_TOKEN`.
 
-After installation, add the customer-specific Kintone credentials to
-`platform/ke-kintone-mcp/.env`, then test the configuration:
+Kiểm tra cấu hình và kết nối:
 
 ```powershell
 npm --prefix platform/ke-kintone-mcp run check
 npm --prefix platform/ke-kintone-mcp run test:connection
 ```
 
-The MCP runtime is installed automatically. It becomes connection-ready only
-after valid Kintone credentials are added; credentials are never bundled in
-the public Kit.
+Sau đó mở lại project trong Codex, trust project và bắt đầu chat bằng:
 
-Open this repository in Codex and trust the project when prompted. Start the
-conversation with `hello`; KE Router will present the available entry flows.
-For a full-cycle customer project, create its isolated workspace first:
-
-```powershell
-./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
-  -DisplayName "ACME Purchase Request"
+```text
+hello
 ```
 
-Place sanitized source material in `projects/<project-slug>/input/`. Keep raw
-or confidential material in `projects/<project-slug>/private/`. Generated
-standalone HTML is written to `projects/<project-slug>/output/`. The complete
-project workspace is excluded from Git.
+## Workspace dự án
 
-## Prerequisites
-
-- Node.js 22 or newer
-- Codex CLI/app
-- A Kintone account with permissions appropriate for the intended operations
-
-## Install from source
-
-Cloning is intended for KE Kit maintainers and contributors:
-
-1. Clone the repository:
-
-   ```powershell
-   git clone https://github.com/jvmap1710/KintoneExpert-BSS.git
-   Set-Location KintoneExpert-BSS
-   ```
-
-2. Install the development runtime, validate the kit, and create the local
-   credential file:
-
-   ```powershell
-   npm install
-   npm run dev:install
-   npm run validate
-   npm run setup
-   ```
-
-3. Edit `.env` and set `KINTONE_BASE_URL`, then choose exactly one:
-
-   - `KINTONE_USERNAME` and `KINTONE_PASSWORD` for app creation/settings/deploy
-   - `KINTONE_API_TOKEN` for operations allowed by the token
-
-4. Validate the local configuration:
-
-   ```powershell
-   npm --prefix platform/ke-kintone-mcp run check
-   npm --prefix platform/ke-kintone-mcp run test:connection
-   ```
-
-5. Restart Codex, open this folder, and trust the project when prompted.
-
-6. Confirm that the server is visible:
-
-   ```powershell
-   codex mcp list
-   ```
-
-## First safe prompt
-
-> Use the Kintone MCP tools in read-only mode. List the apps I can access and
-> show their app IDs. Do not create, update, deploy, or delete anything.
-
-Then test app creation:
-
-> Create a test-environment app named "Codex MCP Sandbox" with fields `Title`
-> (single-line text, required) and `Description` (multi-line text). Read the
-> settings back and show me the pending changes. Do not deploy until I confirm.
-
-## Start a customer project
-
-Initialize an isolated workspace for every Demo/PoC or customer engagement:
-
-```powershell
-./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
-  -DisplayName "ACME Purchase Request" -ProjectType customer
-
-./scripts/init-customer-project.ps1 -ProjectSlug purchase-demo `
-  -DisplayName "Purchase Request Demo" -ProjectType demo
-```
-
-The initializer creates:
-
-- `projects/<project-slug>/input/` for sanitized customer source material.
-- `projects/<project-slug>/private/` for raw or confidential working data.
-- `projects/<project-slug>/output/` for generated standalone HTML only.
-
-It refuses to overwrite an existing project workspace. Project inputs, private
-data, and generated HTML are Git-ignored together. Use the fictional files
-under `examples/sample-data/` when practising the flow.
-
-After the user chooses Demo/PoC or customer implementation, KE Router creates
-or selects this workspace before any expert reads inputs or produces
-deliverables:
+Khi user chọn Demo/PoC hoặc triển khai khách hàng, KE tạo một workspace riêng:
 
 ```text
 projects/<project-slug>/
-|-- PROJECT.md
-|-- input/
-|-- private/
-`-- output/
+├── PROJECT.md
+├── input/
+├── private/
+└── output/
 ```
 
-## Authentication notes
+- `PROJECT.md`: hồ sơ ngắn để các agent nhận diện và tiếp tục đúng dự án.
+- `input/`: tài liệu khách hàng đã được làm sạch, survey, MoM và dữ liệu đầu vào.
+- `private/`: dữ liệu nhạy cảm, file gốc và tài liệu không được đưa vào output.
+- `output/`: tài liệu HTML do KE tạo cho riêng dự án đó.
 
-Username/password authentication takes precedence if it is configured together
-with an API token. Avoid configuring both. API tokens can be comma-separated
-(up to nine), but their app scope and permissions may prevent app-management
-operations.
+`PROJECT.md` không phải tài liệu bàn giao khách hàng. Nó lưu tên/mã dự án, loại
+Demo hay triển khai thật, giai đoạn và nguyên tắc làm việc để agent không trộn
+dữ liệu giữa các dự án.
 
-Guest-space apps are not supported by the official MCP server. Record
-add/update tools also do not accept attachment fields. Downloaded files are
-written to `attachments/`, which is excluded from Git.
+## Nguyên tắc an toàn
 
-## Useful commands
+- Mặc định chỉ đọc Kintone khi khảo sát.
+- Mọi thay đổi hoặc deploy đều cần xác nhận theo quy tắc trong `AGENTS.md`.
+- Không commit credentials, token, dữ liệu cá nhân hoặc tài liệu khách hàng.
+- Không ghi đè output đã tồn tại nếu chưa được user xác nhận.
 
-```powershell
-npm run validate
-npm run setup
-npm --prefix platform/ke-kintone-mcp run check
-npm --prefix platform/ke-kintone-mcp run test:connection
-npm --prefix platform/ke-kintone-mcp run mcp:kintone
-codex mcp list
-```
-
-The `mcp:kintone` command is a stdio server and normally appears to wait silently;
-Codex starts and communicates with it automatically.
-
-## Project layout
-
-```
-skills/                 # KE Router, PM, BA, SA, Engineer, Tester, expert panel
-platform/ke-kintone-mcp/# Official Kintone MCP runtime wrapper
-projects/_template/     # Minimal project input/private/output workspace
-examples/sample-data/   # Synthetic survey and transaction examples
-scripts/                # Project initializer and Markdown-to-HTML converter
-.codex/config.toml      # Enables skills and starts the Kintone MCP runtime
-KE-HELP.md              # User guide, team roles, flow, and prompt examples
-```
-
-## Expert team workflow
-
-See [KE-HELP.md](KE-HELP.md) for the short user guide and example prompts.
-
-KE Router is the entry point for greetings, help, broad requests, and new
-projects. It introduces the team and routes the request before delivery starts.
-
-After trusting and reopening the project, Codex routes natural-language
-requests to the relevant local skill. You can also call a person directly.
-
-| Expert | Role | Typical request |
-| --- | --- | --- |
-| Tí | PM | scope, roadmap, priority, delivery plan |
-| Tèo | BA | collect requirements, sample forms, BRD, To-Be process |
-| Sơn | SA | app/data architecture, integration, security, lookup design |
-| Bình | Kintone Engineer | build, customize, configure, deploy through MCP |
-| Mít | Tester | test cases, UAT, acceptance and defect triage |
-| Cò | Expert panel | multi-role discussion, options, risks and decision |
-
-Typical flow: **Tí → Tèo → Sơn → Bình → Mít → Tí**. Cò may be invited at any
-point when a decision needs several perspectives. A workflow configuration is
-advised and documented by the team; implementing it in Kintone still follows
-the approval and deployment rules in `AGENTS.md`.
-
-## macOS/Linux
-
-Change `command = "npm.cmd"` to `command = "npm"` in
-`.codex/config.toml`.
-
-## References
-
-- https://kintone.dev/en/ai/kintone-mcp-server-intro/
-- https://github.com/kintone/mcp-server
-- https://developers.openai.com/codex/mcp/
+Mã nguồn và các bản phát hành:
+[github.com/jvmap1710/KintoneExpert-BSS](https://github.com/jvmap1710/KintoneExpert-BSS).

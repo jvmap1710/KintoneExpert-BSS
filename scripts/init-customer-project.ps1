@@ -43,11 +43,17 @@ if (Test-Path -LiteralPath $targetPath) {
 
 Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
 
+$projectTypeLabel = if ($ProjectType -eq 'demo') {
+    'Demo / PoC'
+} else {
+    'Triển khai khách hàng'
+}
+
 $projectFile = Join-Path $targetPath 'PROJECT.md'
 $projectContent = Get-Content -Raw -Encoding utf8 -LiteralPath $projectFile
 $projectContent = $projectContent.Replace('{{PROJECT_SLUG}}', $ProjectSlug)
 $projectContent = $projectContent.Replace('{{DISPLAY_NAME}}', $DisplayName)
-$projectContent = $projectContent.Replace('{{PROJECT_TYPE}}', $ProjectType)
+$projectContent = $projectContent.Replace('{{PROJECT_TYPE}}', $projectTypeLabel)
 $projectContent = $projectContent.Replace(
     '{{CREATED_DATE}}',
     (Get-Date -Format 'yyyy-MM-dd')
