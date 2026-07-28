@@ -10,7 +10,7 @@ Prerequisite: Node.js 22 or newer.
 Open a terminal in the customer project and install the public GitHub release:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.1 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.2 install
 ```
 
 Follow the installer prompt. It adds KE Kit to the current project, preserves

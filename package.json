@@ -1,6 +1,6 @@
 {
   "name": "kintone-expert-bss",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "KE Kit for running a Kintone expert team in Codex",
   "bin": {
     "kintone-expert-bss": "dist/ke-installer.mjs",

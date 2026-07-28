@@ -19,7 +19,6 @@ const payload = [
   "projects/_template",
   "scripts/export-markdown-html.mjs",
   "scripts/init-customer-project.ps1",
-  "scripts/validate-kit.mjs",
   "skills",
 ];
 
