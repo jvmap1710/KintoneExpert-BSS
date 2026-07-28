@@ -54,9 +54,15 @@ npm --prefix platform/ke-kintone-mcp run process:stage -- --app <APP_ID> --confi
 ```
 
 The command validates indexes, assignee modes/entities, action endpoints, and
-field-code-shaped inputs; GETs the baseline with `lang=default`; PUTs with the
-latest revision; GETs again; and deep-compares the complete normalized
-workflow. It reports a verified pre-live revision and never deploys it.
+`FIELD_ENTITY` codes against the pre-live form; GETs the baseline with
+`lang=default`; PUTs with the latest revision; GETs again; and deep-compares
+the complete normalized workflow. It reports a verified pre-live revision and
+never deploys it.
+
+For a guest-space App, append `--guest-space <SPACE_ID>`. The command refuses
+to proceed if the desired definition omits an existing status or action. Only
+add `--allow-removals` after the exact destructive workflow diff has been
+shown and explicitly approved.
 
 ## Schema and loss-prevention rules
 

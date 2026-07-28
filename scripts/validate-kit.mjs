@@ -205,6 +205,8 @@ for (const statement of [
   "process:stage",
   "separate deployment confirmation",
   "do not guess a localized",
+  "--allow-removals",
+  "against the pre-live form",
 ]) {
   if (!processManagementKnowledge.includes(statement)) {
     failures.push(`process-management.md: missing contract: ${statement}`);
