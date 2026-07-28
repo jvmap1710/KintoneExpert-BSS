@@ -97,6 +97,14 @@ npm --prefix platform/ke-kintone-mcp run app:url -- --app <APP_ID>
 For a confirmed guest-space App, append `--guest-space <SPACE_ID>`. Report the
 generated URL, App ID, environment, and deploy status together.
 
+After deployment, use Playwright MCP as the primary runtime verification
+channel for the affected user path and capture evidence before claiming the
+behavior works. If Playwright reproduces a JavaScript, request, DOM/style, or
+performance problem, escalate to Chrome DevTools MCP using
+`../ke-router/references/browser-evidence.md`, fix the root cause, and verify
+the same path again with Playwright. Do not treat a successful REST deploy or
+a clean console as user-visible acceptance evidence.
+
 For a presales demo, optimize for a reversible, time-boxed build in the test
 environment. Use synthetic data, label shortcuts and non-production behavior,
 avoid unnecessary customization, and provide a short production-hardening

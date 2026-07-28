@@ -145,6 +145,22 @@ fields, layouts, process settings, and data relevant to their analysis. The
 Engineer owns implementation changes by default. Any write, deployment, or
 destructive action still follows the approval rules above.
 
+## Browser evidence and diagnostics
+
+Playwright MCP is the primary browser channel for every KE expert whenever a
+claim depends on the live Kintone UI or user journey. PM, BA, SA, Engineer, and
+Tester may gather role-appropriate browser evidence; browser writes follow the
+same scope and approval boundary as MCP/REST writes. Use the project-scoped
+persistent browser profile, let the user sign in manually, and never expose
+credentials, cookies, tokens, storage state, or unrelated tabs.
+
+Chrome DevTools MCP is an escalation channel, not the routine browser. Use it
+only after Playwright reproduces a JavaScript, network, DOM/CSS, or performance
+problem. Link the diagnostic result to the Playwright evidence, redact
+sensitive headers and payload data, then re-run the user-visible path with
+Playwright after a fix. Follow
+`skills/ke-router/references/browser-evidence.md`.
+
 ## Smoke-test truthfulness
 
 Configuration inspection is not a smoke test. When the user asks Mít to run a

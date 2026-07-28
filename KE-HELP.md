@@ -19,8 +19,10 @@ ngôn ngữ tự nhiên; KE sẽ tự chọn chuyên gia phù hợp.
 `Tí -> Tèo -> Sơn -> Bình -> Mít -> Tí`
 
 Cò có thể tham gia ở bất kỳ bước nào. Tất cả chuyên gia có thể dùng Kintone
-MCP read-only để phân tích app hiện có. Thao tác ghi, deploy, xóa vẫn phải theo
-quy tắc xác nhận trong `AGENTS.md`.
+MCP read-only để phân tích app hiện có và Playwright MCP để thu thập evidence
+trên giao diện thật. Chrome DevTools MCP chỉ dùng khi cần debug JavaScript,
+network, DOM/CSS hoặc performance. Thao tác ghi, deploy, xóa vẫn phải theo quy
+tắc xác nhận trong `AGENTS.md`.
 
 ## Bắt đầu từ lời chào
 

@@ -7,6 +7,24 @@ startup_timeout_sec = 30
 tool_timeout_sec = 120
 default_tools_approval_mode = "writes"
 
+# Primary browser channel for every KE expert. It opens a project-scoped
+# persistent Chrome profile so the user signs in to Kintone only once.
+[mcp_servers.playwright]
+command = "npm.cmd"
+args = ["--prefix", "platform/ke-browser-mcp", "run", "--silent", "mcp:playwright"]
+startup_timeout_sec = 30
+tool_timeout_sec = 120
+default_tools_approval_mode = "writes"
+
+# Diagnostic escalation channel. Use only after Playwright reproduces a
+# JavaScript, network, DOM/CSS, or performance issue.
+[mcp_servers.chrome-devtools]
+command = "npm.cmd"
+args = ["--prefix", "platform/ke-browser-mcp", "run", "--silent", "mcp:chrome-devtools"]
+startup_timeout_sec = 30
+tool_timeout_sec = 120
+default_tools_approval_mode = "writes"
+
 # Local expert-team skills. They are available after this project is trusted
 # and Codex is restarted or the project is re-opened.
 [[skills.config]]

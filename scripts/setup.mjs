@@ -21,4 +21,6 @@ console.log("Next:");
 console.log("1. Add the customer-specific Kintone credentials to the local .env file.");
 console.log("2. Run: npm run kintone:check");
 console.log("3. Run: npm run kintone:test");
-console.log("4. Reopen this repository in Codex and say: hello");
+console.log("4. Reopen this repository in Codex and trust the project.");
+console.log("5. Let Playwright open Chrome and sign in to Kintone once when asked.");
+console.log("6. Start a new chat and say: hello");

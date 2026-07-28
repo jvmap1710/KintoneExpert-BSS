@@ -42,7 +42,7 @@ Usage:
 Options:
   --directory <path>  Install into this project (default: current directory)
   --yes               Accept defaults and skip confirmation
-  --skip-deps         Do not install the Kintone MCP runtime dependencies
+  --skip-deps         Do not install the Kintone or browser MCP dependencies
   --force             Overwrite conflicting KE-managed files
   --help              Show this help
   --version           Show the package version
@@ -230,6 +230,17 @@ if (args[0] !== "install") {
     } else {
       await run("npm", ["ci", "--prefix", "platform/ke-kintone-mcp"], target);
     }
+
+    console.log("\nInstalling Playwright and Chrome DevTools MCP runtimes...");
+    if (process.platform === "win32") {
+      await run(
+        process.env.ComSpec || "cmd.exe",
+        ["/d", "/s", "/c", "npm", "ci", "--prefix", "platform/ke-browser-mcp"],
+        target,
+      );
+    } else {
+      await run("npm", ["ci", "--prefix", "platform/ke-browser-mcp"], target);
+    }
   }
 
   console.log("\nKE Kit installed successfully.");
@@ -237,5 +248,6 @@ if (args[0] !== "install") {
   console.log("1. Edit platform/ke-kintone-mcp/.env");
   console.log("2. Run: npm --prefix platform/ke-kintone-mcp run check");
   console.log("3. Open this project in Codex and trust it");
-  console.log('4. Start a new chat and say "hello"');
+  console.log("4. Let Playwright open Chrome and sign in to Kintone once when asked");
+  console.log('5. Start a new chat and say "hello"');
 }

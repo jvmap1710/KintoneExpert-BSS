@@ -36,6 +36,8 @@ for (const required of [
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
+  "platform/ke-browser-mcp/package.json",
+  "platform/ke-browser-mcp/package-lock.json",
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
   "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
   "platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs",
@@ -47,6 +49,7 @@ for (const required of [
   "skills/ke-engineer-binh/references/process-management.md",
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
+  "skills/ke-router/references/browser-evidence.md",
 ]) {
   await requirePath(required);
 }
@@ -153,6 +156,21 @@ if (rootPackageJson.files?.join(",") !== "dist/,README.md") {
   failures.push("Root npm package must publish only dist/ and README.md");
 }
 
+const browserPackageJson = JSON.parse(
+  await readText("platform/ke-browser-mcp/package.json"),
+);
+if (browserPackageJson.dependencies?.["@playwright/mcp"] !== "0.0.78") {
+  failures.push("ke-browser-mcp: Playwright MCP version is not pinned");
+}
+if (browserPackageJson.dependencies?.["chrome-devtools-mcp"] !== "1.6.0") {
+  failures.push("ke-browser-mcp: Chrome DevTools MCP version is not pinned");
+}
+if (!browserPackageJson.scripts?.["mcp:chrome-devtools"]?.includes(
+  "--redact-network-headers",
+)) {
+  failures.push("ke-browser-mcp: Chrome DevTools network headers are not redacted");
+}
+
 const agentsRules = await readText("AGENTS.md");
 const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
 const customizationKnowledge = await readText(
@@ -168,6 +186,24 @@ const smokeTestKnowledge = await readText(
 const recordQueryKnowledge = await readText(
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 );
+const browserEvidenceKnowledge = await readText(
+  "skills/ke-router/references/browser-evidence.md",
+);
+for (const statement of [
+  "Playwright MCP is KE's primary browser channel",
+  "Chrome DevTools MCP is KE's diagnostic microscope",
+  "Re-run the user-visible path with Playwright",
+  "never read, request, type, expose",
+]) {
+  if (!browserEvidenceKnowledge.includes(statement)) {
+    failures.push(`browser-evidence.md: missing contract: ${statement}`);
+  }
+}
+for (const server of ["playwright", "chrome-devtools"]) {
+  if (!config.includes(`[mcp_servers.${server}]`)) {
+    failures.push(`.codex/config.toml: ${server} MCP is not registered`);
+  }
+}
 if (!agentsRules.includes("MCP is the default channel, not the exclusive channel")) {
   failures.push("AGENTS.md: MCP-first fallback contract is missing");
 }

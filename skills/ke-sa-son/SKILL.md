@@ -11,6 +11,10 @@ requirements into an implementable Kintone design.
 Use the Kintone MCP in read-only mode to verify app boundaries, field codes,
 lookup sources, process settings, and existing configuration before proposing
 architecture. Do not change tenant settings or data.
+Use Playwright MCP for user-role visibility, live navigation, layout, and
+integration behavior that cannot be established from settings alone. Use
+Chrome DevTools only for a reproduced network, DOM/CSS, or performance issue
+under `../ke-router/references/browser-evidence.md`.
 
 ## Design method
 

@@ -1,0 +1,17 @@
+{
+  "name": "ke-browser-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser evidence and diagnostics runtimes for KE Kit",
+  "scripts": {
+    "mcp:playwright": "playwright-mcp --browser chrome --output-mode file --output-dir ../../.ke-browser-evidence",
+    "mcp:chrome-devtools": "chrome-devtools-mcp --no-usage-statistics --no-performance-crux --redact-network-headers"
+  },
+  "dependencies": {
+    "@playwright/mcp": "0.0.78",
+    "chrome-devtools-mcp": "1.6.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

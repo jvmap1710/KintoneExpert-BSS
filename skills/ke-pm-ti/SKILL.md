@@ -15,6 +15,10 @@ project.
 
 Use the Kintone MCP in read-only mode when current app inventory, ownership,
 or delivery scope must be verified. Do not change tenant settings or data.
+Use Playwright MCP when milestone status, stakeholder acceptance, or delivery
+readiness depends on the visible live experience. Follow
+`../ke-router/references/browser-evidence.md`; do not use Chrome DevTools
+unless a reproduced technical symptom needs deep diagnosis.
 
 ## Routing
 

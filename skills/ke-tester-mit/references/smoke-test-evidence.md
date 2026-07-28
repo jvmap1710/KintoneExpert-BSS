@@ -62,17 +62,23 @@ completing all API/unit checks Mít can perform independently.
 
 ## Browser evidence
 
-When an approved browser tool is available, use the authenticated Kintone tab
+Use Playwright MCP as the primary browser channel. Use the authenticated Kintone tab
 to create records, trigger validation, inspect visible values/styles, execute
 actions, and capture screenshots. Store raw screenshots and traces under
-`projects/<project-slug>/private/`; reference redacted evidence IDs in the
-report.
+`projects/<project-slug>/private/browser-evidence/<run-id>/`; reference
+redacted evidence IDs in the report.
 
 Prefer accessibility/DOM evidence for values and controls, screenshots for
 visual styling, and console/network evidence for JavaScript failures. Treat
 the browser as privileged access: stay within the configured Kintone domain,
 do not expose cookies or credentials, and request confirmation for destructive
 or production actions.
+
+If Playwright reproduces a JavaScript, network, DOM/style, or performance
+failure, use Chrome DevTools MCP only for root-cause diagnosis and link it to
+the Playwright evidence ID. Follow
+`../../ke-router/references/browser-evidence.md`. Repeat the business path in
+Playwright after a fix.
 
 ## Mandatory HTML report
 

@@ -10,7 +10,8 @@ KE là bộ Kit giúp Codex làm việc như một nhóm chuyên gia triển kha
 - **Cò — Expert Panel:** thảo luận phương án và rủi ro đa chuyên gia.
 
 KE hỗ trợ Demo/PoC, triển khai dự án khách hàng, kiểm tra app hiện có và tư
-vấn giải pháp. Kit sử dụng Kintone MCP chính thức để kết nối Codex với Kintone.
+vấn giải pháp. Kit dùng Kintone MCP cho cấu hình/dữ liệu, Playwright MCP cho
+trải nghiệm thật trên trình duyệt và Chrome DevTools MCP cho debug sâu.
 
 ## Cài đặt
 
@@ -18,18 +19,19 @@ Yêu cầu:
 
 - Node.js 22 trở lên.
 - Codex CLI hoặc Codex app.
+- Google Chrome bản stable hiện hành.
 - Tài khoản Kintone phù hợp với phạm vi công việc.
 
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.14 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.15 install
 ```
 
 Installer sẽ:
 
 1. Cài các skill và hướng dẫn vận hành của KE.
-2. Cài Kintone MCP runtime.
+2. Cài Kintone MCP, Playwright MCP và Chrome DevTools MCP runtime.
 3. Tạo file cấu hình `.env` mẫu nhưng không ghi sẵn credentials.
 4. Giữ nguyên nội dung có sẵn trong `AGENTS.md`, `.gitignore` và
    `.codex/config.toml`.
@@ -59,6 +61,32 @@ Sau đó mở lại project trong Codex, trust project và bắt đầu chat b�
 ```text
 hello
 ```
+
+## Browser evidence
+
+Playwright là “mắt và tay” mặc định của cả team KE. PM, BA, SA, Engineer và
+Tester dùng nó để kiểm tra đúng giao diện người dùng đang thấy, chạy luồng
+nghiệp vụ, tạo dữ liệu test có kiểm soát và chụp evidence. Lần đầu Playwright
+mở Chrome, hãy đăng nhập Kintone thủ công; profile được giữ riêng theo project
+và không nằm trong Git.
+
+Chrome DevTools là công cụ debug chuyên sâu, không dùng cho thao tác click
+thông thường. KE chỉ gọi nó sau khi Playwright tái hiện lỗi để kiểm tra:
+
+- lỗi JavaScript và stack trace trong Console;
+- request upload/customization/REST bị 401, 404, 500 hoặc payload sai;
+- DOM class, event và computed CSS không đúng;
+- tải trang hoặc tương tác chậm.
+
+Ví dụ field giờ OT không đổi màu đỏ: Playwright xác nhận lỗi nhìn thấy và chụp
+ảnh; Chrome DevTools kiểm tra file JavaScript có tải thành công, Console có lỗi
+không, class/CSS nào thực sự được áp dụng; sau khi sửa, Playwright chạy lại
+đúng test case để làm evidence nghiệm thu.
+
+Không đưa password vào prompt hay file cấu hình browser. KE không được đọc
+cookie, token, storage state hoặc tab không liên quan. Screenshot/trace gốc
+được giữ trong `projects/<project-slug>/private/browser-evidence/`; báo cáo chỉ
+tham chiếu evidence đã làm sạch.
 
 KE Router sẽ giới thiệu Kit và hỏi bạn muốn:
 

@@ -31,10 +31,13 @@ back, and always publish a standalone HTML test report. Do not call a
 configuration inspection a smoke test.
 
 Separate configuration verification, API functional testing, and browser
-runtime testing. A case is `PASS` only at the evidence level actually
-executed. If client-side JavaScript or visual behavior requires a browser and
-no approved browser tool is available, mark that case `BLOCKED`; never infer
-runtime success from MCP/REST or unit tests.
+runtime testing. Playwright MCP is the primary runtime channel and should
+execute the critical user paths when available. A case is `PASS` only at the
+evidence level actually executed. If client-side JavaScript or visual behavior
+requires a browser and Playwright is unavailable, mark that case `BLOCKED`;
+never infer runtime success from MCP/REST or unit tests. Use Chrome DevTools
+only to diagnose a failure Playwright reproduced. Follow
+`../ke-router/references/browser-evidence.md`.
 
 ## Boundaries
 

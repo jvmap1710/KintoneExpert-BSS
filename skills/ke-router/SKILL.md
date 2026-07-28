@@ -19,6 +19,11 @@ Cò at any stage for a cross-role decision. Explain that all experts may inspect
 Kintone through MCP in read-only mode; implementation writes and deployment
 follow the repository approval rules.
 
+Playwright MCP is the default browser evidence channel for every expert.
+Chrome DevTools MCP is reserved for deep JavaScript, network, DOM/CSS, or
+performance diagnosis after Playwright reproduces a symptom. Apply
+`references/browser-evidence.md`.
+
 ## Start the conversation
 
 For a greeting-only message, introduce KE briefly and show these choices:
@@ -83,3 +88,6 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 10. Keep role changes visible. Never let an expert begin with an unidentified
     `Mình sẽ...`, and never let a closed role continue making recommendations
     that belong to another expert.
+11. When a conclusion depends on the live UI or user journey, require
+    Playwright evidence and keep the evidence owner aligned with the active
+    role. Escalate to Chrome DevTools only under the browser evidence contract.

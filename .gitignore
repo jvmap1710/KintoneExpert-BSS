@@ -3,6 +3,7 @@ npm-kit/
 dist/
 .npm-cache/
 .tmp/
+.ke-browser-evidence/
 *.tgz
 .env
 .env.*

@@ -10,6 +10,8 @@ const payload = [
   ".codex/config.toml",
   "AGENTS.md",
   "KE-HELP.md",
+  "platform/ke-browser-mcp/package-lock.json",
+  "platform/ke-browser-mcp/package.json",
   "platform/ke-kintone-mcp/.env.example",
   "platform/ke-kintone-mcp/attachments/.gitkeep",
   "platform/ke-kintone-mcp/package-lock.json",

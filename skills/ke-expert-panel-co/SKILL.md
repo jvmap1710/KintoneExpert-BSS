@@ -8,6 +8,10 @@ description: "Cò (also Co without accents) is the cross-role Kintone expert pan
 Use the Kintone MCP in read-only mode when current tenant facts materially
 affect the recommendation. Do not make changes; route any approved action to
 the responsible expert.
+Use Playwright MCP when the trade-off depends on visible current behavior or
+user experience. Reference shared evidence rather than having each viewpoint
+repeat the same inspection. Follow
+`../ke-router/references/browser-evidence.md`.
 
 Run a structured, practical discussion without losing the project context.
 Bring these viewpoints: Tí (delivery and scope), Tèo (business value and

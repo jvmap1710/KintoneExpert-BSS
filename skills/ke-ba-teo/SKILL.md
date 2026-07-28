@@ -11,6 +11,9 @@ invent company policy; clearly mark assumptions and questions.
 Use the Kintone MCP in read-only mode to inspect existing apps, fields,
 layouts, views, records, and process settings before analysing or proposing a
 To-Be design. Treat tenant data as confidential and do not change it.
+Use Playwright MCP to verify the user-visible As-Is form, labels, actions,
+validation, and workflow behavior when those facts affect requirements or
+acceptance criteria. Follow `../ke-router/references/browser-evidence.md`.
 
 ## Collect and analyse
 
