@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.9 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.10 install
 ```
 
 Installer sẽ:
@@ -98,6 +98,10 @@ lần xác nhận/deploy tiếp theo.
 
 Sau khi deploy đạt `SUCCESS`, KE tự tạo và trả link app chính xác từ
 `KINTONE_BASE_URL`; không dùng domain giả hoặc placeholder.
+
+Khi query record không có kết quả, KE kiểm tra schema và đọc mẫu không filter
+trước khi kết luận. Kết quả `0 record` do filter không khớp không bị quy thành
+lỗi quyền; chỉ lỗi xác thực/phân quyền rõ ràng mới được báo là thiếu quyền.
 
 Mỗi khi bắt đầu hoặc chuyển vai, chuyên gia sẽ tự giới thiệu tên và vai trò.
 Khi đóng một góc nhìn, chuyên gia nêu phần đã chốt, phần chưa xác minh và hỏi

@@ -25,6 +25,16 @@ may also use MCP in read-only mode for evidence-based analysis.
    hostname or return a `<tenant-domain>` placeholder.
 7. Ask explicit confirmation before deleting fields, records, or spaces.
 
+## Record reads and filters
+
+Never infer missing permissions from a successful query that returns zero
+records. First inspect the field schema, perform a small unfiltered read in the
+same authentication context, compare actual stored values, and then rebuild
+the filter. Only diagnose permissions from an explicit authorization error or
+direct controlled evidence. Follow
+`references/record-query-diagnostics.md` whenever a result is empty,
+unexpected, or will be used to scope a write.
+
 ## Runtime access
 
 Use `npm --prefix platform/ke-kintone-mcp run check` for local configuration and

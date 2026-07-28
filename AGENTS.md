@@ -24,6 +24,21 @@ server. Use the `kintone` MCP tools for Kintone operations.
 Never place credentials, API tokens, passwords, downloaded attachments, or
 personal Kintone data in tracked files or terminal output.
 
+## Record-read diagnostics
+
+A successful filtered query with zero records is not evidence of missing
+permissions. Before diagnosing access, verify the App ID and field codes, then
+make a small unfiltered read in the same authentication context and compare
+the filter with actual stored values and field types. Only state that access
+is denied when Kintone returns an explicit authentication/authorization error
+or controlled evidence proves it. Keep empty data, filter mismatch, query
+syntax, tool failure, authentication failure, and authorization failure as
+separate outcomes.
+
+Never expand a write from a filtered subset to all readable records silently.
+Report the newly matched count and identifiers and obtain confirmation for the
+expanded scope, then read the affected records back after the write.
+
 ## MCP-first execution boundary
 
 Demo/PoC and customer implementations use the `kintone` MCP tools exposed in

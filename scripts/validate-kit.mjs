@@ -38,6 +38,7 @@ for (const required of [
   "scripts/setup.mjs",
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
   "skills/ke-engineer-binh/references/javascript-customization.md",
+  "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 ]) {
   await requirePath(required);
 }
@@ -137,6 +138,9 @@ const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
 const customizationKnowledge = await readText(
   "skills/ke-engineer-binh/references/javascript-customization.md",
 );
+const recordQueryKnowledge = await readText(
+  "skills/ke-engineer-binh/references/record-query-diagnostics.md",
+);
 if (!agentsRules.includes("MCP is the default channel, not the exclusive channel")) {
   failures.push("AGENTS.md: MCP-first fallback contract is missing");
 }
@@ -148,6 +152,18 @@ if (!engineerSkill.includes("supported channel per operation")) {
 }
 if (!engineerSkill.includes("run app:url -- --app <APP_ID>")) {
   failures.push("ke-engineer-binh: post-deploy App URL contract is missing");
+}
+if (!engineerSkill.includes("Never infer missing permissions")) {
+  failures.push("ke-engineer-binh: empty-query diagnostic guardrail is missing");
+}
+for (const statement of [
+  "no visible record",
+  "successful unfiltered response with zero rows is inconclusive",
+  "confirmation before writing",
+]) {
+  if (!recordQueryKnowledge.includes(statement)) {
+    failures.push(`record-query-diagnostics.md: missing contract: ${statement}`);
+  }
 }
 for (const statement of [
   "configuration staging area, not a second runnable App",
