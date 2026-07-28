@@ -10,7 +10,11 @@ param(
 
     [Parameter()]
     [ValidateSet('demo', 'customer')]
-    [string]$ProjectType = 'customer'
+    [string]$ProjectType = 'customer',
+
+    [Parameter()]
+    [ValidateNotNullOrEmpty()]
+    [string]$Objective = 'Not specified'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -46,14 +50,17 @@ Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
 $projectTypeLabel = if ($ProjectType -eq 'demo') {
     'Demo / PoC'
 } else {
-    'Triển khai khách hàng'
+    'Customer implementation'
 }
+$projectObjective = $Objective.Trim().Replace("`r", ' ').Replace("`n", ' ')
+$projectObjective = $projectObjective.Replace('|', '\|')
 
 $projectFile = Join-Path $targetPath 'PROJECT.md'
 $projectContent = Get-Content -Raw -Encoding utf8 -LiteralPath $projectFile
 $projectContent = $projectContent.Replace('{{PROJECT_SLUG}}', $ProjectSlug)
 $projectContent = $projectContent.Replace('{{DISPLAY_NAME}}', $DisplayName)
 $projectContent = $projectContent.Replace('{{PROJECT_TYPE}}', $projectTypeLabel)
+$projectContent = $projectContent.Replace('{{OBJECTIVE}}', $projectObjective)
 $projectContent = $projectContent.Replace(
     '{{CREATED_DATE}}',
     (Get-Date -Format 'yyyy-MM-dd')

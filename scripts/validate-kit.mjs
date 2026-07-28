@@ -87,6 +87,23 @@ if (templateDirectories.join(",") !== "input,output,private") {
   );
 }
 
+const projectTemplate = await readText("projects/_template/PROJECT.md");
+const projectInitializer = await readText("scripts/init-customer-project.ps1");
+for (const placeholder of [
+  "{{PROJECT_SLUG}}",
+  "{{PROJECT_TYPE}}",
+  "{{DISPLAY_NAME}}",
+  "{{OBJECTIVE}}",
+  "{{CREATED_DATE}}",
+]) {
+  if (!projectTemplate.includes(placeholder)) {
+    failures.push(`projects/_template/PROJECT.md: missing ${placeholder}`);
+  }
+  if (!projectInitializer.includes(placeholder)) {
+    failures.push(`scripts/init-customer-project.ps1: does not replace ${placeholder}`);
+  }
+}
+
 const gitignore = await readText(".gitignore");
 for (const rule of ["projects/*", "!projects/_template/**"]) {
   if (!gitignore.includes(rule)) failures.push(`.gitignore: missing ${rule}`);
@@ -122,7 +139,15 @@ const textExtensions = new Set([
   ".mjs",
   ".ps1",
 ]);
-const excludedDirectories = new Set([".git", "node_modules", "attachments", "output"]);
+const excludedDirectories = new Set([
+  ".git",
+  ".npm-cache",
+  ".tmp",
+  "attachments",
+  "dist",
+  "node_modules",
+  "output",
+]);
 
 async function scan(directory) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {

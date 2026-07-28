@@ -11,7 +11,7 @@
 | Loại | {{PROJECT_TYPE}} |
 | Tên hiển thị | {{DISPLAY_NAME}} |
 | Ngày tạo | {{CREATED_DATE}} |
-| Mục tiêu | Chưa xác định |
+| Mục tiêu | {{OBJECTIVE}} |
 | Giai đoạn | Khởi tạo |
 | Người phụ trách | KE Router |
 | Môi trường | Test |

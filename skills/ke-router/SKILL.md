@@ -35,6 +35,32 @@ and route it immediately. Use `references/entry-routing.md` to interpret the
 selection and collect only the minimum missing information. Confirm the chosen
 path without listing roles that were skipped or excluded unless the user asks.
 
+## Natural-language project start
+
+When one message contains enough information to start a Demo/PoC or customer
+implementation, turn it into a project workspace without asking the user to
+repeat information in a form:
+
+1. Infer `ProjectType`, a customer-safe display name, a lowercase hyphenated
+   slug, and a concise objective from the user's own words.
+2. Show one short confirmation containing the interpreted project name, type,
+   and objective. Ask a question only when ambiguity would create the wrong
+   workspace or unsafe scope.
+3. After confirmation, run `scripts/init-customer-project.ps1` with
+   `-ProjectSlug`, `-DisplayName`, `-ProjectType`, and `-Objective`.
+4. Read the generated `projects/<project-slug>/PROJECT.md` back and verify that
+   its type, name, and objective match the conversation.
+5. Tell the user where to place source files under `input/`, then continue into
+   Demo Fast Track or the customer implementation flow. Do not stop after
+   creating the folder.
+
+Example interpretation:
+
+> "Tôi muốn làm PoC cho KH ABCD, dựng nhanh phần phiếu OT."
+
+becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
+`ABCD OT PoC`, and objective `Dựng nhanh PoC phiếu OT cho khách hàng ABCD`.
+
 ## Route requests
 
 1. Route a clear role-specific request to its expert skill.

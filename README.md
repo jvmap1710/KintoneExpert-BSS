@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.3 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.4 install
 ```
 
 Installer sẽ:
@@ -60,6 +60,22 @@ Sau đó mở lại project trong Codex, trust project và bắt đầu chat b�
 hello
 ```
 
+KE Router sẽ giới thiệu Kit và hỏi bạn muốn:
+
+1. Dựng Demo / PoC.
+2. Triển khai dự án khách hàng.
+3. Kiểm tra hoặc cải tiến app Kintone hiện có.
+4. Tư vấn phương án hoặc thảo luận đa chuyên gia.
+
+User có thể trả lời bằng số hoặc mô tả thẳng nhu cầu. Ví dụ:
+
+```text
+Tôi muốn làm PoC cho KH ABCD, dựng nhanh phần phiếu OT.
+```
+
+Router sẽ xác nhận cách hiểu, tự tạo workspace, ghi mục tiêu vào `PROJECT.md`
+và chuyển sang Demo Fast Track.
+
 ## Workspace dự án
 
 Khi user chọn Demo/PoC hoặc triển khai khách hàng, KE tạo một workspace riêng:
@@ -79,7 +95,9 @@ projects/<project-slug>/
 
 `PROJECT.md` không phải tài liệu bàn giao khách hàng. Nó lưu tên/mã dự án, loại
 Demo hay triển khai thật, giai đoạn và nguyên tắc làm việc để agent không trộn
-dữ liệu giữa các dự án.
+dữ liệu giữa các dự án. Khi user mô tả nhu cầu bằng ngôn ngữ tự nhiên, KE
+Router xác nhận cách hiểu, tự tạo workspace và ghi mục tiêu đã hiểu vào file
+này trước khi bắt đầu luồng chuyên gia.
 
 ## Nguyên tắc an toàn
 

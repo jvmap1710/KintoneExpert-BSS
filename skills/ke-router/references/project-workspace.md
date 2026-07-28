@@ -7,17 +7,21 @@ name is ambiguous.
 
 ```powershell
 ./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
-  -DisplayName "ACME Purchase Request" -ProjectType customer
+  -DisplayName "ACME Purchase Request" -ProjectType customer `
+  -Objective "Triển khai quy trình đề nghị mua hàng cho ACME"
 
 ./scripts/init-customer-project.ps1 -ProjectSlug purchase-demo `
-  -DisplayName "Purchase Request Demo" -ProjectType demo
+  -DisplayName "Purchase Request Demo" -ProjectType demo `
+  -Objective "Dựng PoC quy trình đề nghị mua hàng"
 ```
 
 Use a lowercase, hyphenated slug containing only `a-z`, `0-9`, and `-`. The
 script creates `projects/<project-slug>/` from `projects/_template/` and
 refuses to overwrite an existing workspace. The agent should run it after the
 user has selected Demo/PoC or customer implementation and supplied the minimum
-project identity.
+project identity. Always pass the objective inferred from the conversation;
+do not leave it as `Chưa xác định` when the user already stated the desired
+outcome.
 
 Use this minimal structure:
 

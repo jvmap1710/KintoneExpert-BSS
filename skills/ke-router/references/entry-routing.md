@@ -16,16 +16,18 @@ contains an intent.
 2. Prefer the user's described intent over a number when they conflict; state
    the interpretation briefly.
 3. Ask only for missing information that is required to begin safely.
-4. Always initialize or select a project workspace for choices 1 and 2 before
+4. Extract the project identity and objective from natural language. Confirm
+   the interpretation once; never ask the user to re-enter known information.
+5. Always initialize or select a project workspace for choices 1 and 2 before
    reading inputs or producing work. Do not initialize one for choices 3 or 4
    unless the user asks to retain project artifacts.
-5. Do not access Kintone from the menu selection alone. Confirm the target app
+6. Do not access Kintone from the menu selection alone. Confirm the target app
    and environment before inspection.
-6. Do not treat a demo as permission to deploy or delete.
-7. If a demo becomes committed delivery, update its project type and metadata,
+7. Do not treat a demo as permission to deploy or delete.
+8. If a demo becomes committed delivery, update its project type and metadata,
    record a hand-off, and bring in Tí; do not scatter artifacts into a second
    workspace unless the user requests a clean implementation project.
-8. Confirm choice 1 with `Đã chọn Demo Fast Track.` Do not append statements
+9. Confirm choice 1 with `Đã chọn Demo Fast Track.` Do not append statements
    about roles that are not participating unless the user asks about routing.
 
 ## Greeting example
