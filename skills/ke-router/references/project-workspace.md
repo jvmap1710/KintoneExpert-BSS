@@ -33,5 +33,5 @@ Use this minimal structure:
 
 Never place credentials, tokens, passwords, downloaded attachments, personal
 Kintone data, or unredacted production exports in generated HTML. Customer
-project directories are Git-ignored by default. Reuse synthetic examples from
-`examples/sample-data/`; never replace them with customer data.
+project directories are Git-ignored by default. Use only sanitized customer
+inputs or synthetic data created specifically inside the current project.

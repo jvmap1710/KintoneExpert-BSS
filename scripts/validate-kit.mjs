@@ -32,8 +32,6 @@ for (const required of [
   "projects/_template/PROJECT.md",
   "projects/_template/input/.gitkeep",
   "projects/_template/private/.gitkeep",
-  "examples/sample-data/survey-responses.csv",
-  "examples/sample-data/purchase-requests.csv",
   "scripts/init-customer-project.ps1",
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",

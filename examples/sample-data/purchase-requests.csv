@@ -1,6 +1,0 @@
-request_id,request_date,department,category,amount,currency,status,approval_days
-PR-DEMO-001,2026-01-05,Operations,Office Supplies,1250000,VND,Approved,2
-PR-DEMO-002,2026-01-08,Finance,Software,4800000,VND,Approved,3
-PR-DEMO-003,2026-01-12,Sales,Travel,3200000,VND,Returned,1
-PR-DEMO-004,2026-01-15,Operations,Equipment,9800000,VND,Pending,4
-PR-DEMO-005,2026-01-18,IT,Software,6500000,VND,Approved,2
