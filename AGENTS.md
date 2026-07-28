@@ -18,6 +18,20 @@ server. Use the `kintone` MCP tools for Kintone operations.
 Never place credentials, API tokens, passwords, downloaded attachments, or
 personal Kintone data in tracked files or terminal output.
 
+## MCP-only execution boundary
+
+Demo/PoC and customer implementations use the `kintone` MCP tools exposed in
+the active Codex session. Before Kintone work, confirm those tools are
+available. If they are missing, stop and ask the user to run the configuration
+checks, reopen/trust the project, and start a fresh chat.
+
+Do not inspect or modify `node_modules`, MCP `dist/` files, or package source to
+discover tool names or schemas. Do not construct JSON-RPC calls in the shell,
+start the MCP server manually for an operation, or call Kintone REST APIs as an
+unapproved fallback. Use only the schema exposed by the active MCP tool. If a
+tool is unavailable, times out, or still fails after one corrected call, report
+the exact failure and stop instead of reverse-engineering the runtime.
+
 ## Expert-team routing
 
 At the start of a conversation, when the user says hi, hello, xin chào, xin

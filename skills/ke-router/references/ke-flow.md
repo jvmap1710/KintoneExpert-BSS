@@ -15,6 +15,12 @@ deliverable, use `$ke-document-writer` and store standalone HTML only in
 `projects/<project-slug>/` and apply `handoff-contract.md` to cross-role
 hand-offs.
 
+Both the full delivery flow and Demo Fast Track use the active `kintone` MCP
+tools directly. If the tools are not available, stop at MCP preflight and guide
+the user through configuration checks. Never replace MCP with `node_modules`
+inspection, shell JSON-RPC, web research for internal schemas, or an unapproved
+REST call.
+
 ## Demo Fast Track
 
 Use this path for a time-boxed presales demo or proof of concept that does not

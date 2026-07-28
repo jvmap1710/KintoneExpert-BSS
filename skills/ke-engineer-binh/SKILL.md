@@ -30,6 +30,18 @@ check is needed. Let Codex start the configured `kintone` MCP server for
 Kintone operations. Keep `.env`, attachments, package files, scripts, and
 customizations inside `platform/ke-kintone-mcp/`.
 
+Before inspecting or building an app, verify that the active session exposes
+the `kintone` MCP tools. Call those tools directly for Demo/PoC and production
+projects alike. If they are absent, stop and ask the user to check the MCP
+configuration, reopen/trust the project, and start a fresh chat.
+
+Never read `node_modules`, `@kintone/mcp-server/dist`, or package source to
+reverse-engineer tools. Never emulate MCP with shell JSON-RPC or bypass it with
+an unapproved REST call. For a parameter error, use the tool schema supplied by
+the active session and make at most one corrected call. For an unavailable
+tool, timeout, or repeated failure, return the exact error and the preflight
+commands; do not continue investigating runtime internals.
+
 ## Implementation boundary
 
 Prefer native fields, layout, lookup, permissions, views, and calculations.

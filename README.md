@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.5 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.6 install
 ```
 
 Installer sẽ:
@@ -75,6 +75,10 @@ Tôi muốn làm PoC cho KH ABCD, dựng nhanh phần phiếu OT.
 
 Router sẽ xác nhận cách hiểu, tự tạo workspace, ghi mục tiêu vào `PROJECT.md`
 và chuyển sang Demo Fast Track.
+
+Demo và dự án thật đều thao tác Kintone qua MCP tool trực tiếp. Nếu MCP chưa
+được nạp, KE sẽ dừng và hướng dẫn kiểm tra cấu hình; agent không được dò
+`node_modules`, tự dựng JSON-RPC hoặc âm thầm gọi REST API thay thế.
 
 ## Workspace dự án
 
