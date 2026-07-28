@@ -41,7 +41,8 @@ create a delivery commitment:
 - Skip Teo when the demo scenario and sample data are already clear.
 - Skip Son when the demo uses one simple app with no material integration,
   security, data-model, or customization decision.
-- Mit performs a focused smoke test of the demonstrated happy path and visible
+- Mit performs an evidence-based smoke test with 5–10 synthetic records,
+  mandatory HTML report, the demonstrated happy path, and visible
   failure risks; a full UAT pack is not required.
 - Invite Ti only when scope control, timeline/cost commitment, stakeholder
   coordination, delivery planning, or a hand-off to implementation is needed.

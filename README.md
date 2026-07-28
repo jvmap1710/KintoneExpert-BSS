@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.13 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.14 install
 ```
 
 Installer sẽ:
@@ -113,6 +113,11 @@ lỗi quyền; chỉ lỗi xác thực/phân quyền rõ ràng mới được b�
 JavaScript customization dùng helper REST và lệnh staging chung của Kit. Lệnh
 tự đọc cấu hình preview trước/sau, xác minh revision và metadata file, bảo toàn
 customization cũ và không tự deploy khi read-back chưa đạt.
+
+Khi chạy smoke test trên Demo/PoC hoặc app test, Mít thực thi 5–10 test case,
+tạo 5–10 record synthetic có run ID, kiểm tra workflow và luôn xuất một báo
+cáo HTML. Kiểm tra cấu hình, API và runtime trình duyệt được báo riêng; không
+có runtime evidence thì không được kết luận `PASS` hoặc `demo-ready`.
 
 Mỗi khi bắt đầu hoặc chuyển vai, chuyên gia sẽ tự giới thiệu tên và vai trò.
 Khi đóng một góc nhìn, chuyên gia nêu phần đã chốt, phần chưa xác minh và hỏi

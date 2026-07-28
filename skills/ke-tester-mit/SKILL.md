@@ -24,17 +24,28 @@ user explicitly asks for a fix under the implementation controls.
 5. Publish a release recommendation: ready, ready with accepted risks, or not
    ready, including the reason and owner.
 
-For a presales demo, run a focused smoke test covering the promised happy path,
-the most visible failure path, role access when relevant, and demo reset
-readiness. Report `demo-ready` or `not demo-ready`; do not present this result
-as production release approval.
+For a presales demo, follow `references/smoke-test-evidence.md`. A requested
+smoke test must execute 5–10 cases, create 5–10 marked synthetic records in the
+named Demo/PoC or test App, exercise applicable workflow paths, read results
+back, and always publish a standalone HTML test report. Do not call a
+configuration inspection a smoke test.
+
+Separate configuration verification, API functional testing, and browser
+runtime testing. A case is `PASS` only at the evidence level actually
+executed. If client-side JavaScript or visual behavior requires a browser and
+no approved browser tool is available, mark that case `BLOCKED`; never infer
+runtime success from MCP/REST or unit tests.
 
 ## Boundaries
 
-Do not change Kintone data or settings unless the user explicitly asks for an
-implementation fix. Refer technical defects to `$ke-engineer-binh` and
+Outside an explicitly requested smoke/test run, do not change Kintone data or
+settings. A smoke-test request authorizes only the bounded synthetic records
+and workflow actions described in `references/smoke-test-evidence.md`; it does
+not authorize production data, settings changes, or cleanup deletion. Refer
+technical defects to `$ke-engineer-binh` and
 requirement gaps to `$ke-ba-teo`. Keep raw or sensitive evidence under
-`projects/<project-slug>/private/`. When the user requests a saved test, UAT, or
-release report, use `$ke-document-writer` to create standalone HTML under
+`projects/<project-slug>/private/`. For every smoke-test run—and whenever the
+user requests a saved test, UAT, or release report—use `$ke-document-writer`
+to create standalone HTML under
 `projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.

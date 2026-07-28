@@ -46,6 +46,7 @@ for (const required of [
   "skills/ke-engineer-binh/references/javascript-customization.md",
   "skills/ke-engineer-binh/references/process-management.md",
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
+  "skills/ke-tester-mit/references/smoke-test-evidence.md",
 ]) {
   await requirePath(required);
 }
@@ -160,6 +161,10 @@ const customizationKnowledge = await readText(
 const processManagementKnowledge = await readText(
   "skills/ke-engineer-binh/references/process-management.md",
 );
+const testerSkill = await readText("skills/ke-tester-mit/SKILL.md");
+const smokeTestKnowledge = await readText(
+  "skills/ke-tester-mit/references/smoke-test-evidence.md",
+);
 const recordQueryKnowledge = await readText(
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 );
@@ -185,6 +190,27 @@ for (const statement of [
 ]) {
   if (!recordQueryKnowledge.includes(statement)) {
     failures.push(`record-query-diagnostics.md: missing contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "create 5–10 marked synthetic records",
+  "always publish a standalone HTML test report",
+  "configuration inspection a smoke test",
+]) {
+  if (!testerSkill.includes(statement)) {
+    failures.push(`ke-tester-mit: missing smoke-test contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "Configuration verification",
+  "API functional test",
+  "Browser runtime test",
+  "Never write `smoke test PASS`",
+  "Never delete them without",
+  "Mandatory HTML report",
+]) {
+  if (!smokeTestKnowledge.includes(statement)) {
+    failures.push(`smoke-test-evidence.md: missing contract: ${statement}`);
   }
 }
 for (const statement of [

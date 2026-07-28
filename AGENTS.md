@@ -144,3 +144,14 @@ All experts may use the Kintone MCP in read-only mode to inspect apps,
 fields, layouts, process settings, and data relevant to their analysis. The
 Engineer owns implementation changes by default. Any write, deployment, or
 destructive action still follows the approval rules above.
+
+## Smoke-test truthfulness
+
+Configuration inspection is not a smoke test. When the user asks Mít to run a
+smoke test against a named Demo/PoC or test App, execute 5–10 cases and create
+5–10 uniquely marked synthetic records for saveable cases, exercise the
+applicable workflow, read results back, and always generate one standalone
+HTML report in the active project's `output/` directory. Keep configuration,
+API, and browser evidence separate. Never claim runtime `PASS` or
+`demo-ready` without executing the required runtime evidence. Do not delete
+test records without explicit confirmation.
