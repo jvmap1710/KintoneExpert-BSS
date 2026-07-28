@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tèo - Business Analyst"
+  short_description: "Collect requirements and produce BRD and eForm specs."
+  default_prompt: "Use $ke-ba-teo to analyse this business process."

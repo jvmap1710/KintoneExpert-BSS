@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tí - Project Manager"
+  short_description: "Coordinate scope, delivery, and specialist routing."
+  default_prompt: "Use $ke-pm-ti to coordinate this KE project."

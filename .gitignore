@@ -1,0 +1,19 @@
+node_modules/
+.env
+.env.*
+!**/.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.log
+platform/ke-kintone-mcp/.env
+platform/ke-kintone-mcp/attachments/*
+!platform/ke-kintone-mcp/attachments/.gitkeep
+
+# Customer workspaces and generated HTML are local/private by default.
+projects/*
+!projects/_template/
+!projects/_template/**
+output/*
+!output/.gitkeep

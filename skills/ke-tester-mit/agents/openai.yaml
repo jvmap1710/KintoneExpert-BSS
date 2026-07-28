@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mít - QA Tester"
+  short_description: "Create test cases and validate Kintone acceptance criteria."
+  default_prompt: "Use $ke-tester-mit to test this Kintone solution."

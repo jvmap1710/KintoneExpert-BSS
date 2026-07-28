@@ -1,0 +1,4 @@
+interface:
+  display_name: "KE Router"
+  short_description: "Introduce KE and route work to the right expert."
+  default_prompt: "Use $ke-router to introduce KE or route this request."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cò - Expert Panel"
+  short_description: "Facilitate cross-role discussion and decision reviews."
+  default_prompt: "Use $ke-expert-panel-co to review this Kintone decision."

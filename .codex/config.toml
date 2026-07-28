@@ -1,0 +1,42 @@
+# Project-scoped MCP server. Codex loads this file after the repository is trusted.
+# npm.cmd is used because this project targets Windows.
+[mcp_servers.kintone]
+command = "npm.cmd"
+args = ["--prefix", "platform/ke-kintone-mcp", "run", "--silent", "mcp:kintone"]
+startup_timeout_sec = 30
+tool_timeout_sec = 120
+default_tools_approval_mode = "writes"
+
+# Local expert-team skills. They are available after this project is trusted
+# and Codex is restarted or the project is re-opened.
+[[skills.config]]
+path = "skills/ke-router"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-pm-ti"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-ba-teo"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-sa-son"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-engineer-binh"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-tester-mit"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-expert-panel-co"
+enabled = true
+
+[[skills.config]]
+path = "skills/ke-document-writer"
+enabled = true

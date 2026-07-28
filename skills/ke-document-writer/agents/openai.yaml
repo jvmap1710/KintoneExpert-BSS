@@ -1,0 +1,4 @@
+interface:
+  display_name: "KE Document Writer"
+  short_description: "Write KE deliverables and export clean HTML."
+  default_prompt: "Use $ke-document-writer to create or export this KE project document."

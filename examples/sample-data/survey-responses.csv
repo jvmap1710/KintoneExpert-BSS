@@ -1,0 +1,6 @@
+respondent_id,department,current_channel,monthly_volume,cycle_time_days,pain_point,priority
+R001,Operations,Email,18,4.0,Approval status is difficult to track,High
+R002,Finance,Spreadsheet,32,3.5,Duplicate data entry,High
+R003,Sales,Chat,12,2.0,Missing required information,Medium
+R004,Operations,Paper,25,5.0,Requests are sometimes lost,High
+R005,IT,Email,9,2.5,No consistent audit trail,Medium
