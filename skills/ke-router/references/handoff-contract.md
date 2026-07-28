@@ -1,5 +1,29 @@
 # KE hand-off contract
 
+## Conversation hand-off
+
+Every role transfer must be visible in the conversation, even when the user
+does not request a saved document.
+
+The receiving expert starts with:
+
+> Mình là **<name> — <role>** của KE. Mình tiếp nhận từ **<previous expert>**
+> các nội dung: <accepted input>. Ở bước này mình sẽ <responsibility>.
+
+The sending expert closes with:
+
+- conclusions owned by the sending role;
+- assumptions or items that role did not validate;
+- the recommended receiver and reason; and
+- a choice to continue, invite Cò for a material trade-off, or stop.
+
+For an ad-hoc question, wait for the user's choice before activating another
+expert. For an end-to-end flow already authorized by the user, announce
+`<from> hand-off → <to>` and continue. Do not silently change perspective or
+use `Mình sẽ...` without identifying the new speaker.
+
+## Saved hand-off
+
 Create one HTML hand-off record for every transfer of responsibility between
 experts when the user requests a saved deliverable. Store it in
 `projects/<project-slug>/output/` and name it:

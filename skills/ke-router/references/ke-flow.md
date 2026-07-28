@@ -21,6 +21,11 @@ the user through configuration checks. Never replace MCP with `node_modules`
 inspection, shell JSON-RPC, web research for internal schemas, or an unapproved
 REST call.
 
+Before execution, display the experts who will actually participate. At each
+phase start, the active expert identifies themself using
+`Mình là <name> — <role> của KE`, then states the accepted input and current
+responsibility. Apply `handoff-contract.md` whenever the active expert changes.
+
 ## Demo Fast Track
 
 Use this path for a time-boxed presales demo or proof of concept that does not
@@ -28,6 +33,8 @@ create a delivery commitment:
 
 `Requester -> Teo or Son (as needed) -> Binh -> Mit smoke test -> Requester`
 
+- Show this sequence to the user with the actual included experts before work
+  starts. Do not hide role changes in a seamless assistant voice.
 - Skip Teo when the demo scenario and sample data are already clear.
 - Skip Son when the demo uses one simple app with no material integration,
   security, data-model, or customization decision.

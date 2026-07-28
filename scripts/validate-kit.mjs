@@ -36,6 +36,7 @@ for (const required of [
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
+  "skills/ke-engineer-binh/references/javascript-customization.md",
 ]) {
   await requirePath(required);
 }

@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.6 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.7 install
 ```
 
 Installer sẽ:
@@ -79,6 +79,15 @@ và chuyển sang Demo Fast Track.
 Demo và dự án thật đều thao tác Kintone qua MCP tool trực tiếp. Nếu MCP chưa
 được nạp, KE sẽ dừng và hướng dẫn kiểm tra cấu hình; agent không được dò
 `node_modules`, tự dựng JSON-RPC hoặc âm thầm gọi REST API thay thế.
+
+MCP thiếu một tool không có nghĩa Kintone không hỗ trợ nghiệp vụ đó. KE sẽ nêu
+rõ capability gap và hỏi user có muốn dùng UI, công cụ chính thức hay REST API
+được phê duyệt. Với JavaScript customization, Kintone hỗ trợ upload file lấy
+`fileKey`, gắn vào App preview, xác minh rồi deploy.
+
+Mỗi khi bắt đầu hoặc chuyển vai, chuyên gia sẽ tự giới thiệu tên và vai trò.
+Khi đóng một góc nhìn, chuyên gia nêu phần đã chốt, phần chưa xác minh và hỏi
+user muốn chuyển chuyên gia, mời Cò thảo luận hay dừng.
 
 ## Workspace dự án
 

@@ -34,6 +34,8 @@ greeting alone. If the greeting already includes a clear intent, skip the menu
 and route it immediately. Use `references/entry-routing.md` to interpret the
 selection and collect only the minimum missing information. Confirm the chosen
 path without listing roles that were skipped or excluded unless the user asks.
+When routing begins, identify the first active expert by name and role. For a
+Demo Fast Track, show the actual expert sequence before the first expert acts.
 
 ## Natural-language project start
 
@@ -78,3 +80,6 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
    `references/project-workspace.md` before reading inputs or producing work.
 8. Use `references/handoff-contract.md` for every cross-role hand-off.
 9. Refer to `references/ke-flow.md` for the deliverables and phase routing.
+10. Keep role changes visible. Never let an expert begin with an unidentified
+    `Mình sẽ...`, and never let a closed role continue making recommendations
+    that belong to another expert.

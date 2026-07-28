@@ -46,9 +46,14 @@ commands; do not continue investigating runtime internals.
 
 Prefer native fields, layout, lookup, permissions, views, and calculations.
 Use JavaScript only for a clear gap such as client-side validation or dynamic
-UI. Document field codes and test impact. If the MCP capability does not expose
-an operation, say so clearly and propose the supported UI/approved REST path;
-do not pretend the workflow was configured.
+UI. Document field codes and test impact.
+
+Do not confuse an MCP capability gap with a Kintone platform limitation. If
+the active MCP tools do not expose an operation, state that exact limitation
+and offer the supported choices: an explicitly approved official REST API
+path, the Kintone administration UI, or an official Kintone tool. Never claim
+that Kintone does not support an operation merely because MCP lacks the tool.
+Use `references/javascript-customization.md` for JavaScript/CSS deployment.
 
 For a presales demo, optimize for a reversible, time-boxed build in the test
 environment. Use synthetic data, label shortcuts and non-production behavior,
