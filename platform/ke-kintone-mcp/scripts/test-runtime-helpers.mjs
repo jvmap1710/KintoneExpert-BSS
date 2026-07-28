@@ -4,6 +4,12 @@ import {
   verifyStagedFile,
 } from "./lib/customization-verification.mjs";
 import { buildKintoneAuthHeaders } from "./lib/kintone-rest.mjs";
+import {
+  findRemovedWorkflowItems,
+  validateFieldEntityCodes,
+  validateProcessConfig,
+  verifyProcessSettings,
+} from "./lib/process-management-verification.mjs";
 
 const headers = buildKintoneAuthHeaders({
   KINTONE_USERNAME: "admin",
@@ -70,5 +76,103 @@ const result = verifyStagedFile({
 });
 assert.equal(result.file.name, "validation.js");
 assert.equal(result.preservedEntries, 1);
+
+const processConfig = validateProcessConfig({
+  enable: true,
+  states: {
+    "Not started": {
+      name: "Draft",
+      index: 0,
+      assignee: { type: "ONE", entities: [] },
+    },
+    "Pending Manager": {
+      name: "Pending Manager",
+      index: 1,
+      assignee: {
+        type: "ONE",
+        entities: [
+          {
+            entity: { type: "FIELD_ENTITY", code: "Approver" },
+            includeSubs: false,
+          },
+        ],
+      },
+    },
+  },
+  actions: [
+    {
+      name: "Submit",
+      from: "Draft",
+      to: "Pending Manager",
+      filterCond: "",
+    },
+  ],
+});
+const processResult = verifyProcessSettings({
+  expected: processConfig,
+  actual: {
+    enable: true,
+    revision: "12",
+    states: {
+      Draft: {
+        name: "Draft",
+        index: "0",
+        assignee: { type: "ONE", entities: [] },
+      },
+      "Pending Manager": {
+        name: "Pending Manager",
+        index: "1",
+        assignee: {
+          type: "ONE",
+          entities: [
+            {
+              entity: { type: "FIELD_ENTITY", code: "Approver" },
+              includeSubs: false,
+            },
+          ],
+        },
+      },
+    },
+    actions: processConfig.actions,
+  },
+  updateRevision: "12",
+});
+assert.equal(processResult.states, 2);
+assert.equal(processResult.actions, 1);
+validateFieldEntityCodes(processConfig, { Approver: { type: "USER_SELECT" } });
+assert.throws(
+  () => validateFieldEntityCodes(processConfig, {}),
+  /field code does not exist/u,
+);
+assert.deepEqual(
+  findRemovedWorkflowItems(
+    {
+      states: {
+        "Not started": {},
+        "Pending Manager": {},
+        Rejected: {},
+      },
+      actions: [
+        { name: "Submit", from: "Draft", to: "Pending Manager" },
+        { name: "Reject", from: "Pending Manager", to: "Rejected" },
+      ],
+    },
+    processConfig,
+  ),
+  {
+    states: ["Rejected"],
+    actions: [
+      { name: "Reject", from: "Pending Manager", to: "Rejected" },
+    ],
+  },
+);
+assert.throws(
+  () =>
+    validateProcessConfig({
+      ...processConfig,
+      actions: [{ name: "Bad", from: "Missing", to: "Draft" }],
+    }),
+  /unknown from\/to state/u,
+);
 
 console.log("Kintone REST runtime helper tests passed.");

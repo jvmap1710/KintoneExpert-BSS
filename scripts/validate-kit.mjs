@@ -39,9 +39,12 @@ for (const required of [
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
   "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
   "platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs",
+  "platform/ke-kintone-mcp/scripts/lib/process-management-verification.mjs",
   "platform/ke-kintone-mcp/scripts/stage-app-customization.mjs",
+  "platform/ke-kintone-mcp/scripts/stage-process-management.mjs",
   "platform/ke-kintone-mcp/scripts/test-runtime-helpers.mjs",
   "skills/ke-engineer-binh/references/javascript-customization.md",
+  "skills/ke-engineer-binh/references/process-management.md",
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 ]) {
   await requirePath(required);
@@ -124,6 +127,12 @@ if (
 ) {
   failures.push("package.json: shared customization staging command is missing");
 }
+if (
+  packageJson.scripts?.["process:stage"] !==
+  "node --env-file=.env scripts/stage-process-management.mjs"
+) {
+  failures.push("package.json: shared Process Management staging command is missing");
+}
 if (packageJson.scripts?.["customize:ot"]) {
   failures.push("package.json: trial customize:ot script must not be published");
 }
@@ -147,6 +156,9 @@ const agentsRules = await readText("AGENTS.md");
 const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
 const customizationKnowledge = await readText(
   "skills/ke-engineer-binh/references/javascript-customization.md",
+);
+const processManagementKnowledge = await readText(
+  "skills/ke-engineer-binh/references/process-management.md",
 );
 const recordQueryKnowledge = await readText(
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
@@ -185,6 +197,17 @@ for (const statement of [
 ]) {
   if (!customizationKnowledge.includes(statement)) {
     failures.push(`javascript-customization.md: missing contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "capability gap",
+  "complete replacement sets",
+  "process:stage",
+  "separate deployment confirmation",
+  "do not guess a localized",
+]) {
+  if (!processManagementKnowledge.includes(statement)) {
+    failures.push(`process-management.md: missing contract: ${statement}`);
   }
 }
 

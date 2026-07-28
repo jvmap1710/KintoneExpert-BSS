@@ -80,6 +80,14 @@ staged customization by PUT/GET revision, target, type, filename, content
 type, size, and preservation of existing entries rather than requiring the
 GET `fileKey` to equal the upload key. Never deploy when this read-back fails.
 
+Process Management is also available through official REST APIs even when MCP
+does not expose it. For an approved REST path, read the pre-live workflow,
+preserve every status/action outside the approved scope, update with the latest
+revision, read it back, and obtain deployment approval. Omitted statuses may
+be deleted, so never send a guessed or partial workflow definition. Use
+the shared `process:stage` command and
+`skills/ke-engineer-binh/references/process-management.md`.
+
 Kintone `preview` REST endpoints edit or read pre-live App settings. They do
 not provide a preview URL or a runtime form where records and JavaScript can be
 tested. Verify the pending configuration before deployment, obtain explicit

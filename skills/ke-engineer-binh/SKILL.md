@@ -71,9 +71,13 @@ choice. After the user approves REST for a named app and operation, execute
 that scoped path without another channel-choice review; ask again only for the
 separate deployment gate or if scope materially changes. Never claim that
 Kintone does not support an operation merely because MCP lacks the tool. Use
-`references/javascript-customization.md` for JavaScript/CSS deployment.
+`references/javascript-customization.md` for JavaScript/CSS deployment and
+`references/process-management.md` for workflow statuses, assignees, actions,
+and transition conditions.
 For that flow, use the Kit's shared REST staging command and authentication
 helper; do not generate an ad-hoc uploader or authorization header.
+For Process Management, use the shared `process:stage` command with a complete
+project-scoped JSON definition and keep deployment as a separate approval.
 
 MCP and an approved official REST path can be orchestrated in one build. Pick
 the supported channel per operation, not once for the entire session. A common

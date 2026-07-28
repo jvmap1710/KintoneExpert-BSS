@@ -30,7 +30,8 @@ if (!["desktop", "mobile"].includes(target)) {
   process.exit(1);
 }
 
-const absoluteFilePath = path.resolve(filePath);
+const invocationDirectory = process.env.INIT_CWD ?? process.cwd();
+const absoluteFilePath = path.resolve(invocationDirectory, filePath);
 const fileName = path.basename(absoluteFilePath);
 const file = await readFile(absoluteFilePath);
 const client = createKintoneRestClient({ allowApiToken: false });

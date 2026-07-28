@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.11 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.12 install
 ```
 
 Installer sẽ:
@@ -98,6 +98,13 @@ lần xác nhận/deploy tiếp theo.
 
 Sau khi deploy đạt `SUCCESS`, KE tự tạo và trả link app chính xác từ
 `KINTONE_BASE_URL`; không dùng domain giả hoặc placeholder.
+
+Process Management cũng có thể tạo/cập nhật bằng REST API chính thức nếu MCP
+chưa có tool tương ứng. KE sẽ đọc workflow pre-live hiện tại, giữ các
+status/action ngoài phạm vi, cập nhật bằng revision mới nhất, đọc lại để xác
+minh rồi xin duyệt deploy. API này hỗ trợ API token và cần quyền App Management.
+Kit có lệnh staging dùng cấu hình JSON đầy đủ theo từng dự án và không tự
+deploy.
 
 Khi query record không có kết quả, KE kiểm tra schema và đọc mẫu không filter
 trước khi kết luận. Kết quả `0 record` do filter không khớp không bị quy thành
