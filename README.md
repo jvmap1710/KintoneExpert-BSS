@@ -5,27 +5,34 @@ official local MCP server.
 
 ## Quick start
 
-Clone the kit and enter the repository:
+Prerequisite: Node.js 22 or newer.
+
+Open a terminal in the customer project and run:
 
 ```powershell
-git clone https://github.com/jvmap1710/KintoneExpert-BSS.git
-Set-Location KintoneExpert-BSS
+npx kintone-expert-bss install
 ```
 
-Install the kit, verify it, and create the local configuration:
+Follow the installer prompt. It adds KE Kit to the current project, preserves
+existing project instructions/configuration, installs the Kintone MCP runtime,
+and creates a local `.env` without overwriting an existing one.
+
+For non-interactive installation:
 
 ```powershell
-npm install
-npm run validate
-npm run setup
+npx kintone-expert-bss install --directory C:\path\to\customer-project --yes
 ```
 
-Add the customer-specific Kintone credentials to
+Use `--skip-deps` when dependencies are managed separately. The installer
+stops on conflicting KE-managed files by default; review conflicts before
+using `--force`.
+
+After installation, add the customer-specific Kintone credentials to
 `platform/ke-kintone-mcp/.env`, then test the configuration:
 
 ```powershell
-npm run kintone:check
-npm run kintone:test
+npm --prefix platform/ke-kintone-mcp run check
+npm --prefix platform/ke-kintone-mcp run test:connection
 ```
 
 Open this repository in Codex and trust the project when prompted. Start the
@@ -33,7 +40,7 @@ conversation with `hello`; KE Router will present the available entry flows.
 For a full-cycle customer project, create its isolated workspace first:
 
 ```powershell
-npm run init -- -ProjectSlug acme-purchase-request `
+./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
   -DisplayName "ACME Purchase Request"
 ```
 
@@ -48,17 +55,23 @@ are excluded from Git.
 - Codex CLI/app
 - A Kintone account with permissions appropriate for the intended operations
 
-## Setup
+## Install from source
 
-1. Install all dependencies:
+Cloning is intended for KE Kit maintainers and contributors:
+
+1. Clone the repository:
+
+   ```powershell
+   git clone https://github.com/jvmap1710/KintoneExpert-BSS.git
+   Set-Location KintoneExpert-BSS
+   ```
+
+2. Install the development runtime, validate the kit, and create the local
+   credential file:
 
    ```powershell
    npm install
-   ```
-
-2. Validate the kit and create the local credential file:
-
-   ```powershell
+   npm run dev:install
    npm run validate
    npm run setup
    ```
@@ -71,8 +84,8 @@ are excluded from Git.
 4. Validate the local configuration:
 
    ```powershell
-   npm run kintone:check
-   npm run kintone:test
+   npm --prefix platform/ke-kintone-mcp run check
+   npm --prefix platform/ke-kintone-mcp run test:connection
    ```
 
 5. Restart Codex, open this folder, and trust the project when prompted.
@@ -100,7 +113,7 @@ Clone this repository for the customer engagement, then initialize an isolated
 project workspace:
 
 ```powershell
-npm run init -- -ProjectSlug acme-purchase-request `
+./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
   -DisplayName "ACME Purchase Request"
 ```
 
@@ -130,13 +143,13 @@ written to `attachments/`, which is excluded from Git.
 ```powershell
 npm run validate
 npm run setup
-npm run kintone:check
-npm run kintone:test
-npm run mcp:kintone
+npm --prefix platform/ke-kintone-mcp run check
+npm --prefix platform/ke-kintone-mcp run test:connection
+npm --prefix platform/ke-kintone-mcp run mcp:kintone
 codex mcp list
 ```
 
-`npm run mcp:kintone` is a stdio server and normally appears to wait silently;
+The `mcp:kintone` command is a stdio server and normally appears to wait silently;
 Codex starts and communicates with it automatically.
 
 ## Project layout

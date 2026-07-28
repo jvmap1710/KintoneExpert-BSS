@@ -1,0 +1,234 @@
+#!/usr/bin/env node
+
+import { createHash } from "node:crypto";
+import { spawn } from "node:child_process";
+import {
+  access,
+  appendFile,
+  copyFile,
+  cp,
+  mkdir,
+  readFile,
+  readdir,
+  writeFile,
+} from "node:fs/promises";
+import { constants } from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import { fileURLToPath } from "node:url";
+import { createInterface } from "node:readline/promises";
+
+const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const payloadRoot = path.join(packageRoot, "npm-kit");
+const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
+const args = process.argv.slice(2);
+
+function usage() {
+  console.log(`
+Kintone Expert BSS installer
+
+Usage:
+  npx kintone-expert-bss install [options]
+
+Options:
+  --directory <path>  Install into this project (default: current directory)
+  --yes               Accept defaults and skip confirmation
+  --skip-deps         Do not install the Kintone MCP runtime dependencies
+  --force             Overwrite conflicting KE-managed files
+  --help              Show this help
+  --version           Show the package version
+`);
+}
+
+function optionValue(name) {
+  const index = args.indexOf(name);
+  if (index === -1) return undefined;
+  const value = args[index + 1];
+  if (!value || value.startsWith("--")) throw new Error(`${name} requires a value`);
+  return value;
+}
+
+async function exists(target) {
+  try {
+    await access(target, constants.F_OK);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function filesBelow(directory, prefix = "") {
+  const result = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const relative = path.join(prefix, entry.name);
+    if (entry.isDirectory()) {
+      result.push(...(await filesBelow(path.join(directory, entry.name), relative)));
+    } else {
+      result.push(relative);
+    }
+  }
+  return result;
+}
+
+async function digest(target) {
+  return createHash("sha256").update(await readFile(target)).digest("hex");
+}
+
+async function mergeManagedFile(target, source, label) {
+  const begin = `# >>> KE KIT: ${label} >>>`;
+  const end = `# <<< KE KIT: ${label} <<<`;
+  const managed = `${begin}\n${(await readFile(source, "utf8")).trim()}\n${end}`;
+
+  if (!(await exists(target))) {
+    await mkdir(path.dirname(target), { recursive: true });
+    await writeFile(target, `${managed}\n`, "utf8");
+    return;
+  }
+
+  const current = await readFile(target, "utf8");
+  const start = current.indexOf(begin);
+  const finish = current.indexOf(end);
+  if (start >= 0 && finish >= start) {
+    const updated =
+      current.slice(0, start) + managed + current.slice(finish + end.length);
+    await writeFile(target, updated.endsWith("\n") ? updated : `${updated}\n`, "utf8");
+    return;
+  }
+
+  await appendFile(target, `${current.endsWith("\n") ? "" : "\n"}\n${managed}\n`, "utf8");
+}
+
+function run(command, commandArgs, cwd) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, commandArgs, { cwd, stdio: "inherit", shell: false });
+    child.on("error", reject);
+    child.on("exit", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`${command} exited with code ${code}`));
+    });
+  });
+}
+
+if (args.includes("--help") || args.includes("-h")) {
+  usage();
+  process.exit(0);
+}
+
+if (args.includes("--version") || args.includes("-v")) {
+  console.log(packageJson.version);
+  process.exit(0);
+}
+
+if (args[0] !== "install") {
+  usage();
+  process.exitCode = 1;
+} else {
+  const target = path.resolve(optionValue("--directory") ?? process.cwd());
+  const assumeYes = args.includes("--yes");
+  const skipDependencies = args.includes("--skip-deps");
+  const force = args.includes("--force");
+
+  console.log(`\nKE Kit ${packageJson.version}`);
+  console.log(`Target: ${target}`);
+
+  if (!assumeYes) {
+    const terminal = createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await terminal.question("Install KE Kit into this project? (Y/n) ");
+    terminal.close();
+    if (answer.trim() && !/^y(?:es)?$/iu.test(answer.trim())) {
+      console.log("Installation cancelled.");
+      process.exit(0);
+    }
+  }
+
+  await mkdir(target, { recursive: true });
+  const mergeFiles = new Set([
+    "AGENTS.md",
+    "gitignore.template",
+    path.join(".codex", "config.toml"),
+  ]);
+  const payloadFiles = await filesBelow(payloadRoot);
+  const conflicts = [];
+
+  for (const relative of payloadFiles) {
+    if (mergeFiles.has(relative)) continue;
+    const source = path.join(payloadRoot, relative);
+    const destination = path.join(target, relative);
+    if (
+      (await exists(destination)) &&
+      (await digest(source)) !== (await digest(destination))
+    ) {
+      conflicts.push(relative);
+    }
+  }
+
+  if (conflicts.length && !force) {
+    console.error("\nInstallation stopped to protect existing files:");
+    for (const conflict of conflicts.slice(0, 20)) console.error(`- ${conflict}`);
+    if (conflicts.length > 20) {
+      console.error(`- ...and ${conflicts.length - 20} more`);
+    }
+    console.error("\nRe-run with --force only if KE should replace these managed files.");
+    process.exit(2);
+  }
+
+  for (const relative of payloadFiles) {
+    if (mergeFiles.has(relative)) continue;
+    const source = path.join(payloadRoot, relative);
+    const destination = path.join(target, relative);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(source, destination);
+  }
+
+  await mergeManagedFile(
+    path.join(target, "AGENTS.md"),
+    path.join(payloadRoot, "AGENTS.md"),
+    "PROJECT INSTRUCTIONS",
+  );
+  await mergeManagedFile(
+    path.join(target, ".gitignore"),
+    path.join(payloadRoot, "gitignore.template"),
+    "GITIGNORE",
+  );
+  await mergeManagedFile(
+    path.join(target, ".codex", "config.toml"),
+    path.join(payloadRoot, ".codex", "config.toml"),
+    "CODEX CONFIG",
+  );
+
+  const envExample = path.join(
+    target,
+    "platform",
+    "ke-kintone-mcp",
+    ".env.example",
+  );
+  const env = path.join(target, "platform", "ke-kintone-mcp", ".env");
+  if (!(await exists(env))) await cp(envExample, env, { errorOnExist: true });
+
+  const manifest = {
+    package: packageJson.name,
+    version: packageJson.version,
+    installedAt: new Date().toISOString(),
+    files: payloadFiles
+      .filter((file) => file !== "gitignore.template")
+      .map((file) => file.split(path.sep).join("/"))
+      .concat(".gitignore"),
+  };
+  await writeFile(
+    path.join(target, ".codex", "ke-kit-manifest.json"),
+    `${JSON.stringify(manifest, null, 2)}\n`,
+    "utf8",
+  );
+
+  if (!skipDependencies) {
+    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+    console.log("\nInstalling Kintone MCP runtime...");
+    await run(npm, ["ci", "--prefix", "platform/ke-kintone-mcp"], target);
+  }
+
+  console.log("\nKE Kit installed successfully.");
+  console.log("Next:");
+  console.log("1. Edit platform/ke-kintone-mcp/.env");
+  console.log("2. Open this project in Codex and trust it");
+  console.log('3. Start a new chat and say "hello"');
+}

@@ -27,6 +27,7 @@ for (const required of [
   "AGENTS.md",
   "README.md",
   "package.json",
+  "cli/ke-installer.mjs",
   ".codex/config.toml",
   "projects/_template/PROJECT.md",
   "projects/_template/input/.gitkeep",
@@ -36,6 +37,7 @@ for (const required of [
   "examples/sample-data/purchase-requests.csv",
   "scripts/init-customer-project.ps1",
   "scripts/export-markdown-html.mjs",
+  "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
 ]) {
   await requirePath(required);
@@ -97,6 +99,12 @@ if (packageJson.scripts?.["customize:ot"]) {
 }
 if (await exists("platform/ke-kintone-mcp/scripts/upload-ot-customization.mjs")) {
   failures.push("OT trial uploader must not be published");
+}
+
+const rootPackageJson = JSON.parse(await readText("package.json"));
+if (rootPackageJson.private) failures.push("Root npm installer package must be publishable");
+if (rootPackageJson.bin?.["kintone-expert-bss"] !== "cli/ke-installer.mjs") {
+  failures.push("Root npm installer package must expose the kintone-expert-bss CLI");
 }
 
 const textExtensions = new Set([

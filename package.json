@@ -1,12 +1,21 @@
 {
   "name": "kintone-expert-bss",
   "version": "1.0.0",
-  "private": true,
   "description": "KE Kit for running a Kintone expert team in Codex",
+  "bin": {
+    "kintone-expert-bss": "cli/ke-installer.mjs"
+  },
+  "files": [
+    "cli/",
+    "npm-kit/",
+    "README.md"
+  ],
   "scripts": {
-    "postinstall": "npm --prefix platform/ke-kintone-mcp ci",
+    "prepack": "node scripts/build-npm-kit.mjs && npm run validate",
+    "dev:install": "npm --prefix platform/ke-kintone-mcp ci",
     "setup": "node scripts/setup.mjs",
     "validate": "node scripts/validate-kit.mjs",
+    "pack:check": "npm pack --dry-run",
     "kintone:check": "npm --prefix platform/ke-kintone-mcp run check",
     "kintone:test": "npm --prefix platform/ke-kintone-mcp run test:connection",
     "mcp:kintone": "npm --prefix platform/ke-kintone-mcp run mcp:kintone",
@@ -14,5 +23,20 @@
   },
   "engines": {
     "node": ">=22"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvmap1710/KintoneExpert-BSS.git"
+  },
+  "homepage": "https://github.com/jvmap1710/KintoneExpert-BSS#readme",
+  "bugs": {
+    "url": "https://github.com/jvmap1710/KintoneExpert-BSS/issues"
+  },
+  "keywords": [
+    "kintone",
+    "codex",
+    "mcp",
+    "ai-agents",
+    "presales"
+  ]
 }
