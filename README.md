@@ -7,16 +7,10 @@ official local MCP server.
 
 Prerequisite: Node.js 22 or newer.
 
-Open a terminal in the customer project. Install the stable npm release with:
+Open a terminal in the customer project and install the public GitHub release:
 
 ```powershell
-npx kintone-expert-bss install
-```
-
-Or install the public GitHub release directly:
-
-```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.0 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.1 install
 ```
 
 Follow the installer prompt. It adds KE Kit to the current project, preserves
@@ -33,7 +27,7 @@ Use `--skip-deps` when dependencies are managed separately. The installer
 stops on conflicting KE-managed files by default; review conflicts before
 using `--force`.
 
-The published package contains one generated installer file. Skills,
+The release package contains one generated installer file. Skills,
 templates, configuration, documentation, and MCP runtime metadata are
 compressed into that CLI instead of being shipped as a loose payload tree.
 `AGENTS.md` and `KE-HELP.md` are intentionally installed at the project root.
