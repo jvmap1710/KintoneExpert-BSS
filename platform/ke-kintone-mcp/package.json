@@ -5,6 +5,7 @@
   "description": "KE — Kintone Expert MCP runtime for Codex",
   "scripts": {
     "check": "node scripts/check-config.mjs",
+    "app:url": "node --env-file=.env scripts/get-app-url.mjs",
     "test:connection": "node --env-file=.env scripts/test-connection.mjs",
     "mcp:kintone": "node --env-file-if-exists=.env node_modules/@kintone/mcp-server/dist/index.js"
   },

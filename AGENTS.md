@@ -14,6 +14,12 @@ server. Use the `kintone` MCP tools for Kintone operations.
 6. Before deploying app settings, summarize the app ID and pending changes.
 7. After deployment, poll the deploy status until it is `SUCCESS` or report
    the returned failure.
+8. After `SUCCESS`, return the exact clickable App URL derived from the
+   configured `KINTONE_BASE_URL`. Use
+   `npm --prefix platform/ke-kintone-mcp run app:url -- --app <APP_ID>` for a
+   normal App, or add `--guest-space <SPACE_ID>` only when guest-space
+   metadata is known. Never emit `<tenant-domain>`, invent a hostname, or ask
+   the user to replace a placeholder when the base URL is configured.
 
 Never place credentials, API tokens, passwords, downloaded attachments, or
 personal Kintone data in tracked files or terminal output.
@@ -42,6 +48,15 @@ the user approves REST for the named app and operation, that approval
 authorizes the scoped REST implementation; proceed without repeatedly asking
 the user to return to MCP or review the channel choice. REST still follows
 read-back, change-summary, deployment-approval, and secret-handling rules.
+
+MCP and REST may be combined operation-by-operation in the same implementation.
+Do not force the user to choose one channel for the whole build. For example,
+use MCP to create and configure an App, then use an approved official REST
+operation to upload and attach JavaScript when that operation is absent from
+the active MCP tools. Prefer staging all compatible changes in the pre-live
+App and deploying once. If the base App has already been deployed, treat the
+REST customization as a new pending change: read it back, summarize it, obtain
+deployment approval, deploy again, and poll to `SUCCESS`.
 
 Kintone `preview` REST endpoints edit or read pre-live App settings. They do
 not provide a preview URL or a runtime form where records and JavaScript can be

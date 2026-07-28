@@ -51,8 +51,18 @@ For a user-approved REST path:
    verification, not a runtime test.
 5. Summarize pending changes and obtain explicit deployment confirmation.
 6. Deploy App settings and poll until `SUCCESS`; report any returned failure.
-7. Test the customization on the deployed live App with synthetic data and
+7. Generate and return the exact live App URL from `KINTONE_BASE_URL` with the
+   runtime `app:url` command; never substitute a tenant placeholder.
+8. Test the customization on the deployed live App with synthetic data and
    report the result. Treat rollback or another deployment as a new change.
+
+MCP and REST are complementary transports. MCP can create/configure the App
+while an approved REST call uploads and attaches JavaScript in the same
+implementation flow. Prefer adding the customization to the pre-live revision
+before the first deployment so the user reviews and deploys one coherent
+change set. If the base App is already live, attaching JavaScript changes the
+pre-live settings and requires a second reviewed deployment before runtime
+testing.
 
 The Update Customization API requires Kintone Administrator and App Management
 permissions. It supports password, session, or OAuth authentication. API

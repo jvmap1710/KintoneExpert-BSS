@@ -36,6 +36,7 @@ for (const required of [
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
+  "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
   "skills/ke-engineer-binh/references/javascript-customization.md",
 ]) {
   await requirePath(required);
@@ -109,6 +110,9 @@ for (const rule of ["projects/*", "!projects/_template/**"]) {
 }
 
 const packageJson = JSON.parse(await readText("platform/ke-kintone-mcp/package.json"));
+if (packageJson.scripts?.["app:url"] !== "node --env-file=.env scripts/get-app-url.mjs") {
+  failures.push("package.json: safe app:url command is missing");
+}
 if (packageJson.scripts?.["customize:ot"]) {
   failures.push("package.json: trial customize:ot script must not be published");
 }
@@ -138,6 +142,12 @@ if (!agentsRules.includes("MCP is the default channel, not the exclusive channel
 }
 if (!engineerSkill.includes("without another channel-choice review")) {
   failures.push("ke-engineer-binh: approved REST execution contract is missing");
+}
+if (!engineerSkill.includes("supported channel per operation")) {
+  failures.push("ke-engineer-binh: hybrid MCP/REST orchestration is missing");
+}
+if (!engineerSkill.includes("run app:url -- --app <APP_ID>")) {
+  failures.push("ke-engineer-binh: post-deploy App URL contract is missing");
 }
 for (const statement of [
   "configuration staging area, not a second runnable App",

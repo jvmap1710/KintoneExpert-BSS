@@ -20,7 +20,10 @@ may also use MCP in read-only mode for evidence-based analysis.
    required confirmation before deployment.
 5. Poll deployment until `SUCCESS`. Never print or commit credentials,
    tokens, or personal Kintone data.
-6. Ask explicit confirmation before deleting fields, records, or spaces.
+6. After `SUCCESS`, return the exact clickable App URL generated from the
+   configured base URL with the safe `app:url` command. Never guess a tenant
+   hostname or return a `<tenant-domain>` placeholder.
+7. Ask explicit confirmation before deleting fields, records, or spaces.
 
 ## Runtime access
 
@@ -59,6 +62,24 @@ that scoped path without another channel-choice review; ask again only for the
 separate deployment gate or if scope materially changes. Never claim that
 Kintone does not support an operation merely because MCP lacks the tool. Use
 `references/javascript-customization.md` for JavaScript/CSS deployment.
+
+MCP and an approved official REST path can be orchestrated in one build. Pick
+the supported channel per operation, not once for the entire session. A common
+flow is MCP for App, fields, and layout, followed by REST for JavaScript upload
+and customization settings. When possible, stage both sets of compatible
+changes before one deployment. If the App was already deployed, the REST
+customization creates a new pre-live revision and therefore requires read-back,
+a new deployment confirmation, another deploy, and polling to `SUCCESS`.
+
+After a successful deployment, generate the link without reading or printing
+the `.env` file:
+
+```powershell
+npm --prefix platform/ke-kintone-mcp run app:url -- --app <APP_ID>
+```
+
+For a confirmed guest-space App, append `--guest-space <SPACE_ID>`. Report the
+generated URL, App ID, environment, and deploy status together.
 
 For a presales demo, optimize for a reversible, time-boxed build in the test
 environment. Use synthetic data, label shortcuts and non-production behavior,

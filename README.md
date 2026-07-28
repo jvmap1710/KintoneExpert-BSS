@@ -23,7 +23,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.8 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.9 install
 ```
 
 Installer sẽ:
@@ -89,6 +89,15 @@ Với JavaScript customization, Kintone hỗ trợ upload file lấy `fileKey` v
 vào cấu hình pre-live qua API `preview`. Đây không phải URL/app chạy thử: KE
 xác minh cấu hình trước deploy, xin duyệt deploy, rồi mới test runtime trên app
 đã deploy bằng dữ liệu giả lập.
+
+MCP và REST API có thể dùng chung trong một flow: ví dụ MCP tạo app, field và
+layout; REST upload/gắn JavaScript nếu MCP hiện tại chưa có thao tác đó. KE ưu
+tiên gom các thay đổi tương thích vào pre-live để review và deploy một lần.
+Nếu app nền đã live trước, customization được xem là thay đổi mới và cần một
+lần xác nhận/deploy tiếp theo.
+
+Sau khi deploy đạt `SUCCESS`, KE tự tạo và trả link app chính xác từ
+`KINTONE_BASE_URL`; không dùng domain giả hoặc placeholder.
 
 Mỗi khi bắt đầu hoặc chuyển vai, chuyên gia sẽ tự giới thiệu tên và vai trò.
 Khi đóng một góc nhìn, chuyên gia nêu phần đã chốt, phần chưa xác minh và hỏi
