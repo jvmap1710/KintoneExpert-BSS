@@ -3,6 +3,45 @@
 Project-scoped setup for controlling Kintone from Codex through Cybozu's
 official local MCP server.
 
+## Quick start
+
+Clone the kit and enter the repository:
+
+```powershell
+git clone https://github.com/jvmap1710/KintoneExpert-BSS.git
+Set-Location KintoneExpert-BSS
+```
+
+Install the Kintone MCP runtime and verify the kit:
+
+```powershell
+npm --prefix platform/ke-kintone-mcp ci
+node scripts/validate-kit.mjs
+Copy-Item platform/ke-kintone-mcp/.env.example platform/ke-kintone-mcp/.env
+```
+
+Add the customer-specific Kintone credentials to
+`platform/ke-kintone-mcp/.env`, then test the configuration:
+
+```powershell
+npm --prefix platform/ke-kintone-mcp run check
+npm --prefix platform/ke-kintone-mcp run test:connection
+```
+
+Open this repository in Codex and trust the project when prompted. Start the
+conversation with `hello`; KE Router will present the available entry flows.
+For a full-cycle customer project, create its isolated workspace first:
+
+```powershell
+./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
+  -DisplayName "ACME Purchase Request"
+```
+
+Place sanitized source material in `projects/<project-slug>/input/`. Keep raw
+or confidential material in `projects/<project-slug>/private/`. Generated
+standalone HTML is written to `output/<project-slug>/`. These customer folders
+are excluded from Git.
+
 ## Prerequisites
 
 - Node.js 22 or newer
