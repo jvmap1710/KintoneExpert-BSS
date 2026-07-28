@@ -51,5 +51,5 @@ to resolve requirement ambiguity. Give `$ke-tester-mit` the app IDs,
 field codes, behaviors, and deployment result for validation. Keep raw or
 sensitive evidence under `projects/<project-slug>/private/`. When the user
 requests a saved build or deployment summary, use `$ke-document-writer` to
-create standalone HTML under `output/<project-slug>/`. Record transfers with
+create standalone HTML under `projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.

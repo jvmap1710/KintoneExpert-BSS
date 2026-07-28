@@ -28,5 +28,5 @@ This skill advises and documents a decision. It does not make Kintone changes
 or replace the user's approval. Route action work to the relevant expert after
 the decision. When the user requests a saved decision record, use
 `$ke-document-writer` to create standalone HTML under
-`output/<project-slug>/`. Record the transfer to the action owner with
+`projects/<project-slug>/output/`. Record the transfer to the action owner with
 `../ke-router/references/handoff-contract.md`.

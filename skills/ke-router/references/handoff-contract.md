@@ -2,7 +2,7 @@
 
 Create one HTML hand-off record for every transfer of responsibility between
 experts when the user requests a saved deliverable. Store it in
-`output/<project-slug>/` and name it:
+`projects/<project-slug>/output/` and name it:
 
 `HO-YYYYMMDD-NN-<from>-to-<to>-<topic>.html`
 

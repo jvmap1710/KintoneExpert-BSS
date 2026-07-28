@@ -34,5 +34,5 @@ criteria to `$ke-tester-mit`. Keep customer source material under
 `projects/<project-slug>/input/` and raw survey data under `private/`. When the
 user requests a saved BRD, survey summary, or requirement artifact, use
 `$ke-document-writer` to create standalone HTML under
-`output/<project-slug>/`. Record transfers with
+`projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.

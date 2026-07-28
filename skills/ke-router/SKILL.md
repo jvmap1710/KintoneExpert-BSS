@@ -43,11 +43,12 @@ path without listing roles that were skipped or excluded unless the user asks.
 3. Route an end-to-end or ambiguous project request to `$ke-pm-ti`.
 4. Route a multi-option or multi-role discussion to `$ke-expert-panel-co`.
 5. Route a time-boxed presales demo or proof of concept through the Demo Fast
-   Track in `references/ke-flow.md`; do not require PM participation by
-   default.
+   Track in `references/ke-flow.md`; create its project workspace first, but
+   do not require PM participation by default.
 6. For current-tenant analysis, allow the selected expert to use Kintone MCP
    read-only before recommending changes.
-7. For a customer project, initialize `projects/<project-slug>/` as described
-   in `references/project-workspace.md` before producing deliverables.
+7. For every Demo/PoC or customer implementation, initialize or select
+   `projects/<project-slug>/` as described in
+   `references/project-workspace.md` before reading inputs or producing work.
 8. Use `references/handoff-contract.md` for every cross-role hand-off.
 9. Refer to `references/ke-flow.md` for the deliverables and phase routing.

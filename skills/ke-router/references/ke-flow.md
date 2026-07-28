@@ -11,7 +11,7 @@
 
 Cò (Expert Panel) can be called at every phase. When the user requests a saved
 deliverable, use `$ke-document-writer` and store standalone HTML only in
-`output/<project-slug>/`. Keep customer sources under
+`projects/<project-slug>/output/`. Keep customer sources under
 `projects/<project-slug>/` and apply `handoff-contract.md` to cross-role
 hand-offs.
 
@@ -31,5 +31,7 @@ create a delivery commitment:
   coordination, delivery planning, or a hand-off to implementation is needed.
 - Keep the demo clearly labelled as non-production. Use synthetic data and the
   test environment, and apply the normal approval rules for writes and deploys.
+- Create a `demo` project workspace before starting and keep its input,
+  confidential evidence, and output together under that workspace.
 - Record assumptions, shortcuts, unsupported claims, and what must be hardened
   before production.

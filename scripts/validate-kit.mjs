@@ -32,7 +32,6 @@ for (const required of [
   "projects/_template/PROJECT.md",
   "projects/_template/input/.gitkeep",
   "projects/_template/private/.gitkeep",
-  "output/.gitkeep",
   "examples/sample-data/survey-responses.csv",
   "examples/sample-data/purchase-requests.csv",
   "scripts/init-customer-project.ps1",
@@ -59,7 +58,7 @@ for (const skillName of skillDirectories) {
 
   const skill = await readText(skillFile);
   const agent = await readText(agentFile);
-  if (!skill.startsWith("---\n")) failures.push(`${skillFile}: missing YAML frontmatter`);
+  if (!/^---\r?\n/u.test(skill)) failures.push(`${skillFile}: missing YAML frontmatter`);
   if (!new RegExp(`^name: ${skillName}$`, "mu").test(skill)) {
     failures.push(`${skillFile}: name must match folder`);
   }
@@ -82,14 +81,14 @@ const templateDirectories = (
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
   .sort();
-if (templateDirectories.join(",") !== "input,private") {
+if (templateDirectories.join(",") !== "input,output,private") {
   failures.push(
-    `projects/_template: expected only input,private; found ${templateDirectories.join(",")}`,
+    `projects/_template: expected input,output,private; found ${templateDirectories.join(",")}`,
   );
 }
 
 const gitignore = await readText(".gitignore");
-for (const rule of ["projects/*", "!projects/_template/**", "output/*", "!output/.gitkeep"]) {
+for (const rule of ["projects/*", "!projects/_template/**"]) {
   if (!gitignore.includes(rule)) failures.push(`.gitignore: missing ${rule}`);
 }
 
@@ -103,8 +102,14 @@ if (await exists("platform/ke-kintone-mcp/scripts/upload-ot-customization.mjs"))
 
 const rootPackageJson = JSON.parse(await readText("package.json"));
 if (rootPackageJson.private) failures.push("Root npm installer package must be publishable");
-if (rootPackageJson.bin?.["kintone-expert-bss"] !== "cli/ke-installer.mjs") {
+if (rootPackageJson.bin?.["kintone-expert-bss"] !== "dist/ke-installer.mjs") {
   failures.push("Root npm installer package must expose the kintone-expert-bss CLI");
+}
+if (rootPackageJson.bin?.ke !== "dist/ke-installer.mjs") {
+  failures.push("Root npm installer package must expose the short ke CLI");
+}
+if (rootPackageJson.files?.join(",") !== "dist/,README.md") {
+  failures.push("Root npm package must publish only dist/ and README.md");
 }
 
 const textExtensions = new Set([

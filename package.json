@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "description": "KE Kit for running a Kintone expert team in Codex",
   "bin": {
-    "kintone-expert-bss": "cli/ke-installer.mjs"
+    "kintone-expert-bss": "dist/ke-installer.mjs",
+    "ke": "dist/ke-installer.mjs"
   },
   "files": [
-    "cli/",
-    "npm-kit/",
+    "dist/",
     "README.md"
   ],
   "scripts": {
-    "prepack": "node scripts/build-npm-kit.mjs && npm run validate",
+    "build": "node scripts/build-npm-kit.mjs",
+    "prepare": "npm run build",
+    "prepack": "npm run build && npm run validate",
     "dev:install": "npm --prefix platform/ke-kintone-mcp ci",
     "setup": "node scripts/setup.mjs",
     "validate": "node scripts/validate-kit.mjs",
@@ -19,7 +21,8 @@
     "kintone:check": "npm --prefix platform/ke-kintone-mcp run check",
     "kintone:test": "npm --prefix platform/ke-kintone-mcp run test:connection",
     "mcp:kintone": "npm --prefix platform/ke-kintone-mcp run mcp:kintone",
-    "init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-customer-project.ps1"
+    "init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-customer-project.ps1",
+    "doctor": "npm --prefix platform/ke-kintone-mcp run check"
   },
   "engines": {
     "node": ">=22"

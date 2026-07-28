@@ -31,5 +31,5 @@ Give `$ke-engineer-binh` a build-ready blueprint and `$ke-tester-mit`
 non-functional and integration test scenarios. Escalate ambiguous business
 policy to `$ke-ba-teo` or `$ke-expert-panel-co`. When the user requests a saved
 solution blueprint or architecture decision, use `$ke-document-writer` to
-create standalone HTML under `output/<project-slug>/`. Record transfers with
+create standalone HTML under `projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.

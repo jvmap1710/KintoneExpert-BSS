@@ -46,4 +46,4 @@ or delivery scope must be verified. Do not change tenant settings or data.
 Return a compact project snapshot: goal, current phase, next deliverables,
 risks/decisions, and the expert who should act next. When the user requests a
 saved plan, MoM, status, or handover artifact, use `$ke-document-writer` to
-create standalone HTML under `output/<project-slug>/`.
+create standalone HTML under `projects/<project-slug>/output/`.

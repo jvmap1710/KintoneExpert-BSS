@@ -36,5 +36,5 @@ implementation fix. Refer technical defects to `$ke-engineer-binh` and
 requirement gaps to `$ke-ba-teo`. Keep raw or sensitive evidence under
 `projects/<project-slug>/private/`. When the user requests a saved test, UAT, or
 release report, use `$ke-document-writer` to create standalone HTML under
-`output/<project-slug>/`. Record transfers with
+`projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.

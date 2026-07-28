@@ -1,5 +1,9 @@
 node_modules/
 npm-kit/
+dist/
+.npm-cache/
+.tmp/
+*.tgz
 .env
 .env.*
 !**/.env.example
@@ -16,5 +20,3 @@ platform/ke-kintone-mcp/attachments/*
 projects/*
 !projects/_template/
 !projects/_template/**
-output/*
-!output/.gitkeep

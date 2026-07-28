@@ -7,10 +7,16 @@ official local MCP server.
 
 Prerequisite: Node.js 22 or newer.
 
-Open a terminal in the customer project and run:
+Open a terminal in the customer project. Install the stable npm release with:
 
 ```powershell
 npx kintone-expert-bss install
+```
+
+Or install the public GitHub release directly:
+
+```powershell
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.0 install
 ```
 
 Follow the installer prompt. It adds KE Kit to the current project, preserves
@@ -27,6 +33,11 @@ Use `--skip-deps` when dependencies are managed separately. The installer
 stops on conflicting KE-managed files by default; review conflicts before
 using `--force`.
 
+The published package contains one generated installer file. Skills,
+templates, configuration, documentation, and MCP runtime metadata are
+compressed into that CLI instead of being shipped as a loose payload tree.
+`AGENTS.md` and `KE-HELP.md` are intentionally installed at the project root.
+
 After installation, add the customer-specific Kintone credentials to
 `platform/ke-kintone-mcp/.env`, then test the configuration:
 
@@ -34,6 +45,10 @@ After installation, add the customer-specific Kintone credentials to
 npm --prefix platform/ke-kintone-mcp run check
 npm --prefix platform/ke-kintone-mcp run test:connection
 ```
+
+The MCP runtime is installed automatically. It becomes connection-ready only
+after valid Kintone credentials are added; credentials are never bundled in
+the public Kit.
 
 Open this repository in Codex and trust the project when prompted. Start the
 conversation with `hello`; KE Router will present the available entry flows.
@@ -46,8 +61,8 @@ For a full-cycle customer project, create its isolated workspace first:
 
 Place sanitized source material in `projects/<project-slug>/input/`. Keep raw
 or confidential material in `projects/<project-slug>/private/`. Generated
-standalone HTML is written to `output/<project-slug>/`. These customer folders
-are excluded from Git.
+standalone HTML is written to `projects/<project-slug>/output/`. The complete
+project workspace is excluded from Git.
 
 ## Prerequisites
 
@@ -109,23 +124,37 @@ Then test app creation:
 
 ## Start a customer project
 
-Clone this repository for the customer engagement, then initialize an isolated
-project workspace:
+Initialize an isolated workspace for every Demo/PoC or customer engagement:
 
 ```powershell
 ./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
-  -DisplayName "ACME Purchase Request"
+  -DisplayName "ACME Purchase Request" -ProjectType customer
+
+./scripts/init-customer-project.ps1 -ProjectSlug purchase-demo `
+  -DisplayName "Purchase Request Demo" -ProjectType demo
 ```
 
 The initializer creates:
 
 - `projects/<project-slug>/input/` for sanitized customer source material.
 - `projects/<project-slug>/private/` for raw or confidential working data.
-- `output/<project-slug>/` for generated standalone HTML only.
+- `projects/<project-slug>/output/` for generated standalone HTML only.
 
-It refuses to overwrite an existing project or output directory. Customer
-workspaces and generated HTML are Git-ignored by default. Use the fictional
-files under `examples/sample-data/` when practising the flow.
+It refuses to overwrite an existing project workspace. Project inputs, private
+data, and generated HTML are Git-ignored together. Use the fictional files
+under `examples/sample-data/` when practising the flow.
+
+After the user chooses Demo/PoC or customer implementation, KE Router creates
+or selects this workspace before any expert reads inputs or produces
+deliverables:
+
+```text
+projects/<project-slug>/
+|-- PROJECT.md
+|-- input/
+|-- private/
+`-- output/
+```
 
 ## Authentication notes
 
@@ -157,8 +186,7 @@ Codex starts and communicates with it automatically.
 ```
 skills/                 # KE Router, PM, BA, SA, Engineer, Tester, expert panel
 platform/ke-kintone-mcp/# Official Kintone MCP runtime wrapper
-projects/_template/     # Minimal customer input/private workspace
-output/                 # Generated customer HTML; ignored except .gitkeep
+projects/_template/     # Minimal project input/private/output workspace
 examples/sample-data/   # Synthetic survey and transaction examples
 scripts/                # Project initializer and Markdown-to-HTML converter
 .codex/config.toml      # Enables skills and starts the Kintone MCP runtime

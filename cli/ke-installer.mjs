@@ -5,23 +5,32 @@ import { spawn } from "node:child_process";
 import {
   access,
   appendFile,
-  copyFile,
   cp,
   mkdir,
   readFile,
-  readdir,
   writeFile,
 } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline/promises";
+import { gunzipSync } from "node:zlib";
 
-const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const payloadRoot = path.join(packageRoot, "npm-kit");
-const packageJson = JSON.parse(await readFile(path.join(packageRoot, "package.json"), "utf8"));
+const packageName = "__KE_PACKAGE_NAME__";
+const packageVersion = "__KE_PACKAGE_VERSION__";
+const embeddedPayload = "__KE_PAYLOAD_BASE64__";
 const args = process.argv.slice(2);
+
+if (embeddedPayload.startsWith("__KE_")) {
+  throw new Error("This is the CLI source template. Run `npm run build` first.");
+}
+
+const payloadFiles = JSON.parse(
+  gunzipSync(Buffer.from(embeddedPayload, "base64")).toString("utf8"),
+).map((file) => ({
+  ...file,
+  content: Buffer.from(file.content, "base64"),
+}));
 
 function usage() {
   console.log(`
@@ -57,27 +66,18 @@ async function exists(target) {
   }
 }
 
-async function filesBelow(directory, prefix = "") {
-  const result = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const relative = path.join(prefix, entry.name);
-    if (entry.isDirectory()) {
-      result.push(...(await filesBelow(path.join(directory, entry.name), relative)));
-    } else {
-      result.push(relative);
-    }
-  }
-  return result;
-}
-
 async function digest(target) {
   return createHash("sha256").update(await readFile(target)).digest("hex");
 }
 
-async function mergeManagedFile(target, source, label) {
+function digestContent(content) {
+  return createHash("sha256").update(content).digest("hex");
+}
+
+async function mergeManagedFile(target, sourceContent, label) {
   const begin = `# >>> KE KIT: ${label} >>>`;
   const end = `# <<< KE KIT: ${label} <<<`;
-  const managed = `${begin}\n${(await readFile(source, "utf8")).trim()}\n${end}`;
+  const managed = `${begin}\n${sourceContent.toString("utf8").trim()}\n${end}`;
 
   if (!(await exists(target))) {
     await mkdir(path.dirname(target), { recursive: true });
@@ -115,7 +115,7 @@ if (args.includes("--help") || args.includes("-h")) {
 }
 
 if (args.includes("--version") || args.includes("-v")) {
-  console.log(packageJson.version);
+  console.log(packageVersion);
   process.exit(0);
 }
 
@@ -128,7 +128,7 @@ if (args[0] !== "install") {
   const skipDependencies = args.includes("--skip-deps");
   const force = args.includes("--force");
 
-  console.log(`\nKE Kit ${packageJson.version}`);
+  console.log(`\nKE Kit ${packageVersion}`);
   console.log(`Target: ${target}`);
 
   if (!assumeYes) {
@@ -147,18 +147,17 @@ if (args[0] !== "install") {
     "gitignore.template",
     path.join(".codex", "config.toml"),
   ]);
-  const payloadFiles = await filesBelow(payloadRoot);
   const conflicts = [];
 
-  for (const relative of payloadFiles) {
+  for (const file of payloadFiles) {
+    const relative = file.path.split("/").join(path.sep);
     if (mergeFiles.has(relative)) continue;
-    const source = path.join(payloadRoot, relative);
     const destination = path.join(target, relative);
     if (
       (await exists(destination)) &&
-      (await digest(source)) !== (await digest(destination))
+      digestContent(file.content) !== (await digest(destination))
     ) {
-      conflicts.push(relative);
+      conflicts.push(file.path);
     }
   }
 
@@ -172,27 +171,27 @@ if (args[0] !== "install") {
     process.exit(2);
   }
 
-  for (const relative of payloadFiles) {
+  for (const file of payloadFiles) {
+    const relative = file.path.split("/").join(path.sep);
     if (mergeFiles.has(relative)) continue;
-    const source = path.join(payloadRoot, relative);
     const destination = path.join(target, relative);
     await mkdir(path.dirname(destination), { recursive: true });
-    await copyFile(source, destination);
+    await writeFile(destination, file.content);
   }
 
   await mergeManagedFile(
     path.join(target, "AGENTS.md"),
-    path.join(payloadRoot, "AGENTS.md"),
+    payloadFiles.find((file) => file.path === "AGENTS.md").content,
     "PROJECT INSTRUCTIONS",
   );
   await mergeManagedFile(
     path.join(target, ".gitignore"),
-    path.join(payloadRoot, "gitignore.template"),
+    payloadFiles.find((file) => file.path === "gitignore.template").content,
     "GITIGNORE",
   );
   await mergeManagedFile(
     path.join(target, ".codex", "config.toml"),
-    path.join(payloadRoot, ".codex", "config.toml"),
+    payloadFiles.find((file) => file.path === ".codex/config.toml").content,
     "CODEX CONFIG",
   );
 
@@ -206,12 +205,12 @@ if (args[0] !== "install") {
   if (!(await exists(env))) await cp(envExample, env, { errorOnExist: true });
 
   const manifest = {
-    package: packageJson.name,
-    version: packageJson.version,
+    package: packageName,
+    version: packageVersion,
     installedAt: new Date().toISOString(),
     files: payloadFiles
+      .map((file) => file.path)
       .filter((file) => file !== "gitignore.template")
-      .map((file) => file.split(path.sep).join("/"))
       .concat(".gitignore"),
   };
   await writeFile(
@@ -221,14 +220,22 @@ if (args[0] !== "install") {
   );
 
   if (!skipDependencies) {
-    const npm = process.platform === "win32" ? "npm.cmd" : "npm";
     console.log("\nInstalling Kintone MCP runtime...");
-    await run(npm, ["ci", "--prefix", "platform/ke-kintone-mcp"], target);
+    if (process.platform === "win32") {
+      await run(
+        process.env.ComSpec || "cmd.exe",
+        ["/d", "/s", "/c", "npm", "ci", "--prefix", "platform/ke-kintone-mcp"],
+        target,
+      );
+    } else {
+      await run("npm", ["ci", "--prefix", "platform/ke-kintone-mcp"], target);
+    }
   }
 
   console.log("\nKE Kit installed successfully.");
   console.log("Next:");
   console.log("1. Edit platform/ke-kintone-mcp/.env");
-  console.log("2. Open this project in Codex and trust it");
-  console.log('3. Start a new chat and say "hello"');
+  console.log("2. Run: npm --prefix platform/ke-kintone-mcp run check");
+  console.log("3. Open this project in Codex and trust it");
+  console.log('4. Start a new chat and say "hello"');
 }

@@ -296,16 +296,18 @@ if (segments.includes("private")) {
   throw new Error("Private documents cannot be exported.");
 }
 
-const outputRoot = path.join(repositoryRoot, "output", segments[1]);
+const outputRoot = path.join(repositoryRoot, "projects", segments[1], "output");
 const defaultOutput = path.join(outputRoot, `${path.basename(inputPath, ".md")}.html`);
 const outputPath = path.resolve(process.cwd(), args.output || defaultOutput);
 const outputRelative = path.relative(outputRoot, outputPath);
 
 if (outputRelative.startsWith("..") || path.isAbsolute(outputRelative)) {
-  throw new Error("Output must stay inside output/<project-slug>/.");
+  throw new Error("Output must stay inside projects/<project-slug>/output/.");
 }
 if (path.dirname(outputPath) !== outputRoot) {
-  throw new Error("HTML files must be written directly inside output/<project-slug>/.");
+  throw new Error(
+    "HTML files must be written directly inside projects/<project-slug>/output/.",
+  );
 }
 if (path.extname(outputPath).toLowerCase() !== ".html") {
   throw new Error("Output must use the .html extension.");

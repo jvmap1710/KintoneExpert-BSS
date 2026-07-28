@@ -35,7 +35,8 @@ keeps decisions, scope, and hand-offs clear. Use Cò when the user explicitly
 requests a multi-role discussion or needs options and trade-offs at any project
 stage.
 Use `ke-document-writer` when the user requests a saved or exported project
-deliverable. Generate standalone HTML only under `output/<project-slug>/` and
+deliverable. Generate standalone HTML only under
+`projects/<project-slug>/output/` and
 never overwrite an existing file without explicit confirmation.
 
 All experts may use the Kintone MCP in read-only mode to inspect apps,
