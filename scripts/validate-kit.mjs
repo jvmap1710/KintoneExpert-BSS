@@ -37,6 +37,10 @@ for (const required of [
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
+  "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
+  "platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs",
+  "platform/ke-kintone-mcp/scripts/stage-app-customization.mjs",
+  "platform/ke-kintone-mcp/scripts/test-runtime-helpers.mjs",
   "skills/ke-engineer-binh/references/javascript-customization.md",
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 ]) {
@@ -114,6 +118,12 @@ const packageJson = JSON.parse(await readText("platform/ke-kintone-mcp/package.j
 if (packageJson.scripts?.["app:url"] !== "node --env-file=.env scripts/get-app-url.mjs") {
   failures.push("package.json: safe app:url command is missing");
 }
+if (
+  packageJson.scripts?.["customization:stage"] !==
+  "node --env-file=.env scripts/stage-app-customization.mjs"
+) {
+  failures.push("package.json: shared customization staging command is missing");
+}
 if (packageJson.scripts?.["customize:ot"]) {
   failures.push("package.json: trial customize:ot script must not be published");
 }
@@ -169,6 +179,9 @@ for (const statement of [
   "configuration staging area, not a second runnable App",
   "After deploy:",
   "starting a new chat will not create that tool",
+  "Do not require the temporary Upload File",
+  "X-Cybozu-Authorization",
+  "Never deploy an unverified preview revision",
 ]) {
   if (!customizationKnowledge.includes(statement)) {
     failures.push(`javascript-customization.md: missing contract: ${statement}`);

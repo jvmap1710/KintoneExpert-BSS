@@ -72,6 +72,8 @@ that scoped path without another channel-choice review; ask again only for the
 separate deployment gate or if scope materially changes. Never claim that
 Kintone does not support an operation merely because MCP lacks the tool. Use
 `references/javascript-customization.md` for JavaScript/CSS deployment.
+For that flow, use the Kit's shared REST staging command and authentication
+helper; do not generate an ad-hoc uploader or authorization header.
 
 MCP and an approved official REST path can be orchestrated in one build. Pick
 the supported channel per operation, not once for the entire session. A common

@@ -73,6 +73,13 @@ App and deploying once. If the base App has already been deployed, treat the
 REST customization as a new pending change: read it back, summarize it, obtain
 deployment approval, deploy again, and poll to `SUCCESS`.
 
+For JavaScript/CSS customization, use the shared `customization:stage` runtime
+command. Do not generate an ad-hoc REST authentication or uploader script.
+Treat the Upload File `fileKey` as a temporary attachment input; verify the
+staged customization by PUT/GET revision, target, type, filename, content
+type, size, and preservation of existing entries rather than requiring the
+GET `fileKey` to equal the upload key. Never deploy when this read-back fails.
+
 Kintone `preview` REST endpoints edit or read pre-live App settings. They do
 not provide a preview URL or a runtime form where records and JavaScript can be
 tested. Verify the pending configuration before deployment, obtain explicit

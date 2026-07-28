@@ -42,13 +42,22 @@ For a user-approved REST path:
 
 1. Read the current pre-live customization settings with the preview endpoint
    and preserve existing JavaScript/CSS entries and their order.
-2. Upload one local file with `POST /k/v1/file.json` using
-   `multipart/form-data`; capture the returned `fileKey`.
-3. Attach that `fileKey` to the App's pre-live settings with
-   `PUT /k/v1/preview/app/customize.json`.
-4. Read the pre-live customization settings back and verify the file, scope,
-   ordering, App ID, revision, and preserved entries. This is configuration
-   verification, not a runtime test.
+2. Use the Kit's shared staging command rather than generating a new
+   authentication/uploader script:
+
+   `npm --prefix platform/ke-kintone-mcp run customization:stage -- --app
+   <APP_ID> --file <JS_PATH> --target desktop`
+
+   Add `--replace-existing` only when replacement of the same named file was
+   explicitly approved.
+3. The command must use password authentication through the shared REST
+   helper, upload one file, attach it with the latest baseline revision, and
+   read the preview settings back.
+4. Verify the returned PUT revision equals the GET preview revision; verify
+   target, `type: FILE`, file name, content type, size, scope, ordering, and
+   preservation of existing entries. Do not require the temporary Upload File
+   `fileKey` to equal the stored `fileKey` returned by Get Customization.
+   This is configuration verification, not a runtime test.
 5. Summarize pending changes and obtain explicit deployment confirmation.
 6. Deploy App settings and poll until `SUCCESS`; report any returned failure.
 7. Generate and return the exact live App URL from `KINTONE_BASE_URL` with the
@@ -71,11 +80,22 @@ with Update Customization; therefore an API-token-only setup cannot complete
 this deployment flow. Do not print credentials or place them in commands,
 tracked manifests, logs, or generated output.
 
+Password authentication uses `X-Cybozu-Authorization` with Base64 of
+`login_name:password`; it does not use the `Basic` prefix. Optional front-door
+Basic Authentication uses a separate `Authorization: Basic ...` header. Never
+write either header by hand in a generated project script: import the shared
+runtime helper or use `customization:stage`.
+
 Treat customization arrays as complete ordered settings: preserve existing
 files unless the user explicitly approves their removal or replacement.
 Validate configuration before deploy and runtime behavior after deploy.
 JavaScript file creation is not evidence that the file was uploaded, attached,
 deployed, or verified.
+
+If read-back fails, report the sanitized HTTP status, Kintone error code, PUT
+revision, GET revision, target array, expected filename, and expected size.
+Do not send the user to the UI until the REST response has been diagnosed.
+Never deploy an unverified preview revision.
 
 ## Official references
 
