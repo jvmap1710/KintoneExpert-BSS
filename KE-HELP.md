@@ -58,6 +58,7 @@ Mỗi workspace phân tích, Demo/PoC, assessment hoặc dự án thật có:
 
 ```text
 projects/<project-slug>/
+  .ke-project.json
   PROJECT.md
   TEAM-NOTES.md
   input/
@@ -66,6 +67,18 @@ projects/<project-slug>/
   output/
   history/
 ```
+
+Project đang làm được chọn rõ bằng State Manager:
+
+```powershell
+node scripts/ke-project.mjs list
+node scripts/ke-project.mjs use <project-slug>
+node scripts/ke-project.mjs current
+node scripts/ke-project.mjs validate
+```
+
+Không chọn project theo folder sửa gần nhất và không sửa trực tiếp các dòng
+route/phase/gate/owner do State Manager quản lý trong `PROJECT.md`.
 
 - `PROJECT.md`: dashboard hiện tại, phase/gate, baseline, blocker, artifact,
   handoff, next action và owner.

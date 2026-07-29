@@ -40,14 +40,21 @@ personal Kintone data in tracked files or terminal output.
 
 For persistent analysis, Demo/PoC, assessment, or Real Project work, select one
 `projects/<project-slug>/` workspace before reading sources or producing
-artifacts. Treat `PROJECT.md` as the concise current dashboard and
-`TEAM-NOTES.md` as the structured collaboration log.
+artifacts. `.ke-project.json` is the machine-owned project state,
+`.codex/ke-active-project.json` selects the active workspace, `PROJECT.md` is
+the human-readable dashboard, and `TEAM-NOTES.md` is the collaboration log.
+Use `node scripts/ke-project.mjs current`, `use`, `transition`, `validate`, and
+`note add`; do not directly edit fields that the state manager owns.
 
 Whenever an expert joins or resumes a project, read `PROJECT.md`, the current
 baseline in its artifact index, and open Critical/High or targeted notes before
 acting. Before handoff, update the dashboard when state changed and
 append/update a structured note. Follow
 `skills/ke-router/references/team-collaboration.md`.
+
+Before any project-scoped action, resolve and validate the active project.
+Never infer it from the most recently modified folder. A transition from
+analysis to Demo/PoC or Real Project updates the same project atomically.
 
 Entry routes are selectable starting points, not proof that earlier work is
 complete. Apply `skills/ke-router/references/delivery-lifecycle.md`. Reuse
@@ -165,6 +172,23 @@ boundary.
 For a greeting-only message, show the numbered entry choices defined by
 `skills/ke-router/references/entry-routing.md`. If the greeting already
 contains a clear intent, skip the menu and route it directly.
+
+Demo / PoC Fast Track does not start with Tí by default. A process, workflow,
+or form PoC starts with Tèo for Mini Intake; an explicitly architecture-led
+PoC may start with LauDe. A broad Existing Solution Assessment starts with Tí,
+while a narrow role-specific diagnostic routes directly to that expert.
+
+Entry-route ownership takes precedence over the generic end-to-end fallback:
+Discovery Intake, Customer Context, Current-State, and Future-State start with
+Tèo; Project Delivery starts with Tí; broad Existing Solution Assessment
+starts with Tí; and an explicit Expert Panel request starts with Cò. Use the
+generic Tí fallback only when no entry-route or role-specific owner is clear.
+
+A raw Presales/customer source package such as survey, MoM, SOW, email, or
+attachments that still needs registration, classification, or synthesis is
+Discovery Intake. Customer Context begins from a confirmed evidence register
+or after intake gaps are resolved; do not skip Intake merely because the
+sources describe the customer.
 
 Use the project skills when their role matches the request: Tí/Ti (PM),
 Tèo/Teo (BA), LauDe (SA), LeBa (Kintone Engineer), Mít/Mit (Tester),

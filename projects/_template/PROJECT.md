@@ -8,6 +8,7 @@
 
 | Property | Value |
 | --- | --- |
+| Workspace schema | 2 |
 | Project ID | `{{PROJECT_SLUG}}` |
 | Engagement type | {{PROJECT_TYPE}} |
 | Display name | {{DISPLAY_NAME}} |

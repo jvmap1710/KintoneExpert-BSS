@@ -1,0 +1,43 @@
+{
+  "type": "object",
+  "properties": {
+    "entryRoute": {
+      "type": "string",
+      "enum": [
+        "menu",
+        "discovery-intake",
+        "customer-context",
+        "current-state",
+        "future-state",
+        "demo-fast-track",
+        "project-delivery",
+        "existing-solution",
+        "expert-consultation"
+      ]
+    },
+    "projectType": {
+      "type": "string",
+      "enum": ["none", "analysis", "demo", "customer", "assessment"]
+    },
+    "firstRole": {
+      "type": "string",
+      "enum": ["Router", "Ti", "Teo", "LauDe", "LeBa", "Mit", "Co"]
+    },
+    "workspaceAction": {
+      "type": "string",
+      "enum": ["none", "select-or-create"]
+    },
+    "needsClarification": { "type": "boolean" },
+    "reason": { "type": "string" }
+  },
+  "required": [
+    "entryRoute",
+    "projectType",
+    "firstRole",
+    "workspaceAction",
+    "needsClarification",
+    "reason"
+  ],
+  "additionalProperties": false
+}
+

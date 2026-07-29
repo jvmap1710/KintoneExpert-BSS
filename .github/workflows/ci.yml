@@ -1,0 +1,57 @@
+name: KE Kit CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ke-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Quality (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            platform/ke-kintone-mcp/package-lock.json
+            platform/ke-browser-mcp/package-lock.json
+            platform/ke-office-cli/package-lock.json
+      - name: Build installer
+        run: npm run build
+      - name: Validate Kit contracts
+        run: npm run validate
+      - name: Run deterministic regression and routing contract evals
+        run: npm test
+
+  package:
+    name: Package dry run
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify publishable package
+        run: npm run pack:check
+

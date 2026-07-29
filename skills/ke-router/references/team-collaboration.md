@@ -1,10 +1,15 @@
 # Project context and team collaboration
 
-Use two project-local Markdown files:
+Project state has one machine-owned source and two human-readable views:
 
-- `PROJECT.md` is the concise current-state dashboard and source of truth for
-  routing, phase, baselines, blockers, artifact links, ownership, and next
-  action.
+- `.ke-project.json` is the machine-owned state for route, type, phase, gate,
+  owner, handoff, next action, and revision. Do not edit it manually.
+- `.codex/ke-active-project.json` points to the selected workspace. It is local
+  state and must not be committed.
+
+- `PROJECT.md` is the concise human-readable dashboard for phase, baselines,
+  blockers, artifact links, ownership, and next action. For fields mirrored
+  from `.ke-project.json`, the machine state is authoritative.
 - `TEAM-NOTES.md` is the structured working log for findings, questions,
   conflicts, risks, proposals, decision requests, handoffs, test findings, and
   blockers. A note is not an approved requirement or decision by itself.
@@ -13,18 +18,28 @@ Use two project-local Markdown files:
 
 Whenever an expert joins or resumes a project:
 
-1. Read `PROJECT.md`.
-2. Read the current phase baseline(s) from its artifact index.
-3. Read open Critical/High notes and notes targeted to that expert in
+1. Run `node scripts/ke-project.mjs current` and
+   `node scripts/ke-project.mjs validate`. If the intended project is not
+   active, run `node scripts/ke-project.mjs use <slug>`.
+2. Read `PROJECT.md`.
+3. Read the current phase baseline(s) from its artifact index.
+4. Read open Critical/High notes and notes targeted to that expert in
    `TEAM-NOTES.md`.
-4. State the project, current phase, relevant confirmed baseline, open blocker,
+5. State the project, current phase, relevant confirmed baseline, open blocker,
    and the responsibility being accepted.
-5. Perform the task without reopening confirmed decisions unless new evidence
+6. Perform the task without reopening confirmed decisions unless new evidence
    creates a material conflict.
 
 Before leaving a task, append or update a structured note and update
-`PROJECT.md` when the phase, gate, baseline, blocker, owner, artifact index,
-last handoff, or next action changed.
+the project through `node scripts/ke-project.mjs transition ...` when its route, type,
+phase, gate, owner, handoff, or next action changed. Use
+`node scripts/ke-project.mjs note add --from <json>` for concurrent-safe note IDs.
+Content such as baselines, blockers, and artifact links may still be curated
+in `PROJECT.md`, but do not hand-edit state-manager rows.
+
+State writes are atomic and protected by a project-local lock. Validate after
+each transition. Never select a project by folder timestamp or reuse active
+state from another repository.
 
 ## Note contract
 

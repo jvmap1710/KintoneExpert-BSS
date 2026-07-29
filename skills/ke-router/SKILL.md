@@ -65,11 +65,19 @@ without asking the user to repeat information in a form:
 3. After confirmation, run `scripts/init-customer-project.ps1` with
    `-ProjectSlug`, `-DisplayName`, `-ProjectType`, `-EntryRoute`, and
    `-Objective`.
-4. Read the generated `projects/<project-slug>/PROJECT.md` back and verify that
+4. Run `node scripts/ke-project.mjs current` and
+   `node scripts/ke-project.mjs validate`. The
+   initializer must make the new workspace active and create its machine state.
+5. Read the generated `projects/<project-slug>/PROJECT.md` back and verify that
    its type, name, and objective match the conversation.
-5. Verify both `PROJECT.md` and `TEAM-NOTES.md`, tell the user where to place
+6. Verify both `PROJECT.md` and `TEAM-NOTES.md`, tell the user where to place
    sources under `input/` or `private/`, then continue into the selected
    readiness check. Do not stop after creating the folder.
+
+When continuing an existing workspace, select it explicitly with
+`node scripts/ke-project.mjs use <project-slug>` and validate it. Change tracks
+with `node scripts/ke-project.mjs transition <entry-route>` instead of editing the phase,
+gate, route, or owner rows manually.
 
 Example interpretation:
 
@@ -89,7 +97,10 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 4. Route a multi-option or multi-role discussion to `$ke-expert-panel-co`.
 5. Route a time-boxed presales demo or proof of concept through the Demo Fast
    Track in `references/ke-flow.md`; create its project workspace first, but
-   do not require PM participation by default.
+   do not require PM participation by default. Start its Mini Intake with
+   Tèo for a business process/form request, or LauDe when the request is
+   explicitly architecture-led. Do not choose Tí merely because the request
+   spans multiple Demo phases.
 6. For current-tenant analysis, allow the selected expert to use Kintone MCP
    read-only before recommending changes.
 7. For every analysis, Demo/PoC, assessment, or customer implementation,
@@ -113,3 +124,10 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
     Verification hand-off before the task's final response. Do not route to
     full smoke testing until all agreed features are complete and the user
     explicitly says `OK`.
+13. For a broad Existing Solution Assessment without a named expert or narrow
+    technical symptom, start with Tí to coordinate scope and evidence. Route a
+    narrow business, architecture, implementation, or test concern directly
+    to the matching expert.
+14. Route an unregistered source package (survey, MoM, SOW, email, attachments)
+    to Discovery Intake even when it contains customer context. Customer
+    Context assumes a confirmed evidence register or completed intake check.

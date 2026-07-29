@@ -42,6 +42,11 @@ language.
    the user explicitly requests isolation.
 10. If Demo/PoC transitions to Real Project, require a PoC-to-Production Gap
     Assessment; never treat the demo build as production-ready.
+11. Demo/PoC process or form requests start with Tèo's Mini Intake; explicitly
+    architecture-led Demo requests may start with LauDe. Tí is not a default
+    Demo participant.
+12. A broad Existing Solution Assessment starts with Tí for coordination.
+    Narrow role-specific diagnostics route directly to the matching expert.
 
 ## Phase-transition response
 

@@ -159,6 +159,21 @@ $teamNotesContent = $teamNotesContent.Replace(
 )
 Set-Content -Encoding utf8 -LiteralPath $teamNotesFile -Value $teamNotesContent
 
+$stateManager = Join-Path $PSScriptRoot 'ke-project.mjs'
+& node $stateManager bootstrap `
+    --project $ProjectSlug `
+    --type $ProjectType `
+    --route $EntryRoute `
+    --display-name $projectDisplayName `
+    --objective $projectObjective
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to initialize project state for $ProjectSlug."
+}
+& node $stateManager use $ProjectSlug
+if ($LASTEXITCODE -ne 0) {
+    throw "Failed to activate project $ProjectSlug."
+}
+
 Write-Output "Created $ProjectType project workspace: $targetPath"
 Write-Output "Input:  $(Join-Path $targetPath 'input')"
 Write-Output "Analysis: $(Join-Path $targetPath 'analysis')"

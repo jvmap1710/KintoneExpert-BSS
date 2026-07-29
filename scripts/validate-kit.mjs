@@ -37,6 +37,17 @@ for (const required of [
   "projects/_template/private/.gitkeep",
   "scripts/init-customer-project.ps1",
   "scripts/test-kit-flow.mjs",
+  "scripts/ke-project.mjs",
+  "scripts/lib/project-state.mjs",
+  "scripts/migrate-projects.mjs",
+  "scripts/eval-router-contract.mjs",
+  "scripts/eval-agent-live.mjs",
+  "scripts/run-live-e2e.mjs",
+  ".github/workflows/ci.yml",
+  "evals/router-cases.json",
+  "evals/router-result.schema.json",
+  "e2e/kintone-playwright-plan.example.json",
+  "e2e/live-result.schema.json",
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
@@ -221,13 +232,45 @@ if (await exists("platform/ke-kintone-mcp/scripts/upload-ot-customization.mjs"))
 }
 
 const rootPackageJson = JSON.parse(await readText("package.json"));
-if (rootPackageJson.scripts?.test !== "node scripts/test-kit-flow.mjs") {
-  failures.push("Root package: KE flow test command is missing");
+const ciWorkflow = await readText(".github/workflows/ci.yml");
+if (
+  rootPackageJson.scripts?.test !==
+  "npm run test:flow && npm run eval:contract"
+) {
+  failures.push("Root package: combined flow and prompt-contract test is missing");
 }
 if (!rootPackageJson.scripts?.prepack?.includes("npm test")) {
   failures.push("Root package: prepack must run the KE flow test");
 }
 if (rootPackageJson.private) failures.push("Root npm installer package must be publishable");
+for (const contract of [
+  "permissions:\n  contents: read",
+  "ubuntu-latest",
+  "windows-latest",
+  "npm run validate",
+  "npm test",
+  "npm run pack:check",
+]) {
+  if (!ciWorkflow.includes(contract)) {
+    failures.push(`CI workflow: missing contract: ${contract}`);
+  }
+}
+for (const forbidden of ["eval:agent:live", "e2e:live", "KINTONE_PASSWORD"]) {
+  if (ciWorkflow.includes(forbidden)) {
+    failures.push(`CI workflow: live/secret operation must remain opt-in: ${forbidden}`);
+  }
+}
+for (const command of [
+  "project",
+  "migrate",
+  "eval:contract",
+  "eval:agent:live",
+  "e2e:live",
+]) {
+  if (!rootPackageJson.scripts?.[command]) {
+    failures.push(`Root package: ${command} command is missing`);
+  }
+}
 if (rootPackageJson.bin?.["kintone-expert-bss"] !== "dist/ke-installer.mjs") {
   failures.push("Root npm installer package must expose the kintone-expert-bss CLI");
 }

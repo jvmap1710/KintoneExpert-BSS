@@ -1,0 +1,74 @@
+[
+  {
+    "id": "greeting-vi",
+    "prompt": "Xin chào",
+    "entryRoute": "menu",
+    "projectType": "none",
+    "firstRole": "Router",
+    "workspaceAction": "none"
+  },
+  {
+    "id": "discovery-presales-vi",
+    "prompt": "Tôi có survey, MoM, SOW và email của khách hàng ABCD, hãy tổng hợp đầu vào trước.",
+    "entryRoute": "discovery-intake",
+    "projectType": "analysis",
+    "firstRole": "Teo",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "customer-context-en",
+    "prompt": "Build a customer context for ACME from the confirmed evidence register.",
+    "entryRoute": "customer-context",
+    "projectType": "analysis",
+    "firstRole": "Teo",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "current-state-vi",
+    "prompt": "Phân tích As-Is, pain point, conflict và root cause quy trình OT của ABCD.",
+    "entryRoute": "current-state",
+    "projectType": "analysis",
+    "firstRole": "Teo",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "future-state-en",
+    "prompt": "The current-state baseline is confirmed. Continue with To-Be analysis.",
+    "entryRoute": "future-state",
+    "projectType": "analysis",
+    "firstRole": "Teo",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "poc-vi",
+    "prompt": "Tôi muốn dựng PoC nhanh phiếu OT cho khách hàng ABCD.",
+    "entryRoute": "demo-fast-track",
+    "projectType": "demo",
+    "firstRole": "Teo",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "real-project-vi",
+    "prompt": "Current State đã chốt, chuyển sang triển khai dự án thật cho ABCD.",
+    "entryRoute": "project-delivery",
+    "projectType": "customer",
+    "firstRole": "Ti",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "existing-assessment-en",
+    "prompt": "Assess the existing Kintone solution and identify improvement risks.",
+    "entryRoute": "existing-solution",
+    "projectType": "assessment",
+    "firstRole": "Ti",
+    "workspaceAction": "select-or-create"
+  },
+  {
+    "id": "expert-panel-vi",
+    "prompt": "Mời Cò cùng BA và SA thảo luận nên dùng một app hay nhiều app.",
+    "entryRoute": "expert-consultation",
+    "projectType": "analysis",
+    "firstRole": "Co",
+    "workspaceAction": "none"
+  }
+]

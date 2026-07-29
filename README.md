@@ -25,8 +25,67 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.21 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 install
 ```
+
+Nâng một Kit đã cài mà vẫn giữ cấu hình và project:
+
+```powershell
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade --dry-run
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade
+```
+
+Upgrade kiểm tra file KE đã bị sửa, backup dưới `.codex/ke-backups/`, migrate
+workspace cũ và validate lại. Chỉ dùng `--force` sau khi đã review conflict.
+
+### Nếu đã cài và cấu hình KE từ phiên bản cũ
+
+Không chạy lại `install` để nâng phiên bản. Tại đúng thư mục project đã cài KE,
+chạy dry-run trước:
+
+```powershell
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade --dry-run
+```
+
+Đọc các mục `conflicts`, `fromVersion`, `toVersion` và `backupRoot`. Nếu không
+có conflict ngoài dự kiến, chạy:
+
+```powershell
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade
+```
+
+Upgrade xử lý cấu hình hiện có như sau:
+
+- Giữ nguyên `platform/ke-kintone-mcp/.env`, Kintone domain và credentials đã
+  cấu hình. Installer chỉ tạo `.env` từ mẫu nếu file này chưa tồn tại.
+- Giữ nguyên `.codex/ke-preferences.toml`, gồm ngôn ngữ chat và ngôn ngữ tài
+  liệu. Muốn đổi, truyền lại `--chat-language` hoặc `--document-languages`.
+- Merge block do KE quản lý trong `AGENTS.md`, `.gitignore` và
+  `.codex/config.toml`; nội dung riêng nằm ngoài block KE được giữ lại.
+- Không xóa project, input, output, evidence hoặc custom file nằm ngoài danh
+  sách file do KE quản lý.
+- Backup file KE hiện tại và manifest trước khi thay đổi, sau đó tự migrate
+  project cũ sang Project State Manager.
+- Nếu một file KE-managed đã được sửa thủ công, upgrade dừng và liệt kê
+  conflict. Review bản hiện tại với bản backup trước khi dùng `--force`;
+  `--force` cho phép KE thay file đó bằng bản mới.
+
+Nếu trước đây đã tùy biến trực tiếp một skill hoặc script mặc định của KE, nên
+chuyển phần tùy biến cần giữ sang file riêng hoặc `AGENTS.md` ngoài managed
+block rồi mới dùng `--force`.
+
+Sau khi upgrade:
+
+```powershell
+npm --prefix platform/ke-kintone-mcp run check
+npm --prefix platform/ke-kintone-mcp run test:connection
+node scripts/ke-project.mjs list
+node scripts/ke-project.mjs validate --all
+```
+
+Sau đó đóng và mở lại project trong Codex, trust project và bắt đầu một chat
+mới để Codex nạp lại skill và MCP. Nếu `check` vẫn đọc giá trị `.env` cũ, đóng
+toàn bộ cửa sổ Codex/VS Code đang giữ environment rồi mở lại.
 
 Installer sẽ:
 
@@ -219,6 +278,7 @@ khai khách hàng, KE tạo một workspace riêng:
 
 ```text
 projects/<project-slug>/
+├── .ke-project.json
 ├── PROJECT.md
 ├── TEAM-NOTES.md
 ├── input/
@@ -226,6 +286,26 @@ projects/<project-slug>/
 ├── analysis/
 ├── output/
 └── history/
+```
+
+Kit lưu project đang active trong `.codex/ke-active-project.json`. Agent dùng
+State Manager thay vì tự đoán folder hoặc cùng sửa trực tiếp state trong
+Markdown:
+
+```powershell
+node scripts/ke-project.mjs list
+node scripts/ke-project.mjs use <project-slug>
+node scripts/ke-project.mjs current
+node scripts/ke-project.mjs validate
+```
+
+Maintainer có deterministic prompt-contract eval trong CI. Live Codex eval và
+Kintone/Playwright E2E là opt-in; không tự chạy trên tenant production:
+
+```powershell
+npm run eval:agent:live -- --confirm-live
+node scripts/run-live-e2e.mjs --plan e2e/my-test-plan.json --dry-run
+node scripts/run-live-e2e.mjs --plan e2e/my-test-plan.json --confirm-live
 ```
 
 - `PROJECT.md`: dashboard ngắn, phase/gate, baseline và next owner của dự án.

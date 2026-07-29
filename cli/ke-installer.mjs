@@ -38,6 +38,7 @@ Kintone Expert BSS installer
 
 Usage:
   npx kintone-expert-bss install [options]
+  npx kintone-expert-bss upgrade [options]
 
 Options:
   --directory <path>  Install into this project (default: current directory)
@@ -48,6 +49,7 @@ Options:
                       Output languages separated by comma (default: English)
   --skip-deps         Do not install Kintone, browser, or Office dependencies
   --force             Overwrite conflicting KE-managed files
+  --dry-run           Show an upgrade plan without changing files
   --help              Show this help
   --version           Show the package version
 `);
@@ -110,6 +112,14 @@ async function writePreferences(target, chatLanguage, documentLanguages) {
   await writeFile(preferencesPath, content, "utf8");
 }
 
+async function backupFile(targetRoot, backupRoot, relative) {
+  const source = path.join(targetRoot, relative);
+  if (!(await exists(source))) return;
+  const destination = path.join(backupRoot, relative);
+  await mkdir(path.dirname(destination), { recursive: true });
+  await cp(source, destination);
+}
+
 async function mergeManagedFile(target, sourceContent, label) {
   const begin = `# >>> KE KIT: ${label} >>>`;
   const end = `# <<< KE KIT: ${label} <<<`;
@@ -155,30 +165,36 @@ if (args.includes("--version") || args.includes("-v")) {
   process.exit(0);
 }
 
-if (args[0] !== "install") {
+const action = args[0];
+if (!["install", "upgrade"].includes(action)) {
   usage();
   process.exitCode = 1;
 } else {
+  const isUpgrade = action === "upgrade";
   const target = path.resolve(optionValue("--directory") ?? process.cwd());
   const assumeYes = args.includes("--yes");
   const skipDependencies = args.includes("--skip-deps");
   const force = args.includes("--force");
+  const dryRun = args.includes("--dry-run");
   const chatLanguageOption = optionValue("--chat-language");
   const documentLanguagesOption = optionValue("--document-languages");
   const preferencesPath = path.join(target, ".codex", "ke-preferences.toml");
   const preferencesExist = await exists(preferencesPath);
   const configurePreferences =
+    !isUpgrade &&
     !preferencesExist || Boolean(chatLanguageOption || documentLanguagesOption);
   let chatLanguage = normalizeLanguage(chatLanguageOption);
   let documentLanguages = parseDocumentLanguages(documentLanguagesOption);
   let terminal;
 
-  console.log(`\nKE Kit ${packageVersion}`);
+  console.log(`\nKE Kit ${packageVersion} ${isUpgrade ? "upgrade" : "installer"}`);
   console.log(`Target: ${target}`);
 
-  if (!assumeYes) {
+  if (!assumeYes && !dryRun) {
     terminal = createInterface({ input: process.stdin, output: process.stdout });
-    const answer = await terminal.question("Install KE Kit into this project? (Y/n) ");
+    const answer = await terminal.question(
+      `${isUpgrade ? "Upgrade" : "Install"} KE Kit in this project? (Y/n) `,
+    );
     if (answer.trim() && !/^y(?:es)?$/iu.test(answer.trim())) {
       terminal.close();
       console.log("Installation cancelled.");
@@ -215,27 +231,85 @@ if (args[0] !== "install") {
     path.join(".codex", "config.toml"),
   ]);
   const conflicts = [];
+  const manifestPath = path.join(target, ".codex", "ke-kit-manifest.json");
+  const previousManifest =
+    isUpgrade && (await exists(manifestPath))
+      ? JSON.parse(await readFile(manifestPath, "utf8"))
+      : undefined;
+  if (isUpgrade && !previousManifest) {
+    throw new Error("Cannot upgrade: .codex/ke-kit-manifest.json is missing.");
+  }
 
   for (const file of payloadFiles) {
     const relative = file.path.split("/").join(path.sep);
     if (mergeFiles.has(relative)) continue;
     const destination = path.join(target, relative);
-    if (
-      (await exists(destination)) &&
-      digestContent(file.content) !== (await digest(destination))
-    ) {
-      conflicts.push(file.path);
+    if (await exists(destination)) {
+      if (isUpgrade) {
+        const installedHash = previousManifest?.fileHashes?.[file.path];
+        if (previousManifest?.fileHashes) {
+          if (!installedHash || installedHash !== (await digest(destination))) {
+            conflicts.push(file.path);
+          }
+        } else {
+          const legacyManaged = new Set(previousManifest?.files ?? []);
+          const legacyPath =
+            file.path === "gitignore.template" ? ".gitignore" : file.path;
+          if (!legacyManaged.has(legacyPath) && !legacyManaged.has(file.path)) {
+            conflicts.push(file.path);
+          }
+        }
+      } else if (digestContent(file.content) !== (await digest(destination))) {
+        conflicts.push(file.path);
+      }
     }
   }
 
   if (conflicts.length && !force) {
-    console.error("\nInstallation stopped to protect existing files:");
+    console.error(`\n${isUpgrade ? "Upgrade" : "Installation"} stopped to protect existing files:`);
     for (const conflict of conflicts.slice(0, 20)) console.error(`- ${conflict}`);
     if (conflicts.length > 20) {
       console.error(`- ...and ${conflicts.length - 20} more`);
     }
     console.error("\nRe-run with --force only if KE should replace these managed files.");
     process.exit(2);
+  }
+
+  const backupRoot = path.join(
+    target,
+    ".codex",
+    "ke-backups",
+    `${new Date().toISOString().replace(/[:.]/gu, "-")}-from-${
+      previousManifest?.version ?? "unversioned"
+    }`,
+  );
+  if (dryRun) {
+    console.log(
+      JSON.stringify(
+        {
+          action,
+          fromVersion: previousManifest?.version,
+          toVersion: packageVersion,
+          managedFiles: payloadFiles.length,
+          conflicts,
+          legacyManifest: isUpgrade && !previousManifest?.fileHashes,
+          backupRoot,
+        },
+        null,
+        2,
+      ),
+    );
+    process.exit(0);
+  }
+  if (isUpgrade) {
+    await backupFile(target, backupRoot, path.join(".codex", "ke-kit-manifest.json"));
+    for (const file of payloadFiles) {
+      const relative =
+        file.path === "gitignore.template"
+          ? ".gitignore"
+          : file.path.split("/").join(path.sep);
+      await backupFile(target, backupRoot, relative);
+    }
   }
 
   for (const file of payloadFiles) {
@@ -277,7 +351,32 @@ if (args[0] !== "install") {
   const env = path.join(target, "platform", "ke-kintone-mcp", ".env");
   if (!(await exists(env))) await cp(envExample, env, { errorOnExist: true });
 
+  if (isUpgrade) {
+    await run(
+      process.execPath,
+      [
+        "scripts/migrate-projects.mjs",
+        "--root",
+        target,
+        "--backup-root",
+        backupRoot,
+      ],
+      target,
+    );
+  }
+
+  const fileHashes = {};
+  for (const file of payloadFiles) {
+    const relative =
+      file.path === "gitignore.template"
+        ? ".gitignore"
+        : file.path.split("/").join(path.sep);
+    if (!mergeFiles.has(file.path.split("/").join(path.sep))) {
+      fileHashes[file.path] = await digest(path.join(target, relative));
+    }
+  }
   const manifest = {
+    schemaVersion: 2,
     package: packageName,
     version: packageVersion,
     installedAt: new Date().toISOString(),
@@ -285,9 +384,12 @@ if (args[0] !== "install") {
       .map((file) => file.path)
       .filter((file) => file !== "gitignore.template")
       .concat(".gitignore"),
+    fileHashes,
+    previousVersion: previousManifest?.version,
+    backupRoot: isUpgrade ? path.relative(target, backupRoot) : undefined,
   };
   await writeFile(
-    path.join(target, ".codex", "ke-kit-manifest.json"),
+    manifestPath,
     `${JSON.stringify(manifest, null, 2)}\n`,
     "utf8",
   );
@@ -327,7 +429,7 @@ if (args[0] !== "install") {
     }
   }
 
-  console.log("\nKE Kit installed successfully.");
+  console.log(`\nKE Kit ${isUpgrade ? "upgraded" : "installed"} successfully.`);
   if (configurePreferences) {
     console.log(`Chat language: ${chatLanguage}`);
     console.log(`Output document language(s): ${documentLanguages.join(", ")}`);

@@ -21,8 +21,13 @@ const payload = [
   "platform/ke-kintone-mcp/package.json",
   "platform/ke-kintone-mcp/scripts",
   "projects/_template",
+  "e2e",
   "scripts/export-markdown-html.mjs",
   "scripts/init-customer-project.ps1",
+  "scripts/ke-project.mjs",
+  "scripts/migrate-projects.mjs",
+  "scripts/run-live-e2e.mjs",
+  "scripts/lib",
   "skills",
 ];
 

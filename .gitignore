@@ -5,6 +5,10 @@ dist/
 .tmp/
 .ke-browser-evidence/
 .codex/ke-preferences.toml
+.codex/ke-active-project.json
+.codex/ke-backups/
+.codex/ke-last-migration.json
+.codex/ke-eval-results/
 *.tgz
 .env
 .env.*

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "environment": "test",
+  "projectSlug": "replace-with-project-slug",
+  "baseUrl": "https://example.cybozu.com",
+  "appId": 123,
+  "allowSyntheticWrites": false,
+  "retainSyntheticRecords": false,
+  "cases": [
+    {
+      "id": "E2E-001",
+      "title": "Open the live app and verify its form",
+      "steps": [
+        "Open the configured app URL with Playwright MCP.",
+        "Confirm the expected form is visible."
+      ],
+      "expected": "The app loads and the expected form is visible.",
+      "evidence": ["sanitized screenshot", "record or page URL"]
+    }
+  ]
+}
