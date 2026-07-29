@@ -24,6 +24,10 @@ trên giao diện thật. Chrome DevTools MCP chỉ dùng khi cần debug JavaSc
 network, DOM/CSS hoặc performance. Thao tác ghi, deploy, xóa vẫn phải theo quy
 tắc xác nhận trong `AGENTS.md`.
 
+Mỗi task build/fix của LeBa được Mít Quick Verification trước khi kết luận.
+Full smoke test 5–10 cases/records chỉ bắt đầu sau khi toàn bộ feature hoàn tất
+và user xác nhận `OK`.
+
 ## Bắt đầu từ lời chào
 
 Nếu người dùng chỉ nói `hi`, `hello` hoặc `xin chào`, KE Router giới thiệu

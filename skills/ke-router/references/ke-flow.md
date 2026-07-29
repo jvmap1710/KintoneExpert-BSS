@@ -34,14 +34,20 @@ responsibility. Apply `handoff-contract.md` whenever the active expert changes.
 Use this path for a time-boxed presales demo or proof of concept that does not
 create a delivery commitment:
 
-`Requester -> Teo or LauDe (as needed) -> LeBa -> Mit smoke test -> Requester`
+`Requester -> Teo or LauDe (as needed) -> (LeBa -> Mít Quick Verification)*
+-> user OK -> Mít smoke test -> Requester`
 
 - Show this sequence to the user with the actual included experts before work
   starts. Do not hide role changes in a seamless assistant voice.
 - Skip Teo when the demo scenario and sample data are already clear.
 - Skip LauDe when the demo uses one simple app with no material integration,
   security, data-model, or customization decision.
-- Mit performs an evidence-based smoke test with 5–10 synthetic records,
+- After each LeBa implementation/fix task, Mít runs the targeted Quick
+  Verification contract before LeBa closes that task. A failure loops back to
+  LeBa; this gate is not a smoke test.
+- When all agreed features are complete, show the completed feature list and
+  wait for the user's explicit `OK` before starting full smoke testing.
+- Mít then performs an evidence-based smoke test with 5–10 synthetic records,
   mandatory HTML report, the demonstrated happy path, and visible
   failure risks; a full UAT pack is not required.
 - Invite Ti only when scope control, timeline/cost commitment, stakeholder

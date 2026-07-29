@@ -96,3 +96,7 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 11. When a conclusion depends on the live UI or user journey, require
     Playwright evidence and keep the evidence owner aligned with the active
     role. Escalate to Chrome DevTools only under the browser evidence contract.
+12. For LeBa implementation/fix work, require the visible Mít Quick
+    Verification hand-off before the task's final response. Do not route to
+    full smoke testing until all agreed features are complete and the user
+    explicitly says `OK`.

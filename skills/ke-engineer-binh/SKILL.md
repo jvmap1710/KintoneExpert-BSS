@@ -105,6 +105,24 @@ performance problem, escalate to Chrome DevTools MCP using
 the same path again with Playwright. Do not treat a successful REST deploy or
 a clean console as user-visible acceptance evidence.
 
+## Mandatory Mít quick-verification gate
+
+After completing any implementation, configuration, customization, deployment,
+or defect-fix task, announce `LeBa hand-off → Mít Quick Verification` and pass
+the task objective, acceptance condition, App/revision state, changed items,
+and available evidence to `$ke-tester-mit`. Follow
+`../ke-tester-mit/references/quick-verification.md`.
+
+Do not give the task's final completion response before Mít checks the changed
+behavior. If Mít returns `FAIL`, fix the defect and return it for verification.
+If Mít returns `BLOCKED`, report the exact missing runtime/evidence instead of
+claiming the task fully verified.
+
+Quick Verification is not the full smoke test. After every feature in the
+agreed scope is complete, summarize the completed feature list and ask the
+user for `OK` to start the full smoke test. Do not trigger the 5–10
+case/record smoke test before that approval.
+
 For a presales demo, optimize for a reversible, time-boxed build in the test
 environment. Use synthetic data, label shortcuts and non-production behavior,
 avoid unnecessary customization, and provide a short production-hardening
@@ -115,7 +133,8 @@ guardrails still apply.
 
 Ask `$ke-sa-son` to resolve architecture questions and `$ke-ba-teo`
 to resolve requirement ambiguity. Give `$ke-tester-mit` the app IDs,
-field codes, behaviors, and deployment result for validation. Keep raw or
+field codes, behaviors, deployment result, and task acceptance condition for
+mandatory Quick Verification. Keep raw or
 sensitive evidence under `projects/<project-slug>/private/`. When the user
 requests a saved build or deployment summary, use `$ke-document-writer` to
 create standalone HTML under `projects/<project-slug>/output/`. Record transfers with

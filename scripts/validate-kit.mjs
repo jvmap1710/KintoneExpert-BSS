@@ -52,6 +52,7 @@ for (const required of [
   "skills/ke-engineer-binh/references/process-management.md",
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
+  "skills/ke-tester-mit/references/quick-verification.md",
   "skills/ke-router/references/browser-evidence.md",
   "skills/ke-router/references/language-preferences.md",
   "skills/ke-document-writer/references/user-guide.md",
@@ -203,6 +204,9 @@ const testerSkill = await readText("skills/ke-tester-mit/SKILL.md");
 const smokeTestKnowledge = await readText(
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
 );
+const quickVerificationKnowledge = await readText(
+  "skills/ke-tester-mit/references/quick-verification.md",
+);
 const recordQueryKnowledge = await readText(
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
 );
@@ -331,6 +335,37 @@ for (const statement of [
 ]) {
   if (!testerSkill.includes(statement)) {
     failures.push(`ke-tester-mit: missing smoke-test contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "mandatory change-level QA gate",
+  "before KE gives the task's final completion response",
+  "Select 1–3 checks",
+  "Do not create records",
+  "On `FAIL`, hand the defect back to LeBa",
+  "Do not start the 5–10 case/record smoke test automatically",
+  "user explicitly says `OK`",
+]) {
+  if (!quickVerificationKnowledge.includes(statement)) {
+    failures.push(`quick-verification.md: missing contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "Mandatory Mít quick-verification gate",
+  "LeBa hand-off → Mít Quick Verification",
+  "Do not give the task's final completion response",
+]) {
+  if (!engineerSkill.includes(statement)) {
+    failures.push(`ke-engineer-binh: missing quick-verification contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "run the mandatory targeted",
+  "Do not label this gate a smoke test",
+  "user explicitly says `OK`",
+]) {
+  if (!testerSkill.includes(statement)) {
+    failures.push(`ke-tester-mit: missing verification gate: ${statement}`);
   }
 }
 for (const statement of [

@@ -166,6 +166,26 @@ fields, layouts, process settings, and data relevant to their analysis. The
 Engineer owns implementation changes by default. Any write, deployment, or
 destructive action still follows the approval rules above.
 
+## LeBa-to-Mít verification routine
+
+Every implementation, configuration, customization, deployment, or defect-fix
+task completed by LeBa must pass a visible
+`LeBa hand-off → Mít Quick Verification` before the task's final completion
+response. Mít runs 1–3 checks targeted to the change and returns `PASS`,
+`FAIL`, or `BLOCKED` with the evidence level. On `FAIL`, return the task to
+LeBa for a fix and repeat the quick verification.
+
+Quick Verification is not a smoke test. It does not automatically create 5–10
+records, require an HTML report, or prove demo/release readiness. A staged but
+undeployed change can only pass at configuration level; runtime remains
+unverified.
+
+Run the full Mít smoke test only after LeBa confirms all agreed features are
+complete, all required deployments succeeded, and the user explicitly says
+`OK` or approves the smoke test. Then apply the 5–10 case/record and mandatory
+HTML report contract below. Follow
+`skills/ke-tester-mit/references/quick-verification.md`.
+
 ## Browser evidence and diagnostics
 
 Playwright MCP is the primary browser channel for every KE expert whenever a
