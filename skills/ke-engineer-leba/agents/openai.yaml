@@ -1,4 +1,4 @@
 interface:
   display_name: "LeBa - Kintone Engineer"
   short_description: "Build, customize, test, and deploy Kintone solutions."
-  default_prompt: "Use $ke-engineer-binh to implement this Kintone design."
+  default_prompt: "Use $ke-engineer-leba to implement this Kintone design."

@@ -36,6 +36,31 @@ Follow `skills/ke-router/references/language-preferences.md`.
 Never place credentials, API tokens, passwords, downloaded attachments, or
 personal Kintone data in tracked files or terminal output.
 
+## Project context and delivery gates
+
+For persistent analysis, Demo/PoC, assessment, or Real Project work, select one
+`projects/<project-slug>/` workspace before reading sources or producing
+artifacts. Treat `PROJECT.md` as the concise current dashboard and
+`TEAM-NOTES.md` as the structured collaboration log.
+
+Whenever an expert joins or resumes a project, read `PROJECT.md`, the current
+baseline in its artifact index, and open Critical/High or targeted notes before
+acting. Before handoff, update the dashboard when state changed and
+append/update a structured note. Follow
+`skills/ke-router/references/team-collaboration.md`.
+
+Entry routes are selectable starting points, not proof that earlier work is
+complete. Apply `skills/ke-router/references/delivery-lifecycle.md`. Reuse
+confirmed baselines, keep analysis-to-Demo/Real-Project transitions in the
+same workspace, and require a PoC-to-Production Gap Assessment before treating
+PoC work as a Real Project input.
+
+Use `skills/ke-router/references/phase-template-index.md` to select the owner,
+working template, and completion gate. Load only the current and next-phase
+templates; do not generate every artifact by default. A template structures
+confirmed facts but does not authorize Kintone writes, deployments, or test
+data.
+
 ## Record-read diagnostics
 
 A successful filtered query with zero records is not evidence of missing
@@ -98,7 +123,7 @@ preserve every status/action outside the approved scope, update with the latest
 revision, read it back, and obtain deployment approval. Omitted statuses may
 be deleted, so never send a guessed or partial workflow definition. Use
 the shared `process:stage` command and
-`skills/ke-engineer-binh/references/process-management.md`.
+`skills/ke-engineer-leba/references/process-management.md`.
 
 Kintone `preview` REST endpoints edit or read pre-live App settings. They do
 not provide a preview URL or a runtime form where records and JavaScript can be

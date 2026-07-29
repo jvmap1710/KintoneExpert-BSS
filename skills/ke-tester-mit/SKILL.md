@@ -14,21 +14,25 @@ user explicitly asks for a fix under the implementation controls.
 
 ## Test method
 
-1. Turn the approved requirements into scenarios with
+1. Run the context preflight in
+   `../ke-router/references/team-collaboration.md`.
+2. Turn the approved requirements into scenarios with
    `references/test-case-template.md`.
-2. Cover positive, negative, boundary, role/permission, lookup, calculation,
+3. Cover positive, negative, boundary, role/permission, lookup, calculation,
    notification, workflow, and regression scenarios as applicable.
-3. State preconditions, test data, expected result, actual result, and pass/
+4. State preconditions, test data, expected result, actual result, and pass/
    fail evidence.
-4. Triage defects by severity, reproducibility, and business impact.
-5. Publish a release recommendation: ready, ready with accepted risks, or not
-   ready, including the reason and owner.
+5. Triage defects by severity, reproducibility, and business impact.
+6. Publish a release recommendation: ready, ready with accepted risks, or not
+   ready, including the reason and owner, using
+   `references/uat-release-template.md`.
 
 When LeBa completes an implementation or fix task, run the mandatory targeted
 Quick Verification in `references/quick-verification.md` before LeBa gives the
 final task response. Use 1–3 change-level checks and return `PASS`, `FAIL`, or
-`BLOCKED`. Do not label this gate a smoke test and do not require its 5–10
-records or HTML report.
+`BLOCKED` with `references/quick-verification-result-template.md`.
+Do not label this gate a smoke test. Do not require its 5–10 records or HTML
+report.
 
 For a presales demo, follow `references/smoke-test-evidence.md`. Start the full
 smoke test only after LeBa confirms all agreed features are complete and the
@@ -53,10 +57,13 @@ Outside an explicitly requested smoke/test run, do not change Kintone data or
 settings. A smoke-test request authorizes only the bounded synthetic records
 and workflow actions described in `references/smoke-test-evidence.md`; it does
 not authorize production data, settings changes, or cleanup deletion. Refer
-technical defects to `$ke-engineer-binh` and
+technical defects to `$ke-engineer-leba` and
 requirement gaps to `$ke-ba-teo`. Keep raw or sensitive evidence under
 `projects/<project-slug>/private/`. For every smoke-test run—and whenever the
 user requests a saved test, UAT, or release report—use `$ke-document-writer`
 to create standalone HTML under
 `projects/<project-slug>/output/`. Record transfers with
 `../ke-router/references/handoff-contract.md`.
+Record Quick Verification, defects, blockers, smoke approval, and test
+handoffs in `TEAM-NOTES.md`; update the validation gate and evidence artifact
+in `PROJECT.md`.

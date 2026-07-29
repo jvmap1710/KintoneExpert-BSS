@@ -1,37 +1,39 @@
 # KE project workspace
 
-For every Demo/PoC or customer implementation, initialize one isolated
-workspace before reading project inputs or creating deliverables. Derive a
-safe lowercase slug from the supplied name when practical; ask only when the
-name is ambiguous.
+Create or select one isolated workspace before reading customer sources or
+creating persistent work for analysis, Demo/PoC, assessment, or Real Project.
 
 ```powershell
-./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-request `
-  -DisplayName "ACME Purchase Request" -ProjectType customer `
-  -Objective "Triển khai quy trình đề nghị mua hàng cho ACME"
+./scripts/init-customer-project.ps1 -ProjectSlug acme-discovery `
+  -DisplayName "ACME Discovery" -ProjectType analysis `
+  -EntryRoute discovery-intake `
+  -Objective "Synthesize Presales inputs and assess the current process"
 
-./scripts/init-customer-project.ps1 -ProjectSlug purchase-demo `
-  -DisplayName "Purchase Request Demo" -ProjectType demo `
-  -Objective "Dựng PoC quy trình đề nghị mua hàng"
+./scripts/init-customer-project.ps1 -ProjectSlug acme-purchase-poc `
+  -DisplayName "ACME Purchase PoC" -ProjectType demo `
+  -EntryRoute demo-fast-track `
+  -Objective "Validate the purchase-request approval experience"
 ```
 
-Use a lowercase, hyphenated slug containing only `a-z`, `0-9`, and `-`. The
-script creates `projects/<project-slug>/` from `projects/_template/` and
-refuses to overwrite an existing workspace. The agent should run it after the
-user has selected Demo/PoC or customer implementation and supplied the minimum
-project identity. Always pass the objective inferred from the conversation;
-do not leave it as `Chưa xác định` when the user already stated the desired
-outcome.
+Use a lowercase hyphenated slug containing only `a-z`, `0-9`, and `-`. The
+initializer refuses to overwrite an existing workspace.
 
-Use this minimal structure:
-
-| Directory | Owner / purpose |
+| Path | Purpose |
 | --- | --- |
-| `projects/<project-slug>/input/` | Customer-provided sanitized source material |
-| `projects/<project-slug>/private/` | Raw survey data, PII, attachments, and confidential working data |
-| `projects/<project-slug>/output/` | Generated standalone HTML deliverables only |
+| `PROJECT.md` | Concise current project dashboard and authoritative routing state |
+| `TEAM-NOTES.md` | Structured working discussions, questions, conflicts and handoffs |
+| `input/` | Sanitized customer-provided source material |
+| `private/` | Raw files, PII, attachments and confidential evidence |
+| `analysis/` | Evidence registers, working analysis and internal matrices |
+| `output/` | User-facing standalone deliverables |
+| `history/` | Archived closed notes and superseded internal baselines |
 
-Never place credentials, tokens, passwords, downloaded attachments, personal
-Kintone data, or unredacted production exports in generated HTML. Customer
-project directories are Git-ignored by default. Use only sanitized customer
-inputs or synthetic data created specifically inside the current project.
+Apply `team-collaboration.md` whenever an expert joins or hands off. Keep
+project inputs, transitions, analysis and outputs in the same workspace when
+the user moves from analysis to Demo/PoC or Real Project. Create a second
+workspace only when the user requests isolation or the customer/scope is
+materially different.
+
+Never place credentials, tokens, passwords, or unredacted production/personal
+data in `PROJECT.md`, `TEAM-NOTES.md`, or `output/`. Customer project
+directories are Git-ignored by default.

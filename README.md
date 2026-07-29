@@ -25,7 +25,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.19 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.20 install
 ```
 
 Installer sẽ:
@@ -128,12 +128,16 @@ thị, chụp ảnh đã làm sạch, chạy lại các bước quan trọng và
 standalone có version trong `projects/<project-slug>/output/`. Tài liệu phân
 biệt rõ bước đã kiểm chứng, chỉ quan sát và còn ở trạng thái thiết kế.
 
-KE Router sẽ giới thiệu Kit và hỏi bạn muốn:
+KE Router sẽ giới thiệu Kit và cho phép bắt đầu ở đúng giai đoạn:
 
-1. Dựng Demo / PoC.
-2. Triển khai dự án khách hàng.
-3. Kiểm tra hoặc cải tiến app Kintone hiện có.
-4. Tư vấn phương án hoặc thảo luận đa chuyên gia.
+1. Discovery Intake.
+2. Customer Context.
+3. Current-State Assessment / As-Is.
+4. Future-State Design / To-Be.
+5. Demo / PoC Fast Track.
+6. Project Delivery.
+7. Existing Solution Assessment.
+8. Expert Consultation / Expert Panel.
 
 User có thể trả lời bằng số hoặc mô tả thẳng nhu cầu. Ví dụ:
 
@@ -199,26 +203,38 @@ Quick Verification chỉ kiểm 1–3 điểm liên quan trực tiếp đến th
 LeBa sửa rồi Mít kiểm lại. Chỉ sau khi toàn bộ feature đã hoàn tất và user xác
 nhận `OK`, Mít mới chạy smoke test đầy đủ và xuất HTML report.
 
+Mỗi giai đoạn có working template và gate riêng: intake/evidence, customer
+context và As-Is, requirements/To-Be, solution blueprint, build/deploy, Quick
+Verification, smoke/UAT/release và handover/improvement. Agent chỉ nạp template
+của giai đoạn hiện tại và hand-off tiếp theo; không tạo hàng loạt file trống.
+
 Mỗi khi bắt đầu hoặc chuyển vai, chuyên gia sẽ tự giới thiệu tên và vai trò.
 Khi đóng một góc nhìn, chuyên gia nêu phần đã chốt, phần chưa xác minh và hỏi
 user muốn chuyển chuyên gia, mời Cò thảo luận hay dừng.
 
 ## Workspace dự án
 
-Khi user chọn Demo/PoC hoặc triển khai khách hàng, KE tạo một workspace riêng:
+Khi user bắt đầu Analysis, Demo/PoC, Existing Solution Assessment hoặc triển
+khai khách hàng, KE tạo một workspace riêng:
 
 ```text
 projects/<project-slug>/
 ├── PROJECT.md
+├── TEAM-NOTES.md
 ├── input/
 ├── private/
-└── output/
+├── analysis/
+├── output/
+└── history/
 ```
 
-- `PROJECT.md`: hồ sơ ngắn để các agent nhận diện và tiếp tục đúng dự án.
+- `PROJECT.md`: dashboard ngắn, phase/gate, baseline và next owner của dự án.
+- `TEAM-NOTES.md`: log có cấu trúc cho finding, question, conflict và hand-off.
 - `input/`: tài liệu khách hàng đã được làm sạch, survey, MoM và dữ liệu đầu vào.
 - `private/`: dữ liệu nhạy cảm, file gốc và tài liệu không được đưa vào output.
-- `output/`: tài liệu HTML do KE tạo cho riêng dự án đó.
+- `analysis/`: evidence register và working analysis nội bộ.
+- `output/`: tài liệu bàn giao standalone của riêng dự án đó.
+- `history/`: baseline nội bộ cũ và phase notes đã đóng.
 
 `PROJECT.md` không phải tài liệu bàn giao khách hàng. Nó lưu tên/mã dự án, loại
 Demo hay triển khai thật, giai đoạn và nguyên tắc làm việc để agent không trộn

@@ -31,17 +31,50 @@ và user xác nhận `OK`.
 ## Bắt đầu từ lời chào
 
 Nếu người dùng chỉ nói `hi`, `hello` hoặc `xin chào`, KE Router giới thiệu
-ngắn gọn và đưa ra bốn lựa chọn:
+ngắn gọn và đưa ra tám Entry Routes:
 
-1. Dựng Presales demo / PoC.
-2. Triển khai dự án cho khách hàng.
-3. Kiểm tra hoặc cải tiến app Kintone hiện có.
-4. Tư vấn phương án hoặc thảo luận đa chuyên gia.
+1. **Discovery Intake** *(tiếp nhận và phân loại tài liệu đầu vào)*.
+2. **Customer Context** *(xây dựng hồ sơ tổng quan khách hàng)*.
+3. **Current-State Assessment / As-Is Analysis** *(phân tích thực trạng)*.
+4. **Future-State Design / To-Be Analysis** *(thiết kế trạng thái mục tiêu)*.
+5. **Demo / PoC Fast Track** *(dựng nhanh để kiểm chứng)*.
+6. **Project Delivery** *(triển khai dự án thực tế)*.
+7. **Existing Solution Assessment** *(đánh giá giải pháp hiện hữu)*.
+8. **Expert Consultation / Expert Panel** *(tham vấn chuyên gia)*.
 
 Người dùng có thể trả lời bằng số hoặc mô tả nhu cầu tự nhiên. Nếu câu chào đã
 có nhu cầu rõ ràng, ví dụ `Hello KE, tôi cần dựng demo quy trình mua hàng`, KE
-bỏ qua menu và đi thẳng vào Demo Fast Track. Một lời chào đơn thuần không kích
+bỏ qua menu và đi thẳng vào route phù hợp. Một lời chào đơn thuần không kích
 hoạt PM, không tạo project folder và không truy cập Kintone.
+
+Entry Route là điểm bắt đầu, không chứng minh các phase trước đã hoàn thành.
+KE chạy Readiness Check, tái sử dụng baseline đã Confirmed và chỉ hỏi phần còn
+thiếu. Khi BA phân tích xong rồi chuyển sang Demo/PoC hoặc Real Project, KE cập
+nhật delivery track trong cùng workspace thay vì tạo lại dự án.
+
+## Project context
+
+Mỗi workspace phân tích, Demo/PoC, assessment hoặc dự án thật có:
+
+```text
+projects/<project-slug>/
+  PROJECT.md
+  TEAM-NOTES.md
+  input/
+  private/
+  analysis/
+  output/
+  history/
+```
+
+- `PROJECT.md`: dashboard hiện tại, phase/gate, baseline, blocker, artifact,
+  handoff, next action và owner.
+- `TEAM-NOTES.md`: working log có cấu trúc cho finding, question, conflict,
+  assumption, risk, decision request, handoff và test finding.
+
+Khi một agent tham gia, agent đọc dashboard, baseline hiện hành và các note
+Critical/High hoặc được giao cho mình. Quyết định chỉ có hiệu lực sau khi được
+đưa vào artifact chính thức và cập nhật lại `PROJECT.md`.
 
 ## Ví dụ prompt
 

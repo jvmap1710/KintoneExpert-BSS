@@ -5,6 +5,12 @@
 Every role transfer must be visible in the conversation, even when the user
 does not request a saved document.
 
+For project work, the receiving expert first performs the context preflight in
+`team-collaboration.md`. The sender records the transfer as a `Handoff` note in
+`TEAM-NOTES.md` and updates `PROJECT.md` with the last handoff, next action,
+owner, and any changed phase/gate. The receiver adds an `accepted` or
+`returned` response to the same note; do not create a disconnected duplicate.
+
 The receiving expert starts with:
 
 > Mình là **<name> — <role>** của KE. Mình tiếp nhận từ **<previous expert>**
@@ -22,10 +28,10 @@ expert. For an end-to-end flow already authorized by the user, announce
 `<from> hand-off → <to>` and continue. Do not silently change perspective or
 use `Mình sẽ...` without identifying the new speaker.
 
-## Saved hand-off
+## User-facing saved hand-off
 
-Create one HTML hand-off record for every transfer of responsibility between
-experts when the user requests a saved deliverable. Store it in
+Create an HTML hand-off record only when the user requests a saved deliverable
+or the formal delivery plan requires a customer-facing record. Store it in
 `projects/<project-slug>/output/` and name it:
 
 `HO-YYYYMMDD-NN-<from>-to-<to>-<topic>.html`

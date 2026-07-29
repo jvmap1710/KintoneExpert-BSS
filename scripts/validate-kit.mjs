@@ -30,6 +30,9 @@ for (const required of [
   "cli/ke-installer.mjs",
   ".codex/config.toml",
   "projects/_template/PROJECT.md",
+  "projects/_template/TEAM-NOTES.md",
+  "projects/_template/analysis/.gitkeep",
+  "projects/_template/history/.gitkeep",
   "projects/_template/input/.gitkeep",
   "projects/_template/private/.gitkeep",
   "scripts/init-customer-project.ps1",
@@ -48,13 +51,30 @@ for (const required of [
   "platform/ke-kintone-mcp/scripts/stage-app-customization.mjs",
   "platform/ke-kintone-mcp/scripts/stage-process-management.mjs",
   "platform/ke-kintone-mcp/scripts/test-runtime-helpers.mjs",
-  "skills/ke-engineer-binh/references/javascript-customization.md",
-  "skills/ke-engineer-binh/references/process-management.md",
-  "skills/ke-engineer-binh/references/record-query-diagnostics.md",
+  "skills/ke-engineer-leba/references/javascript-customization.md",
+  "skills/ke-engineer-leba/references/process-management.md",
+  "skills/ke-engineer-leba/references/record-query-diagnostics.md",
+  "skills/ke-engineer-leba/references/build-and-deploy-template.md",
+  "skills/ke-pm-ti/references/delivery-plan.md",
+  "skills/ke-pm-ti/references/project-control-template.md",
+  "skills/ke-pm-ti/references/handover-improvement-template.md",
+  "skills/ke-ba-teo/references/intake-template.md",
+  "skills/ke-ba-teo/references/discovery-analysis.md",
+  "skills/ke-ba-teo/references/discovery-assessment-template.md",
+  "skills/ke-ba-teo/references/requirements-catalog-template.md",
+  "skills/ke-ba-teo/references/brd-outline.md",
+  "skills/ke-sa-laude/references/solution-blueprint.md",
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
   "skills/ke-tester-mit/references/quick-verification.md",
+  "skills/ke-tester-mit/references/quick-verification-result-template.md",
+  "skills/ke-tester-mit/references/test-case-template.md",
+  "skills/ke-tester-mit/references/uat-release-template.md",
   "skills/ke-router/references/browser-evidence.md",
   "skills/ke-router/references/language-preferences.md",
+  "skills/ke-router/references/delivery-lifecycle.md",
+  "skills/ke-router/references/phase-template-index.md",
+  "skills/ke-router/references/team-collaboration.md",
+  "skills/ke-expert-panel-co/references/decision-record.md",
   "skills/ke-document-writer/references/user-guide.md",
   "skills/ke-document-writer/references/office-output.md",
 ]) {
@@ -100,9 +120,9 @@ const templateDirectories = (
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
   .sort();
-if (templateDirectories.join(",") !== "input,output,private") {
+if (templateDirectories.join(",") !== "analysis,history,input,output,private") {
   failures.push(
-    `projects/_template: expected input,output,private; found ${templateDirectories.join(",")}`,
+    `projects/_template: expected analysis,history,input,output,private; found ${templateDirectories.join(",")}`,
   );
 }
 
@@ -114,6 +134,9 @@ for (const placeholder of [
   "{{DISPLAY_NAME}}",
   "{{OBJECTIVE}}",
   "{{CREATED_DATE}}",
+  "{{ENTRY_ROUTE}}",
+  "{{DELIVERY_TRACK}}",
+  "{{CURRENT_PHASE}}",
 ]) {
   if (!projectTemplate.includes(placeholder)) {
     failures.push(`projects/_template/PROJECT.md: missing ${placeholder}`);
@@ -193,14 +216,24 @@ if (rootPackageJson.scripts?.office !==
 }
 
 const agentsRules = await readText("AGENTS.md");
-const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
+const engineerSkill = await readText("skills/ke-engineer-leba/SKILL.md");
 const customizationKnowledge = await readText(
-  "skills/ke-engineer-binh/references/javascript-customization.md",
+  "skills/ke-engineer-leba/references/javascript-customization.md",
 );
 const processManagementKnowledge = await readText(
-  "skills/ke-engineer-binh/references/process-management.md",
+  "skills/ke-engineer-leba/references/process-management.md",
 );
 const testerSkill = await readText("skills/ke-tester-mit/SKILL.md");
+const routerSkill = await readText("skills/ke-router/SKILL.md");
+const pmSkill = await readText("skills/ke-pm-ti/SKILL.md");
+const baSkill = await readText("skills/ke-ba-teo/SKILL.md");
+const saSkill = await readText("skills/ke-sa-laude/SKILL.md");
+const deliveryLifecycle = await readText(
+  "skills/ke-router/references/delivery-lifecycle.md",
+);
+const phaseTemplateIndex = await readText(
+  "skills/ke-router/references/phase-template-index.md",
+);
 const smokeTestKnowledge = await readText(
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
 );
@@ -208,7 +241,7 @@ const quickVerificationKnowledge = await readText(
   "skills/ke-tester-mit/references/quick-verification.md",
 );
 const recordQueryKnowledge = await readText(
-  "skills/ke-engineer-binh/references/record-query-diagnostics.md",
+  "skills/ke-engineer-leba/references/record-query-diagnostics.md",
 );
 const browserEvidenceKnowledge = await readText(
   "skills/ke-router/references/browser-evidence.md",
@@ -223,6 +256,72 @@ const userGuideKnowledge = await readText(
 const officeOutputKnowledge = await readText(
   "skills/ke-document-writer/references/office-output.md",
 );
+for (const [skillName, skill, references] of [
+  [
+    "ke-router",
+    routerSkill,
+    ["delivery-lifecycle.md", "phase-template-index.md", "team-collaboration.md"],
+  ],
+  [
+    "ke-pm-ti",
+    pmSkill,
+    [
+      "delivery-plan.md",
+      "project-control-template.md",
+      "handover-improvement-template.md",
+    ],
+  ],
+  [
+    "ke-ba-teo",
+    baSkill,
+    [
+      "intake-template.md",
+      "discovery-analysis.md",
+      "discovery-assessment-template.md",
+      "requirements-catalog-template.md",
+      "brd-outline.md",
+    ],
+  ],
+  ["ke-sa-laude", saSkill, ["solution-blueprint.md"]],
+  ["ke-engineer-leba", engineerSkill, ["build-and-deploy-template.md"]],
+  [
+    "ke-tester-mit",
+    testerSkill,
+    [
+      "test-case-template.md",
+      "quick-verification-result-template.md",
+      "uat-release-template.md",
+    ],
+  ],
+]) {
+  for (const reference of references) {
+    if (!skill.includes(reference)) {
+      failures.push(`${skillName}: phase template is not linked: ${reference}`);
+    }
+  }
+}
+for (const phase of [
+  "Engagement Setup",
+  "Discovery Intake",
+  "Customer Context",
+  "Current-State Assessment",
+  "Future-State Design",
+  "Solution Architecture",
+  "Build / stage / deploy",
+  "Quick Verification",
+  "Smoke Test",
+  "UAT / release",
+  "Handover / improve",
+]) {
+  if (!phaseTemplateIndex.includes(phase)) {
+    failures.push(`phase-template-index.md: lifecycle phase is missing: ${phase}`);
+  }
+}
+for (const gate of ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7"]) {
+  if (!deliveryLifecycle.includes(gate) || !phaseTemplateIndex.includes(gate)) {
+    failures.push(`Delivery lifecycle/template index: quality gate is missing: ${gate}`);
+  }
+}
 for (const statement of [
   "chat_language",
   "document_languages",
@@ -308,16 +407,16 @@ if (!agentsRules.includes("MCP is the default channel, not the exclusive channel
   failures.push("AGENTS.md: MCP-first fallback contract is missing");
 }
 if (!engineerSkill.includes("without another channel-choice review")) {
-  failures.push("ke-engineer-binh: approved REST execution contract is missing");
+  failures.push("ke-engineer-leba: approved REST execution contract is missing");
 }
 if (!engineerSkill.includes("supported channel per operation")) {
-  failures.push("ke-engineer-binh: hybrid MCP/REST orchestration is missing");
+  failures.push("ke-engineer-leba: hybrid MCP/REST orchestration is missing");
 }
 if (!engineerSkill.includes("run app:url -- --app <APP_ID>")) {
-  failures.push("ke-engineer-binh: post-deploy App URL contract is missing");
+  failures.push("ke-engineer-leba: post-deploy App URL contract is missing");
 }
 if (!engineerSkill.includes("Never infer missing permissions")) {
-  failures.push("ke-engineer-binh: empty-query diagnostic guardrail is missing");
+  failures.push("ke-engineer-leba: empty-query diagnostic guardrail is missing");
 }
 for (const statement of [
   "no visible record",
@@ -356,7 +455,7 @@ for (const statement of [
   "Do not give the task's final completion response",
 ]) {
   if (!engineerSkill.includes(statement)) {
-    failures.push(`ke-engineer-binh: missing quick-verification contract: ${statement}`);
+    failures.push(`ke-engineer-leba: missing quick-verification contract: ${statement}`);
   }
 }
 for (const statement of [
@@ -459,5 +558,5 @@ if (failures.length) {
 }
 
 console.log(
-  `KE Kit validation passed (${skillDirectories.length} skills, minimal project template, protected output).`,
+  `KE Kit validation passed (${skillDirectories.length} skills, lifecycle project template, protected output).`,
 );

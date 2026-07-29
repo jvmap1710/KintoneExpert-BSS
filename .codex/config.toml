@@ -40,11 +40,11 @@ path = "skills/ke-ba-teo"
 enabled = true
 
 [[skills.config]]
-path = "skills/ke-sa-son"
+path = "skills/ke-sa-laude"
 enabled = true
 
 [[skills.config]]
-path = "skills/ke-engineer-binh"
+path = "skills/ke-engineer-leba"
 enabled = true
 
 [[skills.config]]

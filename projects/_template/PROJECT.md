@@ -1,30 +1,86 @@
 # {{DISPLAY_NAME}}
 
-> Hồ sơ làm việc nội bộ của KE. Các agent đọc file này trước khi xử lý để
-> nhận diện đúng project và không trộn input/output giữa các dự án.
+> KE's project-local dashboard and current source of truth. Every expert reads
+> this file, the referenced current baseline, and open targeted items in
+> `TEAM-NOTES.md` before acting.
 
-## Thông tin project
+## Project identity
 
-| Thuộc tính | Giá trị |
+| Property | Value |
 | --- | --- |
-| Mã project | `{{PROJECT_SLUG}}` |
-| Loại | {{PROJECT_TYPE}} |
-| Tên hiển thị | {{DISPLAY_NAME}} |
-| Ngày tạo | {{CREATED_DATE}} |
-| Mục tiêu | {{OBJECTIVE}} |
-| Giai đoạn | Khởi tạo |
-| Người phụ trách | KE Router |
-| Môi trường | Test |
+| Project ID | `{{PROJECT_SLUG}}` |
+| Engagement type | {{PROJECT_TYPE}} |
+| Display name | {{DISPLAY_NAME}} |
+| Created | {{CREATED_DATE}} |
+| Objective | {{OBJECTIVE}} |
+| Entry route | {{ENTRY_ROUTE}} |
+| Delivery track | {{DELIVERY_TRACK}} |
+| Current phase | {{CURRENT_PHASE}} |
+| Current gate | G0 — Engagement Confirmed |
+| Active owner | KE Router |
+| Environment | Analysis / Test |
 
-## Cấu trúc dữ liệu
+## Baseline status
 
-- `input/`: tài liệu khách hàng đã làm sạch, survey, MoM và dữ liệu đầu vào.
-- `private/`: file gốc, dữ liệu cá nhân và tài liệu nhạy cảm.
-- `output/`: tài liệu HTML do KE tạo cho project này.
+| Baseline | Status | Version / artifact | Confirmed by / date |
+| --- | --- | --- | --- |
+| Evidence baseline | Not started | — | — |
+| Customer Context | Not started | — | — |
+| Current State | Not started | — | — |
+| Future State | Not started | — | — |
+| Solution Architecture | Not started | — | — |
 
-## Quy tắc
+Allowed baseline states: `Not started`, `Draft`, `Internal Reviewed`,
+`Customer Reviewed`, and `Confirmed`.
 
-- Không đưa credentials, token, password hoặc dữ liệu cá nhân vào `output/`.
-- Không ghi đè tài liệu đã tồn tại nếu chưa được user xác nhận.
-- Cập nhật mục tiêu, giai đoạn và người phụ trách khi project thay đổi.
-- Toàn bộ workspace này được Git-ignore mặc định.
+## Scope and assumptions
+
+### In scope
+
+- {{OBJECTIVE}}
+
+### Out of scope
+
+- Not established.
+
+### Critical assumptions
+
+- None recorded.
+
+## Open blockers
+
+- None recorded.
+
+## Artifact index
+
+| Artifact | Status | Safe relative path | Owner |
+| --- | --- | --- | --- |
+| Team collaboration log | Active | `TEAM-NOTES.md` | All KE experts |
+
+## Delivery state
+
+| Property | Value |
+| --- | --- |
+| Last handoff | None |
+| Next action | Complete readiness check for {{ENTRY_ROUTE}} |
+| Next owner | KE Router |
+| Last updated | {{CREATED_DATE}} |
+
+## Workspace
+
+- `input/`: sanitized customer-provided source material.
+- `private/`: raw files, PII, attachments, and confidential evidence.
+- `analysis/`: working registers and analysis artifacts.
+- `output/`: user-facing standalone deliverables.
+- `history/`: archived phase notes and superseded internal baselines.
+
+## Rules
+
+- Keep this dashboard concise; put working discussion in `TEAM-NOTES.md`.
+- Promote confirmed decisions into the authoritative artifact before closing
+  the related note.
+- Update phase, gate, baselines, blockers, artifact index, handoff, next
+  action, owner, and timestamp when they change.
+- Never place credentials, secrets, or unredacted personal/production data in
+  this file or user-facing output.
+- Never read or reuse context from another customer project.

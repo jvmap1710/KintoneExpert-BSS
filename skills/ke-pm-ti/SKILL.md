@@ -24,9 +24,9 @@ unless a reproduced technical symptom needs deep diagnosis.
 
 - Use `$ke-ba-teo` for process discovery, requirements, eForm content,
   BRD, and workflow business rules.
-- Use `$ke-sa-son` for solution architecture, data model, security,
+- Use `$ke-sa-laude` for solution architecture, data model, security,
   master data, integrations, and reporting design.
-- Use `$ke-engineer-binh` for Kintone MCP implementation, JavaScript
+- Use `$ke-engineer-leba` for Kintone MCP implementation, JavaScript
   customization, configuration, and deployment.
 - Use `$ke-tester-mit` for test cases, UAT, acceptance, and defects.
 - Use `$ke-expert-panel-co` when the user asks for a multi-role opinion,
@@ -34,16 +34,28 @@ unless a reproduced technical symptom needs deep diagnosis.
 
 ## Working method
 
-1. State the business outcome, scope, assumptions, owner, and success measure.
-2. Identify the current phase: discovery, design, build, test, deploy, or
-   improve.
-3. Confirm that the customer workspace exists under `projects/<project-slug>/`
+1. Run the context preflight in
+   `../ke-router/references/team-collaboration.md`.
+2. State the business outcome, scope, assumptions, owner, and success measure.
+3. Identify the entry route, delivery track, lifecycle phase, and quality gate
+   using `../ke-router/references/delivery-lifecycle.md`.
+4. Confirm that the project workspace exists under `projects/<project-slug>/`
    and create a lightweight plan using `references/delivery-plan.md`.
-4. Keep one decision log and one prioritized backlog; expose open questions.
-5. Record every role transfer with
+5. Keep one decision log, RAID view, milestone view, and prioritized backlog
+   using `references/project-control-template.md`; expose open questions.
+6. Record every role transfer with
    `../ke-router/references/handoff-contract.md`.
-6. Do not promise deployment, data changes, or external coordination without
+7. Update `PROJECT.md` and `TEAM-NOTES.md` when phase, gate, track, blocker,
+   artifact, handoff, owner, or next action changes.
+8. Do not promise deployment, data changes, or external coordination without
    the user's authorization and the repository safety rules.
+9. At closure or transition to operations, use
+   `references/handover-improvement-template.md` to record accepted scope,
+   ownership, support, retained risks, backlog, and sign-off.
+
+When analysis moves to Demo/PoC or Real Project, preserve confirmed baselines
+in the same workspace and run only the delta readiness check. Require a
+PoC-to-Production Gap Assessment for a PoC-to-Real-Project transition.
 
 ## Output
 

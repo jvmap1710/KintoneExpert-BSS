@@ -1,60 +1,51 @@
-# KE delivery flow
+# KE phase and role flow
 
-| Phase | Owner | Primary output |
+Use `delivery-lifecycle.md` for gate definitions and track transitions.
+
+| Phase | Primary owner | Primary output |
 | --- | --- | --- |
-| Frame | Tí (PM) | Goal, scope, plan, decision log |
-| Discover | Tèo (BA) | As-Is/To-Be, BRD, field and approval rules |
-| Design | LauDe (SA) | Solution and data/security/integration design |
-| Build | LeBa (Engineer) | Build specification and deploy summary |
-| Validate | Mít (Tester) | Test cases, UAT result, release recommendation |
-| Close / improve | Tí (PM) | Handover, backlog, lessons learned |
+| Engagement Setup | Tí or Router | Project dashboard, objective, entry route, track |
+| Discovery Intake | Tèo | Source/Evidence Register, questions and conflicts |
+| Customer Context | Tèo | Confirmed customer overview and scope context |
+| Current-State Assessment | Tèo | As-Is, findings, root causes and opportunities |
+| Future-State Design | Tèo | To-Be, requirements and acceptance criteria |
+| Solution Architecture | LauDe | App/data/security/integration blueprint |
+| Build | LeBa | Implemented configuration/customization and deploy evidence |
+| Change-level verification | Mít | Quick Verification for each LeBa task |
+| Full validation | Mít | Approved smoke test, UAT evidence and report |
+| Close / improve | Tí | Handover, backlog, decisions and next roadmap |
 
-Cò (Expert Panel) can be called at every phase. When the user requests a saved
-deliverable, use `$ke-document-writer` and store standalone HTML only in
-`projects/<project-slug>/output/`. Keep customer sources under
-`projects/<project-slug>/` and apply `handoff-contract.md` to cross-role
-hand-offs.
+Cò may be called for a material multi-role conflict or decision. Every role
+performs the context preflight and structured handoff in
+`team-collaboration.md`.
 
-Both the full delivery flow and Demo Fast Track use the active `kintone` MCP
-tools by default. If the whole MCP server is not available, stop at MCP
-preflight and guide the user through configuration checks. If MCP is loaded
-but lacks a required supported operation, expose the capability gap and offer
-an official UI/tool or scoped REST path. Never replace MCP with `node_modules`
-inspection, shell JSON-RPC, web research for internal schemas, or an
-unapproved REST call. Once REST is explicitly approved for the named operation,
-continue that scoped path and retain the normal deployment approval gate.
+## Demo / PoC Fast Track
 
-Before execution, display the experts who will actually participate. At each
-phase start, the active expert identifies themself using
-`Mình là <name> — <role> của KE`, then states the accepted input and current
-responsibility. Apply `handoff-contract.md` whenever the active expert changes.
+Use:
 
-## Demo Fast Track
+`Mini Intake -> Tèo or LauDe as needed -> (LeBa -> Mít Quick Verification)*
+-> user OK -> Mít full smoke test -> Demo Package`
 
-Use this path for a time-boxed presales demo or proof of concept that does not
-create a delivery commitment:
+- Show the actual participating expert sequence before execution.
+- Keep a one-page Customer Context and As-Is/Pain Point Snapshot even when
+  detailed discovery is skipped.
+- Define the PoC hypothesis, success criteria, synthetic-data boundary,
+  shortcuts, exclusions, and production-hardening backlog.
+- Each LeBa task must pass targeted Mít Quick Verification before task closure.
+- After all agreed features are complete, wait for explicit user approval
+  before the 5–10 case/record smoke test and HTML report.
+- Label the result non-production. A transition to Real Project requires a
+  PoC-to-Production Gap Assessment.
 
-`Requester -> Teo or LauDe (as needed) -> (LeBa -> Mít Quick Verification)*
--> user OK -> Mít smoke test -> Requester`
+## Real Project
 
-- Show this sequence to the user with the actual included experts before work
-  starts. Do not hide role changes in a seamless assistant voice.
-- Skip Teo when the demo scenario and sample data are already clear.
-- Skip LauDe when the demo uses one simple app with no material integration,
-  security, data-model, or customization decision.
-- After each LeBa implementation/fix task, Mít runs the targeted Quick
-  Verification contract before LeBa closes that task. A failure loops back to
-  LeBa; this gate is not a smoke test.
-- When all agreed features are complete, show the completed feature list and
-  wait for the user's explicit `OK` before starting full smoke testing.
-- Mít then performs an evidence-based smoke test with 5–10 synthetic records,
-  mandatory HTML report, the demonstrated happy path, and visible
-  failure risks; a full UAT pack is not required.
-- Invite Ti only when scope control, timeline/cost commitment, stakeholder
-  coordination, delivery planning, or a hand-off to implementation is needed.
-- Keep the demo clearly labelled as non-production. Use synthetic data and the
-  test environment, and apply the normal approval rules for writes and deploys.
-- Create a `demo` project workspace before starting and keep its input,
-  confidential evidence, and output together under that workspace.
-- Record assumptions, shortcuts, unsupported claims, and what must be hardened
-  before production.
+Use:
+
+`Readiness -> Future State -> Requirements Baseline -> Solution Architecture
+-> Delivery Plan -> Build/Quick Verification -> user OK -> Smoke Test -> UAT
+-> Production Readiness -> Handover`
+
+Require material scope/SOW alignment, stakeholders and acceptance owner,
+security, data/migration, integrations, non-functional needs, environments,
+release/rollback, operations, and support decisions before the applicable
+gate.

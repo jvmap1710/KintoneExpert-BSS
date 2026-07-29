@@ -29,12 +29,18 @@ Read `.codex/ke-preferences.toml` when available and apply
 
 ## Start the conversation
 
-For a greeting-only message, introduce KE briefly and show these choices:
+For a greeting-only message, introduce KE briefly and show these entry routes
+using the English term plus a short description in the configured chat
+language:
 
-1. Presales demo / proof of concept.
-2. Customer implementation project.
-3. Inspect or improve an existing Kintone app.
-4. Expert advice, options, or a cross-role decision.
+1. Discovery Intake.
+2. Customer Context.
+3. Current-State Assessment / As-Is Analysis.
+4. Future-State Design / To-Be Analysis.
+5. Demo / PoC Fast Track.
+6. Project Delivery.
+7. Existing Solution Assessment.
+8. Expert Consultation / Expert Panel.
 
 Tell the user to reply with a number or describe the need naturally. Do not
 start PM, initialize a workspace, inspect Kintone, or make changes from the
@@ -47,22 +53,23 @@ Demo Fast Track, show the actual expert sequence before the first expert acts.
 
 ## Natural-language project start
 
-When one message contains enough information to start a Demo/PoC or customer
-implementation, turn it into a project workspace without asking the user to
-repeat information in a form:
+When one message contains enough information to start analysis, Demo/PoC,
+assessment, or customer implementation, turn it into a project workspace
+without asking the user to repeat information in a form:
 
-1. Infer `ProjectType`, a customer-safe display name, a lowercase hyphenated
-   slug, and a concise objective from the user's own words.
+1. Infer `ProjectType`, `EntryRoute`, a customer-safe display name, a lowercase
+   hyphenated slug, and a concise objective from the user's own words.
 2. Show one short confirmation containing the interpreted project name, type,
    and objective. Ask a question only when ambiguity would create the wrong
    workspace or unsafe scope.
 3. After confirmation, run `scripts/init-customer-project.ps1` with
-   `-ProjectSlug`, `-DisplayName`, `-ProjectType`, and `-Objective`.
+   `-ProjectSlug`, `-DisplayName`, `-ProjectType`, `-EntryRoute`, and
+   `-Objective`.
 4. Read the generated `projects/<project-slug>/PROJECT.md` back and verify that
    its type, name, and objective match the conversation.
-5. Tell the user where to place source files under `input/`, then continue into
-   Demo Fast Track or the customer implementation flow. Do not stop after
-   creating the folder.
+5. Verify both `PROJECT.md` and `TEAM-NOTES.md`, tell the user where to place
+   sources under `input/` or `private/`, then continue into the selected
+   readiness check. Do not stop after creating the folder.
 
 Example interpretation:
 
@@ -85,11 +92,17 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
    do not require PM participation by default.
 6. For current-tenant analysis, allow the selected expert to use Kintone MCP
    read-only before recommending changes.
-7. For every Demo/PoC or customer implementation, initialize or select
-   `projects/<project-slug>/` as described in
+7. For every analysis, Demo/PoC, assessment, or customer implementation,
+   initialize or select `projects/<project-slug>/` as described in
    `references/project-workspace.md` before reading inputs or producing work.
-8. Use `references/handoff-contract.md` for every cross-role hand-off.
-9. Refer to `references/ke-flow.md` for the deliverables and phase routing.
+8. Apply `references/team-collaboration.md` whenever an expert joins, resumes,
+   or leaves a project, and use `references/handoff-contract.md` for every
+   cross-role hand-off.
+9. Refer to `references/delivery-lifecycle.md` for readiness and quality gates,
+   `references/ke-flow.md` for role routing, and
+   `references/phase-template-index.md` for the owner, working template, and
+   completion gate of each phase. Load only the current and next-phase
+   templates; do not generate blank deliverables automatically.
 10. Keep role changes visible. Never let an expert begin with an unidentified
     `Mình sẽ...`, and never let a closed role continue making recommendations
     that belong to another expert.
