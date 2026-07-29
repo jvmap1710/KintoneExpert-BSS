@@ -127,6 +127,7 @@ if (templateDirectories.join(",") !== "analysis,history,input,output,private") {
 }
 
 const projectTemplate = await readText("projects/_template/PROJECT.md");
+const teamNotesTemplate = await readText("projects/_template/TEAM-NOTES.md");
 const projectInitializer = await readText("scripts/init-customer-project.ps1");
 for (const placeholder of [
   "{{PROJECT_SLUG}}",
@@ -143,6 +144,47 @@ for (const placeholder of [
   }
   if (!projectInitializer.includes(placeholder)) {
     failures.push(`scripts/init-customer-project.ps1: does not replace ${placeholder}`);
+  }
+}
+for (const contract of [
+  "Current gate",
+  "Baseline status",
+  "Open blockers",
+  "Artifact index",
+  "Last handoff",
+  "Next action",
+  "TEAM-NOTES.md",
+]) {
+  if (!projectTemplate.includes(contract)) {
+    failures.push(`projects/_template/PROJECT.md: missing dashboard contract: ${contract}`);
+  }
+}
+for (const contract of [
+  "{{DISPLAY_NAME}}",
+  "Target role",
+  "Related sources",
+  "Response / Resolution",
+  "Finding | Question | Conflict | Assumption | Risk",
+  "Open | In Review | Answered | Confirmed | Closed",
+]) {
+  if (!teamNotesTemplate.includes(contract)) {
+    failures.push(`projects/_template/TEAM-NOTES.md: missing note contract: ${contract}`);
+  }
+}
+for (const contract of [
+  "'analysis', 'demo', 'customer', 'assessment'",
+  "'discovery-intake'",
+  "'customer-context'",
+  "'current-state'",
+  "'future-state'",
+  "'demo-fast-track'",
+  "'project-delivery'",
+  "'existing-solution'",
+  "'expert-consultation'",
+  "TEAM-NOTES.md",
+]) {
+  if (!projectInitializer.includes(contract)) {
+    failures.push(`init-customer-project.ps1: missing lifecycle option: ${contract}`);
   }
 }
 
@@ -230,6 +272,12 @@ const baSkill = await readText("skills/ke-ba-teo/SKILL.md");
 const saSkill = await readText("skills/ke-sa-laude/SKILL.md");
 const deliveryLifecycle = await readText(
   "skills/ke-router/references/delivery-lifecycle.md",
+);
+const entryRouting = await readText(
+  "skills/ke-router/references/entry-routing.md",
+);
+const teamCollaboration = await readText(
+  "skills/ke-router/references/team-collaboration.md",
 );
 const phaseTemplateIndex = await readText(
   "skills/ke-router/references/phase-template-index.md",
@@ -320,6 +368,43 @@ for (const phase of [
 for (const gate of ["G0", "G1", "G2", "G3", "G4", "G5", "G6", "G7"]) {
   if (!deliveryLifecycle.includes(gate) || !phaseTemplateIndex.includes(gate)) {
     failures.push(`Delivery lifecycle/template index: quality gate is missing: ${gate}`);
+  }
+}
+for (const route of [
+  "Discovery Intake",
+  "Customer Context",
+  "Current-State Assessment / As-Is Analysis",
+  "Future-State Design / To-Be Analysis",
+  "Demo / PoC Fast Track",
+  "Project Delivery",
+  "Existing Solution Assessment",
+  "Expert Consultation / Expert Panel",
+]) {
+  if (!entryRouting.includes(route) || !routerSkill.includes(route)) {
+    failures.push(`Router: entry route is missing: ${route}`);
+  }
+}
+for (const contract of [
+  "PROJECT.md",
+  "TEAM-NOTES.md",
+  "Context preflight",
+  "Do not overwrite another role's statement",
+  "Promote a confirmed decision",
+  "Never use context from another project workspace",
+]) {
+  if (!teamCollaboration.includes(contract)) {
+    failures.push(`team-collaboration.md: missing contract: ${contract}`);
+  }
+}
+for (const [role, skill] of [
+  ["ke-pm-ti", pmSkill],
+  ["ke-ba-teo", baSkill],
+  ["ke-sa-laude", saSkill],
+  ["ke-engineer-leba", engineerSkill],
+  ["ke-tester-mit", testerSkill],
+]) {
+  if (!skill.includes("team-collaboration.md")) {
+    failures.push(`${role}: project context preflight is missing`);
   }
 }
 for (const statement of [
