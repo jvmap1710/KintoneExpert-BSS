@@ -53,6 +53,7 @@ for (const required of [
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
   "skills/ke-router/references/browser-evidence.md",
+  "skills/ke-router/references/language-preferences.md",
   "skills/ke-document-writer/references/user-guide.md",
   "skills/ke-document-writer/references/office-output.md",
 ]) {
@@ -208,6 +209,9 @@ const recordQueryKnowledge = await readText(
 const browserEvidenceKnowledge = await readText(
   "skills/ke-router/references/browser-evidence.md",
 );
+const languagePreferencesKnowledge = await readText(
+  "skills/ke-router/references/language-preferences.md",
+);
 const documentWriterSkill = await readText("skills/ke-document-writer/SKILL.md");
 const userGuideKnowledge = await readText(
   "skills/ke-document-writer/references/user-guide.md",
@@ -215,6 +219,40 @@ const userGuideKnowledge = await readText(
 const officeOutputKnowledge = await readText(
   "skills/ke-document-writer/references/office-output.md",
 );
+for (const statement of [
+  "chat_language",
+  "document_languages",
+  "one complete standalone file per language",
+  "explicit instruction in the current conversation",
+]) {
+  if (!languagePreferencesKnowledge.includes(statement)) {
+    failures.push(`language-preferences.md: missing contract: ${statement}`);
+  }
+}
+for (const statement of [
+  "--chat-language",
+  "--document-languages",
+  "Preferred chat language",
+  "English, Vietnamese",
+  "ke-preferences.toml",
+]) {
+  const installer = await readText("cli/ke-installer.mjs");
+  if (!installer.includes(statement)) {
+    failures.push(`ke-installer.mjs: missing language option: ${statement}`);
+  }
+}
+for (const oldIdentity of ["Sơn —", "Bình —", "Sơn/Son", "Bình/Binh"]) {
+  for (const relativePath of ["AGENTS.md", "README.md", "KE-HELP.md", "skills/ke-router/SKILL.md"]) {
+    if ((await readText(relativePath)).includes(oldIdentity)) {
+      failures.push(`${relativePath}: old expert identity remains: ${oldIdentity}`);
+    }
+  }
+}
+for (const newIdentity of ["LauDe", "LeBa"]) {
+  if (!agentsRules.includes(newIdentity)) {
+    failures.push(`AGENTS.md: missing expert identity: ${newIdentity}`);
+  }
+}
 for (const statement of [
   "HTML remains KE's default standalone format",
   "DOCX",

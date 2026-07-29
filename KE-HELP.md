@@ -9,14 +9,14 @@ ngôn ngữ tự nhiên; KE sẽ tự chọn chuyên gia phù hợp.
 | --- | --- |
 | Tí (Ti) — PM | Phạm vi, roadmap, ưu tiên, tiến độ |
 | Tèo (Teo) — BA | Khảo sát, BRD, eForm, quy trình và approval rules |
-| Sơn (Son) — SA | Kiến trúc app/data, lookup, phân quyền, integration |
-| Bình (Binh) — Engineer | Build, custom JS, kiểm tra, deploy qua Kintone MCP |
+| LauDe — SA | Kiến trúc app/data, lookup, phân quyền, integration |
+| LeBa — Engineer | Build, custom JS, kiểm tra, deploy qua Kintone MCP |
 | Mít (Mit) — Tester | Test case, UAT, defect, release readiness |
 | Cò (Co) — Expert Panel | Thảo luận đa chuyên gia, phương án và rủi ro |
 
 ## Luồng mặc định
 
-`Tí -> Tèo -> Sơn -> Bình -> Mít -> Tí`
+`Tí -> Tèo -> LauDe -> LeBa -> Mít -> Tí`
 
 Cò có thể tham gia ở bất kỳ bước nào. Tất cả chuyên gia có thể dùng Kintone
 MCP read-only để phân tích app hiện có và Playwright MCP để thu thập evidence
@@ -44,8 +44,8 @@ hoạt PM, không tạo project folder và không truy cập Kintone.
 - `Hi` — KE giới thiệu tổng quan và cách bắt đầu.
 - `Tôi muốn chuyển phiếu đề nghị mua hàng từ Excel lên Kintone.`
 - `Tèo, hãy tạo checklist collect requirement cho quy trình OT.`
-- `Sơn, tư vấn data model cho Employee và OT.`
+- `LauDe, tư vấn data model cho Employee và OT.`
 - `Cò, tranh luận giữa 1 app và nhiều app cho quy trình mua hàng.`
-- `Bình, đọc cấu trúc app <APP_ID> và đề xuất cách custom.`
+- `LeBa, đọc cấu trúc app <APP_ID> và đề xuất cách custom.`
 - `Tạo User Guide app OT cho nhân viên và Manager, có screenshot từ UI thật.`
 - `Xuất BRD thành HTML và Word, đồng thời xuất field catalogue thành Excel.`

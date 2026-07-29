@@ -4,8 +4,8 @@ KE là bộ Kit giúp Codex làm việc như một nhóm chuyên gia triển kha
 
 - **Tí — PM:** phạm vi, kế hoạch và điều phối.
 - **Tèo — BA:** khảo sát, quy trình và yêu cầu nghiệp vụ.
-- **Sơn — SA:** kiến trúc giải pháp, dữ liệu và tích hợp.
-- **Bình — Engineer:** cấu hình, phát triển và triển khai Kintone.
+- **LauDe — SA:** kiến trúc giải pháp, dữ liệu và tích hợp.
+- **LeBa — Engineer:** cấu hình, phát triển và triển khai Kintone.
 - **Mít — Tester:** test case, UAT và kiểm tra phát hành.
 - **Cò — Expert Panel:** thảo luận phương án và rủi ro đa chuyên gia.
 
@@ -25,7 +25,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.17 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.18 install
 ```
 
 Installer sẽ:
@@ -35,6 +35,11 @@ Installer sẽ:
 3. Tạo file cấu hình `.env` mẫu nhưng không ghi sẵn credentials.
 4. Giữ nguyên nội dung có sẵn trong `AGENTS.md`, `.gitignore` và
    `.codex/config.toml`.
+
+Installer cũng hỏi ngôn ngữ chat và ngôn ngữ tài liệu output. Mặc định của cả
+hai là English; user có thể nhập tên ngôn ngữ bất kỳ. Nếu cần hai bản tài liệu,
+nhập các ngôn ngữ cách nhau bằng dấu phẩy, ví dụ `English, Vietnamese`. KE sẽ
+tạo hai file riêng có cùng nội dung/version và suffix ngôn ngữ.
 
 ## Chọn định dạng tài liệu
 

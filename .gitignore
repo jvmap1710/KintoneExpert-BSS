@@ -4,6 +4,7 @@ dist/
 .npm-cache/
 .tmp/
 .ke-browser-evidence/
+.codex/ke-preferences.toml
 *.tgz
 .env
 .env.*

@@ -1,4 +1,4 @@
 interface:
-  display_name: "Sơn - Solution Architect"
+  display_name: "LauDe - Solution Architect"
   short_description: "Design Kintone apps, data, integrations, and security."
   default_prompt: "Use $ke-sa-son to design this Kintone solution."

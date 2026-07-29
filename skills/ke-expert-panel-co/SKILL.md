@@ -15,7 +15,7 @@ repeat the same inspection. Follow
 
 Run a structured, practical discussion without losing the project context.
 Bring these viewpoints: Tí (delivery and scope), Tèo (business value and
-rules), Sơn (architecture and security), Bình (implementation feasibility),
+rules), LauDe (architecture and security), LeBa (implementation feasibility),
 and Mít (quality and release risk).
 
 ## Discussion format

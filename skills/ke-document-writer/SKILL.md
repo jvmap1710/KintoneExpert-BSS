@@ -16,21 +16,26 @@ Create output files only when the user requests a saved deliverable.
    never reproduce its raw contents in output.
 3. Separate confirmed facts, decisions, assumptions, and open questions. Do not
    invent participants, policy, requirements, approvals, dates, or test results.
-4. Resolve the output type. If it is not specified and the choice matters,
+4. Read `.codex/ke-preferences.toml` when it exists and apply
+   `../ke-router/references/language-preferences.md`. An explicit language in
+   the current request overrides the saved preference. For multiple document
+   languages, create one complete, version-matched deliverable per language
+   with a clear language suffix.
+5. Resolve the output type. If it is not specified and the choice matters,
    offer the relevant HTML, DOCX, XLSX, PPTX, or multiple-format options from
    `references/office-output.md`. Write final deliverables directly to
    `projects/<project-slug>/output/`; do not create Markdown or intermediate
    document files in the repository.
-5. Inspect the target path before writing. If it exists, do not overwrite it.
+6. Inspect the target path before writing. If it exists, do not overwrite it.
    Propose a new version or ask for explicit overwrite confirmation.
-6. Use a metadata table with document ID, version, project, owner, date,
+7. Use a metadata table with document ID, version, project, owner, date,
    status, reviewers/approver, and related artifact IDs when applicable.
-7. Apply `../ke-router/references/handoff-contract.md` when the document changes
+8. Apply `../ke-router/references/handoff-contract.md` when the document changes
    role ownership.
-8. For a user guide, SOP, operating manual, training handout, or UI how-to,
+9. For a user guide, SOP, operating manual, training handout, or UI how-to,
    follow `references/user-guide.md`. Use Playwright MCP to observe and replay
    the deployed flow before calling instructions verified.
-9. For DOCX, XLSX, PPTX, or multiple formats, follow
+10. For DOCX, XLSX, PPTX, or multiple formats, follow
    `references/office-output.md` and use the pinned OfficeCLI runtime. Validate,
    render, visually inspect, and read content back before delivery.
 
@@ -38,7 +43,8 @@ Create output files only when the user requests a saved deliverable.
 
 Create semantic, standalone HTML with:
 
-- UTF-8, `lang="vi"` unless another language is requested, responsive viewport,
+- UTF-8, a `lang` value matching the selected document language (default
+  `lang="en"`), responsive viewport,
   a meaningful `<title>`, and no remote assets.
 - One `<main>` region, a clear `<h1>`, metadata table, logical heading order,
   accessible tables, and descriptive link text.

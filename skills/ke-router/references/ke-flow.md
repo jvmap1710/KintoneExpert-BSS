@@ -4,8 +4,8 @@
 | --- | --- | --- |
 | Frame | Tí (PM) | Goal, scope, plan, decision log |
 | Discover | Tèo (BA) | As-Is/To-Be, BRD, field and approval rules |
-| Design | Sơn (SA) | Solution and data/security/integration design |
-| Build | Bình (Engineer) | Build specification and deploy summary |
+| Design | LauDe (SA) | Solution and data/security/integration design |
+| Build | LeBa (Engineer) | Build specification and deploy summary |
 | Validate | Mít (Tester) | Test cases, UAT result, release recommendation |
 | Close / improve | Tí (PM) | Handover, backlog, lessons learned |
 
@@ -34,12 +34,12 @@ responsibility. Apply `handoff-contract.md` whenever the active expert changes.
 Use this path for a time-boxed presales demo or proof of concept that does not
 create a delivery commitment:
 
-`Requester -> Teo or Son (as needed) -> Binh -> Mit smoke test -> Requester`
+`Requester -> Teo or LauDe (as needed) -> LeBa -> Mit smoke test -> Requester`
 
 - Show this sequence to the user with the actual included experts before work
   starts. Do not hide role changes in a seamless assistant voice.
 - Skip Teo when the demo scenario and sample data are already clear.
-- Skip Son when the demo uses one simple app with no material integration,
+- Skip LauDe when the demo uses one simple app with no material integration,
   security, data-model, or customization decision.
 - Mit performs an evidence-based smoke test with 5–10 synthetic records,
   mandatory HTML report, the demonstrated happy path, and visible

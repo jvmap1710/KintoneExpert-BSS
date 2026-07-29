@@ -49,7 +49,7 @@ Diagnostic flow:
    requests. The runtime is configured to redact sensitive network headers,
    disable usage statistics, and avoid CrUX URL sharing.
 4. Return the root cause or the narrowest supported hypothesis, linked to the
-   Playwright evidence ID. Hand code/configuration fixes to Bình and
+   Playwright evidence ID. Hand code/configuration fixes to LeBa and
    requirement ambiguity to Tèo.
 5. Re-run the user-visible path with Playwright after a fix. A clean console
    alone is not proof that the business flow works.
