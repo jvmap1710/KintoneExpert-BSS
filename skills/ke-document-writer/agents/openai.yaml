@@ -1,4 +1,4 @@
 interface:
   display_name: "KE Document Writer"
-  short_description: "Write verified KE guides and HTML deliverables."
-  default_prompt: "Use $ke-document-writer to create a verified UI user guide or another KE project deliverable."
+  short_description: "Write verified HTML and Office deliverables."
+  default_prompt: "Use $ke-document-writer to create a verified KE deliverable and let me choose HTML, DOCX, XLSX, PPTX, or multiple formats."

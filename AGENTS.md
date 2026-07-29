@@ -136,9 +136,11 @@ keeps decisions, scope, and hand-offs clear. Use Cò when the user explicitly
 requests a multi-role discussion or needs options and trade-offs at any project
 stage.
 Use `ke-document-writer` when the user requests a saved or exported project
-deliverable. Generate standalone HTML only under
-`projects/<project-slug>/output/` and
-never overwrite an existing file without explicit confirmation.
+deliverable. Support standalone HTML and native DOCX, XLSX, or PPTX under
+`projects/<project-slug>/output/`; never overwrite an existing file without
+explicit confirmation. If the user did not specify a format and the choice
+matters, offer the relevant output types. Use the pinned OfficeCLI runtime for
+Office files and require validate, render inspection, and content read-back.
 
 For a user guide, SOP, operating manual, training handout, or UI how-to, use
 Playwright to capture and replay the deployed flow, then use

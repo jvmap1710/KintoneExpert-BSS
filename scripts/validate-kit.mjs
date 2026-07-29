@@ -38,6 +38,9 @@ for (const required of [
   "scripts/setup.mjs",
   "platform/ke-browser-mcp/package.json",
   "platform/ke-browser-mcp/package-lock.json",
+  "platform/ke-office-cli/package.json",
+  "platform/ke-office-cli/package-lock.json",
+  "platform/ke-office-cli/scripts/run-officecli.mjs",
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
   "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
   "platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs",
@@ -51,6 +54,7 @@ for (const required of [
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
   "skills/ke-router/references/browser-evidence.md",
   "skills/ke-document-writer/references/user-guide.md",
+  "skills/ke-document-writer/references/office-output.md",
 ]) {
   await requirePath(required);
 }
@@ -172,6 +176,20 @@ if (!browserPackageJson.scripts?.["mcp:chrome-devtools"]?.includes(
   failures.push("ke-browser-mcp: Chrome DevTools network headers are not redacted");
 }
 
+const officePackageJson = JSON.parse(
+  await readText("platform/ke-office-cli/package.json"),
+);
+if (officePackageJson.dependencies?.["@officecli/officecli"] !== "1.0.143") {
+  failures.push("ke-office-cli: OfficeCLI version is not pinned");
+}
+if (officePackageJson.scripts?.office !== "node scripts/run-officecli.mjs") {
+  failures.push("ke-office-cli: pinned OfficeCLI wrapper is missing");
+}
+if (rootPackageJson.scripts?.office !==
+  "npm --prefix platform/ke-office-cli run office --") {
+  failures.push("Root package: OfficeCLI command is missing");
+}
+
 const agentsRules = await readText("AGENTS.md");
 const engineerSkill = await readText("skills/ke-engineer-binh/SKILL.md");
 const customizationKnowledge = await readText(
@@ -194,6 +212,23 @@ const documentWriterSkill = await readText("skills/ke-document-writer/SKILL.md")
 const userGuideKnowledge = await readText(
   "skills/ke-document-writer/references/user-guide.md",
 );
+const officeOutputKnowledge = await readText(
+  "skills/ke-document-writer/references/office-output.md",
+);
+for (const statement of [
+  "HTML remains KE's default standalone format",
+  "DOCX",
+  "XLSX",
+  "PPTX",
+  "Do not offer PDF by default",
+  "Office quality loop",
+  "structural validation",
+  "OFFICECLI_SKIP_UPDATE",
+]) {
+  if (!officeOutputKnowledge.includes(statement)) {
+    failures.push(`office-output.md: missing contract: ${statement}`);
+  }
+}
 for (const statement of [
   "use Playwright MCP",
   "Replay the documented critical path",

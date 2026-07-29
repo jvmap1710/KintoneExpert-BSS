@@ -25,16 +25,40 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.16 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.17 install
 ```
 
 Installer sẽ:
 
 1. Cài các skill và hướng dẫn vận hành của KE.
-2. Cài Kintone MCP, Playwright MCP và Chrome DevTools MCP runtime.
+2. Cài Kintone MCP, browser MCP và OfficeCLI runtime.
 3. Tạo file cấu hình `.env` mẫu nhưng không ghi sẵn credentials.
 4. Giữ nguyên nội dung có sẵn trong `AGENTS.md`, `.gitignore` và
    `.codex/config.toml`.
+
+## Chọn định dạng tài liệu
+
+Khi yêu cầu lưu tài liệu, user có thể chọn:
+
+- `HTML`: mặc định, standalone và dễ mở trên browser.
+- `DOCX`: BRD, MoM, solution, test report, User Guide, SOP, handover.
+- `XLSX`: field catalogue, backlog, mapping, test case, defect/risk register.
+- `PPTX`: proposal, executive summary, demo/training hoặc decision workshop.
+- Nhiều định dạng cùng lúc, ví dụ `HTML + DOCX`.
+
+Ví dụ:
+
+```text
+Xuất User Guide app OT thành HTML và Word.
+Xuất field catalogue và test cases thành Excel.
+Tạo deck PowerPoint 10 slide để demo giải pháp.
+```
+
+Office output được tạo bằng runtime
+[iOfficeAI/OfficeCLI](https://github.com/iOfficeAI/OfficeCLI) đã khóa phiên bản.
+KE sẽ validate cấu trúc, render lại thành HTML/ảnh để kiểm tra bố cục và đọc
+lại nội dung trước khi bàn giao. PDF chưa bật mặc định vì OfficeCLI cần exporter
+plugin riêng.
 
 ## Kết nối Kintone
 

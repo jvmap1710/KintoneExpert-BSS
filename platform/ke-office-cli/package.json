@@ -1,0 +1,16 @@
+{
+  "name": "ke-office-cli",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned OfficeCLI runtime for KE document outputs",
+  "scripts": {
+    "office": "node scripts/run-officecli.mjs",
+    "check": "node scripts/run-officecli.mjs --version"
+  },
+  "dependencies": {
+    "@officecli/officecli": "1.0.143"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

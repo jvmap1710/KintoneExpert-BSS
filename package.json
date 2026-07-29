@@ -1,6 +1,6 @@
 {
   "name": "kintone-expert-bss",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "KE Kit for running a Kintone expert team in Codex",
   "bin": {
     "kintone-expert-bss": "dist/ke-installer.mjs",
@@ -14,7 +14,7 @@
     "build": "node scripts/build-npm-kit.mjs",
     "prepare": "npm run build",
     "prepack": "npm run build && npm run validate",
-    "dev:install": "npm --prefix platform/ke-kintone-mcp ci && npm --prefix platform/ke-browser-mcp ci",
+    "dev:install": "npm --prefix platform/ke-kintone-mcp ci && npm --prefix platform/ke-browser-mcp ci && npm --prefix platform/ke-office-cli ci",
     "setup": "node scripts/setup.mjs",
     "validate": "node scripts/validate-kit.mjs",
     "pack:check": "npm pack --dry-run",
@@ -23,6 +23,8 @@
     "mcp:kintone": "npm --prefix platform/ke-kintone-mcp run mcp:kintone",
     "mcp:playwright": "npm --prefix platform/ke-browser-mcp run mcp:playwright",
     "mcp:chrome-devtools": "npm --prefix platform/ke-browser-mcp run mcp:chrome-devtools",
+    "office": "npm --prefix platform/ke-office-cli run office --",
+    "office:check": "npm --prefix platform/ke-office-cli run check",
     "init": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/init-customer-project.ps1",
     "doctor": "npm --prefix platform/ke-kintone-mcp run check"
   },

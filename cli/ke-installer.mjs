@@ -42,7 +42,7 @@ Usage:
 Options:
   --directory <path>  Install into this project (default: current directory)
   --yes               Accept defaults and skip confirmation
-  --skip-deps         Do not install the Kintone or browser MCP dependencies
+  --skip-deps         Do not install Kintone, browser, or Office dependencies
   --force             Overwrite conflicting KE-managed files
   --help              Show this help
   --version           Show the package version
@@ -241,13 +241,25 @@ if (args[0] !== "install") {
     } else {
       await run("npm", ["ci", "--prefix", "platform/ke-browser-mcp"], target);
     }
+
+    console.log("\nInstalling OfficeCLI document runtime...");
+    if (process.platform === "win32") {
+      await run(
+        process.env.ComSpec || "cmd.exe",
+        ["/d", "/s", "/c", "npm", "ci", "--prefix", "platform/ke-office-cli"],
+        target,
+      );
+    } else {
+      await run("npm", ["ci", "--prefix", "platform/ke-office-cli"], target);
+    }
   }
 
   console.log("\nKE Kit installed successfully.");
   console.log("Next:");
   console.log("1. Edit platform/ke-kintone-mcp/.env");
   console.log("2. Run: npm --prefix platform/ke-kintone-mcp run check");
-  console.log("3. Open this project in Codex and trust it");
-  console.log("4. Let Playwright open Chrome and sign in to Kintone once when asked");
-  console.log('5. Start a new chat and say "hello"');
+  console.log("3. Run: npm --prefix platform/ke-office-cli run check");
+  console.log("4. Open this project in Codex and trust it");
+  console.log("5. Let Playwright open Chrome and sign in to Kintone once when asked");
+  console.log('6. Start a new chat and say "hello"');
 }

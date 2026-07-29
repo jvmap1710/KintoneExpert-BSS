@@ -1,12 +1,12 @@
 ---
 name: ke-document-writer
-description: "Create and maintain KE project deliverables such as meeting minutes (MoM), BRD, survey summaries, solution documents, test reports, decision records, hand-offs, customer handover notes, Playwright-based user guides, SOPs, operating manuals, training handouts, and step-by-step how-to documents. Use when the user asks to write, update, save, version, format, capture, or export a project document to standalone HTML."
+description: "Create and maintain KE project deliverables such as meeting minutes (MoM), BRD, survey summaries, solution documents, test reports, decision records, hand-offs, customer handover notes, Playwright-based user guides, SOPs, operating manuals, training handouts, and step-by-step how-to documents. Use when the user asks to write, update, save, version, format, capture, or export a project document as HTML, Word/DOCX, Excel/XLSX, PowerPoint/PPTX, or multiple formats."
 ---
 
 # KE Document Writer
 
 Create project documents from confirmed facts without copying template files.
-Create HTML output only when the user requests a saved deliverable.
+Create output files only when the user requests a saved deliverable.
 
 ## Document workflow
 
@@ -16,9 +16,11 @@ Create HTML output only when the user requests a saved deliverable.
    never reproduce its raw contents in output.
 3. Separate confirmed facts, decisions, assumptions, and open questions. Do not
    invent participants, policy, requirements, approvals, dates, or test results.
-4. Write one standalone HTML file directly to
-   `projects/<project-slug>/output/`. Do not create Markdown, template, or
-   intermediate document files in the repository.
+4. Resolve the output type. If it is not specified and the choice matters,
+   offer the relevant HTML, DOCX, XLSX, PPTX, or multiple-format options from
+   `references/office-output.md`. Write final deliverables directly to
+   `projects/<project-slug>/output/`; do not create Markdown or intermediate
+   document files in the repository.
 5. Inspect the target path before writing. If it exists, do not overwrite it.
    Propose a new version or ask for explicit overwrite confirmation.
 6. Use a metadata table with document ID, version, project, owner, date,
@@ -28,6 +30,9 @@ Create HTML output only when the user requests a saved deliverable.
 8. For a user guide, SOP, operating manual, training handout, or UI how-to,
    follow `references/user-guide.md`. Use Playwright MCP to observe and replay
    the deployed flow before calling instructions verified.
+9. For DOCX, XLSX, PPTX, or multiple formats, follow
+   `references/office-output.md` and use the pinned OfficeCLI runtime. Validate,
+   render, visually inspect, and read content back before delivery.
 
 ## HTML standard
 
