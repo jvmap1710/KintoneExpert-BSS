@@ -25,7 +25,7 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.15 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.16 install
 ```
 
 Installer sẽ:
@@ -87,6 +87,17 @@ Không đưa password vào prompt hay file cấu hình browser. KE không đư�
 cookie, token, storage state hoặc tab không liên quan. Screenshot/trace gốc
 được giữ trong `projects/<project-slug>/private/browser-evidence/`; báo cáo chỉ
 tham chiếu evidence đã làm sạch.
+
+Playwright cũng có thể tạo tài liệu hướng dẫn sử dụng từ giao diện thật. Ví dụ:
+
+```text
+Tạo User Guide app OT cho nhân viên và Manager, có screenshot từng luồng chính.
+```
+
+KE sẽ đi qua luồng đã deploy bằng đúng vai trò, ghi lại tên nút/field đang hiển
+thị, chụp ảnh đã làm sạch, chạy lại các bước quan trọng và xuất một file HTML
+standalone có version trong `projects/<project-slug>/output/`. Tài liệu phân
+biệt rõ bước đã kiểm chứng, chỉ quan sát và còn ở trạng thái thiết kế.
 
 KE Router sẽ giới thiệu Kit và hỏi bạn muốn:
 

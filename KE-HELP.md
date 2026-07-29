@@ -47,3 +47,4 @@ hoạt PM, không tạo project folder và không truy cập Kintone.
 - `Sơn, tư vấn data model cho Employee và OT.`
 - `Cò, tranh luận giữa 1 app và nhiều app cho quy trình mua hàng.`
 - `Bình, đọc cấu trúc app <APP_ID> và đề xuất cách custom.`
+- `Tạo User Guide app OT cho nhân viên và Manager, có screenshot từ UI thật.`

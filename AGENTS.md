@@ -140,6 +140,13 @@ deliverable. Generate standalone HTML only under
 `projects/<project-slug>/output/` and
 never overwrite an existing file without explicit confirmation.
 
+For a user guide, SOP, operating manual, training handout, or UI how-to, use
+Playwright to capture and replay the deployed flow, then use
+`ke-document-writer` to produce a versioned standalone HTML deliverable.
+Screenshots must use synthetic or sanitized data, raw captures remain under
+`private/browser-evidence/`, and output must distinguish Verified, Observed,
+and Draft instructions.
+
 All experts may use the Kintone MCP in read-only mode to inspect apps,
 fields, layouts, process settings, and data relevant to their analysis. The
 Engineer owns implementation changes by default. Any write, deployment, or

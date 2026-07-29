@@ -1,6 +1,6 @@
 ---
 name: ke-document-writer
-description: "Create and maintain KE project deliverables such as meeting minutes (MoM), BRD, survey summaries, solution documents, test reports, decision records, hand-offs, and customer handover notes. Use when the user asks to write, update, save, version, format, or export a project document to standalone HTML."
+description: "Create and maintain KE project deliverables such as meeting minutes (MoM), BRD, survey summaries, solution documents, test reports, decision records, hand-offs, customer handover notes, Playwright-based user guides, SOPs, operating manuals, training handouts, and step-by-step how-to documents. Use when the user asks to write, update, save, version, format, capture, or export a project document to standalone HTML."
 ---
 
 # KE Document Writer
@@ -25,6 +25,9 @@ Create HTML output only when the user requests a saved deliverable.
    status, reviewers/approver, and related artifact IDs when applicable.
 7. Apply `../ke-router/references/handoff-contract.md` when the document changes
    role ownership.
+8. For a user guide, SOP, operating manual, training handout, or UI how-to,
+   follow `references/user-guide.md`. Use Playwright MCP to observe and replay
+   the deployed flow before calling instructions verified.
 
 ## HTML standard
 
@@ -49,6 +52,7 @@ Use filenames such as:
 - `ADR-<number>-<topic>.html`
 - `TEST-REPORT-<release>.html`
 - `HANDOVER-<release>.html`
+- `USER-GUIDE-<app-or-flow>-v<major>.<minor>.html`
 
 Increment the minor version for review edits and the major version for an
 approved scope baseline. Do not silently replace an approved document.
@@ -89,6 +93,17 @@ quote identifiable responses without authorization.
 Preserve requirement and decision IDs. State environment and Kintone app IDs
 when relevant. Separate planned, configured, deployed, tested, and accepted
 states; never imply that an unverified action succeeded.
+
+### User guides and SOPs
+
+Use task-oriented steps, exact visible labels, expected results, and sanitized
+Playwright screenshots. State the environment, App ID/link, deployed revision,
+audience role, and last verified date. Embed sanitized images in the standalone
+HTML; never link output to raw files under `private/`. Always include a
+three-column rules/error-handling table and a scope/support section with
+included/deferred behavior, issue-reporting evidence, support route, and
+retained synthetic record IDs. Follow
+`references/user-guide.md`.
 
 ## Convert supplied Markdown
 

@@ -50,6 +50,7 @@ for (const required of [
   "skills/ke-engineer-binh/references/record-query-diagnostics.md",
   "skills/ke-tester-mit/references/smoke-test-evidence.md",
   "skills/ke-router/references/browser-evidence.md",
+  "skills/ke-document-writer/references/user-guide.md",
 ]) {
   await requirePath(required);
 }
@@ -189,6 +190,28 @@ const recordQueryKnowledge = await readText(
 const browserEvidenceKnowledge = await readText(
   "skills/ke-router/references/browser-evidence.md",
 );
+const documentWriterSkill = await readText("skills/ke-document-writer/SKILL.md");
+const userGuideKnowledge = await readText(
+  "skills/ke-document-writer/references/user-guide.md",
+);
+for (const statement of [
+  "use Playwright MCP",
+  "Replay the documented critical path",
+  "Embed only sanitized screenshots",
+  "Rules and common error handling",
+  "Scope and support",
+  "not deleted without confirmation",
+  "Verified:",
+  "Observed:",
+  "Draft:",
+]) {
+  if (!userGuideKnowledge.includes(statement)) {
+    failures.push(`user-guide.md: missing contract: ${statement}`);
+  }
+}
+if (!documentWriterSkill.includes("follow `references/user-guide.md`")) {
+  failures.push("ke-document-writer: Playwright user-guide workflow is missing");
+}
 for (const statement of [
   "Playwright MCP is KE's primary browser channel",
   "Chrome DevTools MCP is KE's diagnostic microscope",

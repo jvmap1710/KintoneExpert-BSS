@@ -72,7 +72,9 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 1. Route a clear role-specific request to its expert skill.
 2. Route requests to save or export MoM, BRD, decisions, reports, hand-offs, or
-   other project documents to `$ke-document-writer`.
+   other project documents to `$ke-document-writer`. Route user guides, SOPs,
+   training handouts, and step-by-step UI manuals there as well; Playwright
+   supplies the verified UI steps and sanitized screenshots.
 3. Route an end-to-end or ambiguous project request to `$ke-pm-ti`.
 4. Route a multi-option or multi-role discussion to `$ke-expert-panel-co`.
 5. Route a time-boxed presales demo or proof of concept through the Demo Fast
