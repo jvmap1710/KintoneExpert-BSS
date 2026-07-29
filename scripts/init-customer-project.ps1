@@ -58,8 +58,6 @@ if (Test-Path -LiteralPath $targetPath) {
     throw "Project workspace already exists: $targetPath"
 }
 
-Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
-
 $projectTypeLabels = @{
     analysis = 'Analysis / Advisory'
     demo = 'Demo / PoC'
@@ -103,36 +101,62 @@ $deliveryTrackLabels = @{
     customer = 'Real Project'
     assessment = 'Assessment'
 }
+
+$allowedTypesByRoute = @{
+    'discovery-intake' = @('analysis', 'customer')
+    'customer-context' = @('analysis', 'customer')
+    'current-state' = @('analysis', 'customer', 'assessment')
+    'future-state' = @('analysis', 'customer')
+    'demo-fast-track' = @('demo')
+    'project-delivery' = @('customer')
+    'existing-solution' = @('assessment')
+    'expert-consultation' = @('analysis')
+}
+if ($ProjectType -notin $allowedTypesByRoute[$EntryRoute]) {
+    $allowedTypes = $allowedTypesByRoute[$EntryRoute] -join ', '
+    throw "EntryRoute '$EntryRoute' is incompatible with ProjectType " +
+        "'$ProjectType'. Allowed type(s): $allowedTypes."
+}
+
+$projectDisplayName = $DisplayName.Trim().Replace("`r", ' ').Replace("`n", ' ')
+$projectDisplayName = $projectDisplayName.Replace('|', '\|')
 $projectObjective = $Objective.Trim().Replace("`r", ' ').Replace("`n", ' ')
 $projectObjective = $projectObjective.Replace('|', '\|')
 
+Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
+
 $projectFile = Join-Path $targetPath 'PROJECT.md'
 $projectContent = Get-Content -Raw -Encoding utf8 -LiteralPath $projectFile
-$projectContent = $projectContent.Replace('{{PROJECT_SLUG}}', $ProjectSlug)
-$projectContent = $projectContent.Replace('{{DISPLAY_NAME}}', $DisplayName)
-$projectContent = $projectContent.Replace('{{PROJECT_TYPE}}', $projectTypeLabel)
-$projectContent = $projectContent.Replace('{{OBJECTIVE}}', $projectObjective)
-$projectContent = $projectContent.Replace(
-    '{{ENTRY_ROUTE}}',
-    $entryRouteLabels[$EntryRoute]
-)
-$projectContent = $projectContent.Replace(
-    '{{DELIVERY_TRACK}}',
-    $deliveryTrackLabels[$ProjectType]
-)
-$projectContent = $projectContent.Replace(
-    '{{CURRENT_PHASE}}',
-    $currentPhaseLabels[$EntryRoute]
-)
-$projectContent = $projectContent.Replace(
-    '{{CREATED_DATE}}',
-    (Get-Date -Format 'yyyy-MM-dd')
+$projectReplacements = @{
+    PROJECT_SLUG = $ProjectSlug
+    DISPLAY_NAME = $projectDisplayName
+    PROJECT_TYPE = $projectTypeLabel
+    OBJECTIVE = $projectObjective
+    ENTRY_ROUTE = $entryRouteLabels[$EntryRoute]
+    DELIVERY_TRACK = $deliveryTrackLabels[$ProjectType]
+    CURRENT_PHASE = $currentPhaseLabels[$EntryRoute]
+    CREATED_DATE = (Get-Date -Format 'yyyy-MM-dd')
+}
+$projectContent = [regex]::Replace(
+    $projectContent,
+    '\{\{([A-Z_]+)\}\}',
+    {
+        param($match)
+        $key = $match.Groups[1].Value
+        if ($projectReplacements.ContainsKey($key)) {
+            return [string]$projectReplacements[$key]
+        }
+        return $match.Value
+    }
 )
 Set-Content -Encoding utf8 -LiteralPath $projectFile -Value $projectContent
 
 $teamNotesFile = Join-Path $targetPath 'TEAM-NOTES.md'
 $teamNotesContent = Get-Content -Raw -Encoding utf8 -LiteralPath $teamNotesFile
-$teamNotesContent = $teamNotesContent.Replace('{{DISPLAY_NAME}}', $DisplayName)
+$teamNotesContent = $teamNotesContent.Replace(
+    '{{DISPLAY_NAME}}',
+    $projectDisplayName
+)
 Set-Content -Encoding utf8 -LiteralPath $teamNotesFile -Value $teamNotesContent
 
 Write-Output "Created $ProjectType project workspace: $targetPath"

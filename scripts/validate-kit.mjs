@@ -36,6 +36,7 @@ for (const required of [
   "projects/_template/input/.gitkeep",
   "projects/_template/private/.gitkeep",
   "scripts/init-customer-project.ps1",
+  "scripts/test-kit-flow.mjs",
   "scripts/export-markdown-html.mjs",
   "scripts/build-npm-kit.mjs",
   "scripts/setup.mjs",
@@ -142,8 +143,11 @@ for (const placeholder of [
   if (!projectTemplate.includes(placeholder)) {
     failures.push(`projects/_template/PROJECT.md: missing ${placeholder}`);
   }
-  if (!projectInitializer.includes(placeholder)) {
-    failures.push(`scripts/init-customer-project.ps1: does not replace ${placeholder}`);
+  const replacementKey = placeholder.slice(2, -2);
+  if (!new RegExp(`^\\s*${replacementKey}\\s*=`, "mu").test(projectInitializer)) {
+    failures.push(
+      `scripts/init-customer-project.ps1: missing replacement key ${replacementKey}`,
+    );
   }
 }
 for (const contract of [
@@ -217,6 +221,12 @@ if (await exists("platform/ke-kintone-mcp/scripts/upload-ot-customization.mjs"))
 }
 
 const rootPackageJson = JSON.parse(await readText("package.json"));
+if (rootPackageJson.scripts?.test !== "node scripts/test-kit-flow.mjs") {
+  failures.push("Root package: KE flow test command is missing");
+}
+if (!rootPackageJson.scripts?.prepack?.includes("npm test")) {
+  failures.push("Root package: prepack must run the KE flow test");
+}
 if (rootPackageJson.private) failures.push("Root npm installer package must be publishable");
 if (rootPackageJson.bin?.["kintone-expert-bss"] !== "dist/ke-installer.mjs") {
   failures.push("Root npm installer package must expose the kintone-expert-bss CLI");

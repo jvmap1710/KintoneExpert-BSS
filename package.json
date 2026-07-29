@@ -13,10 +13,11 @@
   "scripts": {
     "build": "node scripts/build-npm-kit.mjs",
     "prepare": "npm run build",
-    "prepack": "npm run build && npm run validate",
+    "prepack": "npm run build && npm run validate && npm test",
     "dev:install": "npm --prefix platform/ke-kintone-mcp ci && npm --prefix platform/ke-browser-mcp ci && npm --prefix platform/ke-office-cli ci",
     "setup": "node scripts/setup.mjs",
     "validate": "node scripts/validate-kit.mjs",
+    "test": "node scripts/test-kit-flow.mjs",
     "pack:check": "npm pack --dry-run",
     "kintone:check": "npm --prefix platform/ke-kintone-mcp run check",
     "kintone:test": "npm --prefix platform/ke-kintone-mcp run test:connection",
