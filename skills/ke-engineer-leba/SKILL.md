@@ -49,14 +49,34 @@ unexpected, or will be used to scope a write.
 
 Only when live Kintone access is needed, tell the user that credentials belong
 in `platform/ke-kintone-mcp/.env`; never request secrets in chat or print their
-values. `npm --prefix platform/ke-kintone-mcp run check` validates local
-configuration only and does not contact the tenant. A tenant connection probe
-is a separate read: only after the user approves the named test plan and
-target, run:
+values. On an explicit MCP/connection-check request, run the local check and,
+when target details are known, the existing read-only API probe plus one
+published read-only MCP metadata call for the named App. A listed MCP server
+alone is not `MCP: PASS`; no record reads are needed. Report Config/API/MCP
+separately as `PASS`, `FAIL`, or `BLOCKED`. The request authorizes only these
+minimal diagnostics; do not require a separate full test plan or hand routine
+commands to the user. The API probe only accepts `--environment test`; never
+infer an environment or relabel production as test. Ask only for missing
+target details. API-token auth requires a known `--app <APP_ID>`; username/
+password auth may omit it, reading at most one App. A named-App MCP metadata
+read also needs that App ID; report MCP blocked and ask only for the missing
+App when it is unknown. Use `--guest-space <SPACE_ID>` only for a known guest
+space. The required `--approved-test-plan` value refers to the actual current
+request, not a fabricated plan or broader approval. For example:
 
 ```powershell
-npm --prefix platform/ke-kintone-mcp run test:connection -- --environment test --approved-test-plan <APPROVAL_REFERENCE> --app <APP_ID>
+npm --prefix platform/ke-kintone-mcp run check
+npm --prefix platform/ke-kintone-mcp run test:connection -- --environment test --approved-test-plan "current user request: check connection"
 ```
+
+Add `--app <APP_ID>` only when known (required for API-token auth). For a
+known App, include `--app <APP_ID>`; add `--guest-space <SPACE_ID>` only when
+that guest-space target is also known.
+
+If MCP is absent, or no suitable published metadata tool/scope is available,
+finish safe requested diagnostics and report `MCP: BLOCKED`; ask only for
+trust/reopen/restart when the server itself is missing. Do not inspect runtime
+internals or use the probe to bypass the MCP allowlist for other work.
 
 Let Codex start the configured `kintone` MCP server for normal Kintone
 operations. Keep the credential file and shared runtime dependencies under
@@ -68,9 +88,10 @@ operation, target, and exact limits; its reference string is not approval.
 
 Before inspecting or building an app, verify that the active session exposes
 the required `kintone` MCP tools. Call those tools directly for Demo/PoC and
-production projects alike. If the entire MCP server is absent, stop and ask the
-user to check its configuration, reopen/trust the project, and start a fresh
-chat. The default tool list in `.codex/config.toml` is read-only. A write tool
+production projects alike. For a missing MCP server, follow the requested-check
+diagnostics above when applicable; otherwise report MCP blocked and ask the
+user to trust/reopen/restart as needed. The default tool list in
+`.codex/config.toml` is read-only. A write tool
 missing because the configured `enabled_tools` allowlist excludes it is
 policy-disabled, not an upstream capability gap; do not fall back to REST,
 UI, or shell to bypass that restriction. For a user-authorized write, show the

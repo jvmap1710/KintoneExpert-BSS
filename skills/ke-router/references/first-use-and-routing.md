@@ -62,16 +62,20 @@ registration, classification, or synthesis.
 
 ## Kintone access and first-time setup
 
-Offline BA, architecture, planning, and advisory work do not need Kintone
-credentials. Ask for the target App/environment and explain the requested
-read-only inspection before using tenant access. Only when live Kintone access
-is needed, tell the user that credentials belong in
-`platform/ke-kintone-mcp/.env`; never ask them to paste secrets into chat, a
-command, or a tracked file. Local configuration validation is not a tenant
-connection test. A connection test or any write requires its own explicit,
-scoped authorization under `AGENTS.md` and the runtime-specific instructions.
-For browser sign-in, let the user sign in manually; never request or expose
-passwords, cookies, tokens, or browser storage.
+Offline/ad-hoc work, including a transient connection diagnostic, needs no
+project workspace. For an explicit MCP/connection-check request, run the local
+config check and, when target details are known, the existing read-only test
+probe plus one published MCP read-only metadata call; a listed server alone
+is not `MCP: PASS`. Report Config/API/MCP as `PASS`, `FAIL`, or `BLOCKED`. The
+request authorizes only these minimal reads, not a full test plan. The API
+probe is test-only; never infer its environment or App ID. Ask only for missing
+target details; API-token auth and named-App MCP metadata reads need a known
+App, while username/password auth can use the one-App probe. Its required
+`--approved-test-plan` value references the actual request only. Credentials belong in
+`platform/ke-kintone-mcp/.env`; never ask users to paste secrets into chat, a
+command, or a tracked file. For browser sign-in, let the user sign in
+manually; never request or expose passwords, cookies, tokens, or browser
+storage.
 
 Credentials, admin roles, a configured default, or prior approvals are not
 authority for the current task. Follow the user's current scope and approval

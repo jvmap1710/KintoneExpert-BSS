@@ -104,10 +104,13 @@ expanded scope, then read the affected records back after the write.
 
 Demo/PoC and customer implementations use the `kintone` MCP tools exposed in
 the active Codex session. Before Kintone work, confirm those tools are
-available. If the whole MCP server is missing or failed to load, stop and ask
-the user to run the configuration checks, reopen/trust the project, and start
-a fresh chat. Do not recommend a fresh chat when MCP is loaded and its
-published tool list simply does not include the required operation.
+available. For an explicit connection-check request, run the safe local config
+check, scoped read-only API probe, and one published read-only MCP metadata
+call before reporting Config/API/MCP as PASS/FAIL/BLOCKED; a listed server
+alone is not MCP PASS. If the server is missing, finish requested diagnostics,
+then report MCP blocked and ask only for trust/reopen/restart. Do not recommend
+a fresh chat when MCP is loaded and its published tool list simply does not
+include the required operation.
 
 The configured `enabled_tools` list in `.codex/config.toml` is read-only by
 default. If a write tool is absent because this allowlist excludes it, classify
