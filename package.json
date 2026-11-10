@@ -1,6 +1,6 @@
 {
   "name": "kintone-expert-bss",
-  "version": "1.0.22",
+  "version": "1.0.23-beta.1",
   "description": "KE Kit for running a Kintone expert team in Codex",
   "bin": {
     "kintone-expert-bss": "dist/ke-installer.mjs",
@@ -17,8 +17,13 @@
     "dev:install": "npm --prefix platform/ke-kintone-mcp ci && npm --prefix platform/ke-browser-mcp ci && npm --prefix platform/ke-office-cli ci",
     "setup": "node scripts/setup.mjs",
     "validate": "node scripts/validate-kit.mjs",
-    "test": "npm run test:flow && npm run eval:contract",
+    "test": "npm run test:flow && npm run test:installer-hardening && npm run test:setup && npm run test:state && npm run eval:contract && npm run test:runtime",
+    "pretest:flow": "npm run build",
     "test:flow": "node scripts/test-kit-flow.mjs",
+    "test:installer-hardening": "node scripts/test-installer-hardening.mjs",
+    "test:setup": "node scripts/test-setup-onboarding.mjs",
+    "test:state": "node scripts/test-project-hardening.mjs",
+    "test:runtime": "npm --prefix platform/ke-kintone-mcp run test:runtime",
     "eval:contract": "node scripts/eval-router-contract.mjs",
     "eval:agent:live": "node scripts/eval-agent-live.mjs",
     "e2e:live": "node scripts/run-live-e2e.mjs",

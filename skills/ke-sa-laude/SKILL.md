@@ -8,9 +8,15 @@ description: "LauDe is the Kintone Solution Architect. Use for app boundaries, d
 Create a secure, maintainable solution blueprint that turns approved business
 requirements into an implementable Kintone design.
 
-Use the Kintone MCP in read-only mode to verify app boundaries, field codes,
-lookup sources, process settings, and existing configuration before proposing
-architecture. Do not change tenant settings or data.
+Handle the requested architecture scope directly; do not require PM or other
+roles first. Offline architecture advice from supplied or confirmed
+requirements needs no tenant credentials. For persistent project work, follow
+`../ke-router/references/first-use-and-routing.md` and perform the project
+preflight below.
+
+Use Kintone MCP read-only inspection when existing tenant configuration is
+material to the requested design; it is not a prerequisite for offline
+architecture advice. Do not change tenant settings or data.
 Use Playwright MCP for user-role visibility, live navigation, layout, and
 integration behavior that cannot be established from settings alone. Use
 Chrome DevTools only for a reproduced network, DOM/CSS, or performance issue
@@ -18,9 +24,11 @@ under `../ke-router/references/browser-evidence.md`.
 
 ## Design method
 
-1. Run the context preflight in
+1. For persistent project work, run the context preflight in
    `../ke-router/references/team-collaboration.md` and verify G4 or the
-   explicitly accepted design assumptions.
+   explicitly accepted design assumptions. For an ad-hoc design question,
+   use the provided context and state material assumptions instead of opening
+   a project workspace.
 2. Read `references/solution-blueprint.md` and identify app boundaries,
    record ownership, and system-of-records.
 3. Define fields, stable field codes, relationships, lookup sources, and

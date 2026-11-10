@@ -37,6 +37,7 @@ for (const required of [
   "projects/_template/private/.gitkeep",
   "scripts/init-customer-project.ps1",
   "scripts/test-kit-flow.mjs",
+  "scripts/test-runtime-hardening.mjs",
   "scripts/ke-project.mjs",
   "scripts/lib/project-state.mjs",
   "scripts/migrate-projects.mjs",
@@ -53,10 +54,14 @@ for (const required of [
   "scripts/setup.mjs",
   "platform/ke-browser-mcp/package.json",
   "platform/ke-browser-mcp/package-lock.json",
+  "platform/ke-browser-mcp/scripts/launch-playwright.mjs",
   "platform/ke-office-cli/package.json",
   "platform/ke-office-cli/package-lock.json",
   "platform/ke-office-cli/scripts/run-officecli.mjs",
   "platform/ke-kintone-mcp/scripts/get-app-url.mjs",
+  "platform/ke-kintone-mcp/scripts/check-config.mjs",
+  "platform/ke-kintone-mcp/scripts/test-connection.mjs",
+  "platform/ke-kintone-mcp/scripts/start-mcp.mjs",
   "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
   "platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs",
   "platform/ke-kintone-mcp/scripts/lib/process-management-verification.mjs",
@@ -209,20 +214,84 @@ for (const rule of ["projects/*", "!projects/_template/**"]) {
 }
 
 const packageJson = JSON.parse(await readText("platform/ke-kintone-mcp/package.json"));
-if (packageJson.scripts?.["app:url"] !== "node --env-file=.env scripts/get-app-url.mjs") {
+if (packageJson.scripts?.["app:url"] !== "node scripts/get-app-url.mjs") {
   failures.push("package.json: safe app:url command is missing");
 }
 if (
   packageJson.scripts?.["customization:stage"] !==
-  "node --env-file=.env scripts/stage-app-customization.mjs"
+  "node scripts/stage-app-customization.mjs"
 ) {
   failures.push("package.json: shared customization staging command is missing");
 }
 if (
   packageJson.scripts?.["process:stage"] !==
-  "node --env-file=.env scripts/stage-process-management.mjs"
+  "node scripts/stage-process-management.mjs"
 ) {
   failures.push("package.json: shared Process Management staging command is missing");
+}
+if (
+  packageJson.scripts?.["test:runtime"] !==
+  "node scripts/test-runtime-helpers.mjs && node ../../scripts/test-runtime-hardening.mjs"
+) {
+  failures.push("Kintone package: isolated runtime regression suite is missing");
+}
+if (packageJson.scripts?.["mcp:kintone"] !== "node scripts/start-mcp.mjs") {
+  failures.push("Kintone package: secure MCP launcher is missing");
+}
+if (packageJson.dependencies?.["@kintone/mcp-server"] !== "1.11.2") {
+  failures.push("Kintone package: pinned MCP server version changed");
+}
+
+const kintoneRestRuntime = await readText(
+  "platform/ke-kintone-mcp/scripts/lib/kintone-rest.mjs",
+);
+for (const contract of [
+  "values: { ...fileValues, ...inheritedValues }",
+  "redirect: \"error\"",
+  "Read back the target state before any retry",
+  "Authorization file changed after validation",
+  "read-only by default",
+]) {
+  if (!kintoneRestRuntime.includes(contract)) {
+    failures.push(`Kintone REST runtime: missing hardening contract: ${contract}`);
+  }
+}
+for (const [relative, operation] of [
+  [
+    "platform/ke-kintone-mcp/scripts/stage-app-customization.mjs",
+    "app-customization.stage",
+  ],
+  [
+    "platform/ke-kintone-mcp/scripts/stage-process-management.mjs",
+    "process-management.stage",
+  ],
+]) {
+  const script = await readText(relative);
+  if (
+    !script.includes('const project = argument("project")') ||
+    !script.includes('const authorizationFile = argument("authorization")') ||
+    !script.includes("await resolveProjectFile({ project, filePath") ||
+    !script.includes("loadMutationAuthorization({") ||
+    !script.includes(`operation: "${operation}"`) ||
+    !script.includes("createKintoneRestClient({")
+  ) {
+    failures.push(`${relative}: explicit project/operation authorization guard is missing`);
+  }
+}
+const browserLauncher = await readText(
+  "platform/ke-browser-mcp/scripts/launch-playwright.mjs",
+);
+for (const contract of [
+  "KE_PROJECT_SLUG",
+  "KE_BROWSER_IDENTITY",
+  "browser-profiles",
+  "browser-evidence",
+  "--user-data-dir",
+  "--output-dir",
+]) {
+  if (!browserLauncher.includes(contract)) {
+    failures.push(`Playwright launcher: missing project isolation contract: ${contract}`);
+  }
 }
 if (packageJson.scripts?.["customize:ot"]) {
   failures.push("package.json: trial customize:ot script must not be published");
@@ -233,11 +302,36 @@ if (await exists("platform/ke-kintone-mcp/scripts/upload-ot-customization.mjs"))
 
 const rootPackageJson = JSON.parse(await readText("package.json"));
 const ciWorkflow = await readText(".github/workflows/ci.yml");
+for (const command of [
+  "test:flow",
+  "test:installer-hardening",
+  "test:setup",
+  "test:state",
+  "eval:contract",
+  "test:runtime",
+]) {
+  if (!rootPackageJson.scripts?.test?.includes(`npm run ${command}`)) {
+    failures.push(`Root package: npm test is missing ${command}`);
+  }
+}
+for (const command of [
+  "test:flow",
+  "test:installer-hardening",
+  "test:setup",
+  "test:state",
+]) {
+  if (!rootPackageJson.scripts?.[command]) {
+    failures.push(`Root package: ${command} regression command is missing`);
+  }
+}
+if (rootPackageJson.scripts?.["pretest:flow"] !== "npm run build") {
+  failures.push("Root package: test:flow must build a fresh installer before using dist/");
+}
 if (
-  rootPackageJson.scripts?.test !==
-  "npm run test:flow && npm run eval:contract"
+  rootPackageJson.scripts?.["test:runtime"] !==
+  "npm --prefix platform/ke-kintone-mcp run test:runtime"
 ) {
-  failures.push("Root package: combined flow and prompt-contract test is missing");
+  failures.push("Root package: runtime regression command is missing");
 }
 if (!rootPackageJson.scripts?.prepack?.includes("npm test")) {
   failures.push("Root package: prepack must run the KE flow test");

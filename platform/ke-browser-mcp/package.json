@@ -4,7 +4,7 @@
   "private": true,
   "description": "Browser evidence and diagnostics runtimes for KE Kit",
   "scripts": {
-    "mcp:playwright": "playwright-mcp --browser chrome --output-mode file --output-dir ../../.ke-browser-evidence",
+    "mcp:playwright": "node scripts/launch-playwright.mjs",
     "mcp:chrome-devtools": "chrome-devtools-mcp --no-usage-statistics --no-performance-crux --redact-network-headers"
   },
   "dependencies": {

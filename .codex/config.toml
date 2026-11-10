@@ -5,6 +5,23 @@ command = "npm.cmd"
 args = ["--prefix", "platform/ke-kintone-mcp", "run", "--silent", "mcp:kintone"]
 startup_timeout_sec = 30
 tool_timeout_sec = 120
+# Default to inspection only. A write skill must request only the named upstream
+# tool(s) needed for the approved operation; review this diff and reopen Codex,
+# then restore this list. This is not per-App/account enforcement.
+enabled_tools = [
+  "kintone-get-apps",
+  "kintone-get-app",
+  "kintone-get-form-fields",
+  "kintone-get-form-layout",
+  "kintone-get-process-management",
+  "kintone-get-app-deploy-status",
+  "kintone-get-general-settings",
+  "kintone-get-customization",
+  "kintone-get-records",
+  "kintone-get-record-comments",
+  "kintone-get-space",
+]
+# `writes` prompts for tools not marked read-only; it does not make tools read-only.
 default_tools_approval_mode = "writes"
 
 # Primary browser channel for every KE expert. It opens a project-scoped
@@ -57,4 +74,9 @@ enabled = true
 
 [[skills.config]]
 path = "skills/ke-document-writer"
+enabled = true
+
+# Shared coding compass for implementation work.
+[[skills.config]]
+path = "skills/karpathy-guidelines"
 enabled = true

@@ -1,5 +1,10 @@
 # KE — Kintone Expert Kit
 
+> **Beta `1.0.23-beta.1` — chỉ dùng có giám sát; chưa sẵn sàng cho production.**
+> Chỉ dùng trong môi trường dev/test được phép, với dữ liệu synthetic và người vận
+> hành theo dõi. Không dùng cho production app hoặc dữ liệu production. Các ví dụ
+> cài đặt bên dưới pin đúng beta tag này.
+
 KE là bộ Kit giúp Codex làm việc như một nhóm chuyên gia triển khai Kintone:
 
 - **Tí — PM:** phạm vi, kế hoạch và điều phối.
@@ -19,20 +24,20 @@ Yêu cầu:
 
 - Node.js 22 trở lên.
 - Codex CLI hoặc Codex app.
-- Google Chrome bản stable hiện hành.
-- Tài khoản Kintone phù hợp với phạm vi công việc.
+- Google Chrome bản stable hiện hành chỉ khi cần kiểm tra bằng browser.
+- Tài khoản Kintone phù hợp chỉ khi task thực sự cần tenant access.
 
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.1 install
 ```
 
 Nâng một Kit đã cài mà vẫn giữ cấu hình và project:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade --dry-run
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.1 upgrade --dry-run
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.1 upgrade
 ```
 
 Upgrade kiểm tra file KE đã bị sửa, backup dưới `.codex/ke-backups/`, migrate
@@ -44,14 +49,14 @@ Không chạy lại `install` để nâng phiên bản. Tại đúng thư mục 
 chạy dry-run trước:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade --dry-run
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.1 upgrade --dry-run
 ```
 
 Đọc các mục `conflicts`, `fromVersion`, `toVersion` và `backupRoot`. Nếu không
 có conflict ngoài dự kiến, chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.22 upgrade
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.1 upgrade
 ```
 
 Upgrade xử lý cấu hình hiện có như sau:
@@ -78,10 +83,12 @@ Sau khi upgrade:
 
 ```powershell
 npm --prefix platform/ke-kintone-mcp run check
-npm --prefix platform/ke-kintone-mcp run test:connection
 node scripts/ke-project.mjs list
 node scripts/ke-project.mjs validate --all
 ```
+
+`check` chỉ kiểm tra cấu hình cục bộ. Nếu cần kiểm tra kết nối tenant, làm theo
+phần “Kết nối Kintone” với environment, test plan, App scope và chấp thuận riêng.
 
 Sau đó đóng và mở lại project trong Codex, trust project và bắt đầu một chat
 mới để Codex nạp lại skill và MCP. Nếu `check` vẫn đọc giá trị `.env` cũ, đóng
@@ -99,6 +106,22 @@ Installer cũng hỏi ngôn ngữ chat và ngôn ngữ tài liệu output. Mặc
 hai là English; user có thể nhập tên ngôn ngữ bất kỳ. Nếu cần hai bản tài liệu,
 nhập các ngôn ngữ cách nhau bằng dấu phẩy, ví dụ `English, Vietnamese`. KE sẽ
 tạo hai file riêng có cùng nội dung/version và suffix ngôn ngữ.
+
+## Bắt đầu nhanh
+
+Sau khi cài và mở project trong Codex, có thể bắt đầu bằng `hello` hoặc mô tả
+thẳng mục tiêu. Lời chào và tư vấn offline không cần credentials, đăng nhập
+browser, tenant access hay workspace. Nếu user nêu yêu cầu rõ, KE xử lý trực
+tiếp thay vì bắt chọn menu. Có thể gọi thẳng Tèo (BA), LauDe (SA), LeBa
+(Engineer), Mít (Tester), Cò (Expert Panel) hoặc Tí (PM) khi phù hợp; không cần
+chạy qua PM hay toàn bộ vai trò nếu task không cần.
+
+Với phân tích/tư vấn ad-hoc, trao đổi ngay trong chat. Với công việc cần lưu
+artefact hoặc theo dõi dự án, KE tóm tắt danh tính dự án và mục tiêu để user xác
+nhận trước khi tạo workspace và các thư mục cần thiết. Xác nhận workspace chỉ
+cho phép chuẩn bị không gian làm việc; không đồng nghĩa với quyền truy cập
+tenant, đọc App/record hay ghi dữ liệu. Những thao tác đó cần phạm vi và chấp
+thuận riêng.
 
 ## Chọn định dạng tài liệu
 
@@ -126,37 +149,49 @@ plugin riêng.
 
 ## Kết nối Kintone
 
-Mở file:
+Chỉ cấu hình khi task cần truy cập tenant. Credentials nằm trong file local bị
+ignore khỏi Git:
 
 ```text
 platform/ke-kintone-mcp/.env
 ```
 
-Điền `KINTONE_BASE_URL` và chọn một phương thức xác thực:
+Khi cần, điền `KINTONE_BASE_URL` và chọn một phương thức xác thực:
 
 - `KINTONE_USERNAME` + `KINTONE_PASSWORD`; hoặc
 - `KINTONE_API_TOKEN`.
 
-Kiểm tra cấu hình và kết nối:
+Kiểm tra cấu hình cục bộ không gọi tenant và không hiển thị giá trị secret:
 
 ```powershell
-npm --prefix platform/ke-kintone-mcp run check
-npm --prefix platform/ke-kintone-mcp run test:connection
+node platform/ke-kintone-mcp/scripts/check-config.mjs
 ```
 
-Sau đó mở lại project trong Codex, trust project và bắt đầu chat bằng:
+Chỉ chạy probe kết nối sau khi đã thống nhất tenant/environment, App scope và
+test plan, rồi được user chấp thuận rõ ràng. Probe này dùng GET/read-only:
 
-```text
-hello
+```powershell
+node platform/ke-kintone-mcp/scripts/test-connection.mjs --environment test --approved-test-plan <approval-reference> --app <APP_ID>
 ```
+
+Không cần điền credentials hoặc chạy probe để chào hỏi, tư vấn offline hay bắt
+đầu phân tích không cần Kintone.
 
 ## Browser evidence
 
-Playwright là “mắt và tay” mặc định của cả team KE. PM, BA, SA, Engineer và
-Tester dùng nó để kiểm tra đúng giao diện người dùng đang thấy, chạy luồng
-nghiệp vụ, tạo dữ liệu test có kiểm soát và chụp evidence. Lần đầu Playwright
-mở Chrome, hãy đăng nhập Kintone thủ công; profile được giữ riêng theo project
-và không nằm trong Git.
+Playwright là kênh browser khi task cần kiểm tra giao diện hoặc luồng nghiệp vụ.
+Trước khi mở browser, xác nhận workspace/project và gán binding cụ thể cho
+process Codex/browser MCP, sau đó khởi động lại MCP:
+
+```powershell
+$env:KE_PROJECT_SLUG = "<project-slug>"
+$env:KE_BROWSER_IDENTITY = "tester"
+```
+
+Hai biến này cô lập profile/evidence theo project và role; nhãn identity không
+xác minh user Kintone đang đăng nhập, cũng không cấp hay giới hạn quyền tenant.
+Lần đầu mở Chrome, user tự đăng nhập thủ công bằng account phù hợp với phạm vi
+đã duyệt. Chào hỏi và chat-only onboarding không cần binding hay login.
 
 Chrome DevTools là công cụ debug chuyên sâu, không dùng cho thao tác click
 thông thường. KE chỉ gọi nó sau khi Playwright tái hiện lỗi để kiểm tra:
@@ -198,23 +233,37 @@ KE Router sẽ giới thiệu Kit và cho phép bắt đầu ở đúng giai đo
 7. Existing Solution Assessment.
 8. Expert Consultation / Expert Panel.
 
-User có thể trả lời bằng số hoặc mô tả thẳng nhu cầu. Ví dụ:
+Tám route là điểm bắt đầu tùy chọn, không phải waterfall bắt buộc. User có thể
+chọn một route, yêu cầu trực tiếp một chuyên gia, hoặc mô tả thẳng mục tiêu;
+KE chỉ phối hợp thêm vai trò khi công việc thực sự cần. Ví dụ:
 
 ```text
 Tôi muốn làm PoC cho KH ABCD, dựng nhanh phần phiếu OT.
 ```
 
-Router sẽ xác nhận cách hiểu, tự tạo workspace, ghi mục tiêu vào `PROJECT.md`
-và chuyển sang Demo Fast Track.
+Với câu hỏi offline/ad-hoc, Router trả lời trong chat. Với công việc dự án cần
+lưu lại, Router xác nhận identity và mục tiêu trước khi tạo workspace; xác nhận
+đó không cho phép truy cập tenant hay ghi dữ liệu. Demo/PoC chỉ cần Mini Intake
+của Tèo khi yêu cầu còn thiếu/không rõ; request kiến trúc có thể bắt đầu ở
+LauDe, còn spec đã được xác nhận có thể chuyển thẳng cho LeBa.
 
-Demo và dự án thật ưu tiên thao tác Kintone qua MCP tool trực tiếp. Nếu toàn bộ
-MCP chưa được nạp, KE sẽ dừng và hướng dẫn kiểm tra cấu hình; agent không được
-dò `node_modules`, tự dựng JSON-RPC hoặc âm thầm gọi REST API thay thế.
+Demo và dự án thật ưu tiên thao tác Kintone qua MCP tool trực tiếp. Nếu MCP
+chưa được nạp, KE sẽ dừng và hướng dẫn kiểm tra cấu hình; agent không được dò
+`node_modules`, tự dựng JSON-RPC hoặc âm thầm gọi REST API thay thế.
 
-MCP thiếu một tool không có nghĩa Kintone không hỗ trợ nghiệp vụ đó. KE sẽ nêu
-rõ capability gap và hỏi user có muốn dùng UI, công cụ chính thức hay REST API
-chính thức. Khi user duyệt REST cho app và thao tác cụ thể, KE được tiếp tục
-theo phạm vi đó; không bắt quay lại review lựa chọn kênh.
+MCP không hiện write tool có thể do read-only `enabled_tools` allowlist trong
+`.codex/config.toml`, không phải giới hạn upstream. Allowlist mặc định không
+ghi và không phải rào quyền theo App/account. Không chuyển sang REST, UI hay
+shell để né policy. Với thao tác write đã được user duyệt rõ theo App và phạm
+vi cụ thể, chỉ thêm upstream tool cần cho thao tác đó, review diff cấu hình,
+khởi động lại Codex, làm theo các gate hiện hành rồi khôi phục allowlist
+read-only và khởi động lại. Chỉ gọi là upstream capability gap nếu server đã
+được nạp, policy đã được tính đến và tool thực sự không được cung cấp.
+
+Khi bất kỳ kênh nào (MCP, REST, browser/UI hay shell) được chấp thuận cho một
+thao tác, workspace approval không thay thế phê duyệt tenant/App, record scope
+hay synthetic-data writes. Chỉ chạy đúng thao tác, App và dữ liệu đã duyệt;
+không mở rộng sang ghi tùy ý.
 
 Với JavaScript customization, Kintone hỗ trợ upload file lấy `fileKey` và gắn
 vào cấu hình pre-live qua API `preview`. Đây không phải URL/app chạy thử: KE
@@ -294,18 +343,29 @@ Markdown:
 
 ```powershell
 node scripts/ke-project.mjs list
-node scripts/ke-project.mjs use <project-slug>
-node scripts/ke-project.mjs current
-node scripts/ke-project.mjs validate
+node scripts/ke-project.mjs current --project <project-slug>
+node scripts/ke-project.mjs show --project <project-slug>
+node scripts/ke-project.mjs validate --project <project-slug>
+node scripts/ke-project.mjs use --project <project-slug>
 ```
 
-Maintainer có deterministic prompt-contract eval trong CI. Live Codex eval và
-Kintone/Playwright E2E là opt-in; không tự chạy trên tenant production:
+Các lệnh thay đổi state như `bootstrap`, `transition` và `note` cũng yêu cầu
+`--project <project-slug>` tường minh; không dựa vào active pointer để chọn ngầm
+project đích.
+
+Eval contract là kiểm thử route/corpus, không chứng minh hành vi end-to-end.
+`eval:agent:live` là mô phỏng phân loại route dành riêng cho maintainer trong
+source repo; lệnh này không được đóng gói trong installer. Quy tắc “không dùng
+tool” chỉ nằm trong prompt, không phải sandbox cô lập tenant; MCP/browser access
+không bị cách ly. Không chạy mô phỏng này trong workspace có quyền cao hoặc kết
+nối production. Helper được cài đặt `node scripts/run-live-e2e.mjs` chỉ tạo plan
+dry-run; `--confirm-live` hiện bị fail-closed vì runner chưa cưỡng chế được ranh
+giới App, user và từng hành động đã duyệt. Không xem kết quả mô phỏng hoặc
+validation plan là PASS của full behavior E2E:
 
 ```powershell
 npm run eval:agent:live -- --confirm-live
 node scripts/run-live-e2e.mjs --plan e2e/my-test-plan.json --dry-run
-node scripts/run-live-e2e.mjs --plan e2e/my-test-plan.json --confirm-live
 ```
 
 - `PROJECT.md`: dashboard ngắn, phase/gate, baseline và next owner của dự án.
@@ -316,16 +376,19 @@ node scripts/run-live-e2e.mjs --plan e2e/my-test-plan.json --confirm-live
 - `output/`: tài liệu bàn giao standalone của riêng dự án đó.
 - `history/`: baseline nội bộ cũ và phase notes đã đóng.
 
-`PROJECT.md` không phải tài liệu bàn giao khách hàng. Nó lưu tên/mã dự án, loại
-Demo hay triển khai thật, giai đoạn và nguyên tắc làm việc để agent không trộn
-dữ liệu giữa các dự án. Khi user mô tả nhu cầu bằng ngôn ngữ tự nhiên, KE
-Router xác nhận cách hiểu, tự tạo workspace và ghi mục tiêu đã hiểu vào file
-này trước khi bắt đầu luồng chuyên gia.
+`.ke-project.json` là state máy có thẩm quyền; `PROJECT.md` là dashboard chiếu
+trạng thái cho người đọc, không phải nguồn state hay tài liệu bàn giao khách
+hàng. Khi user mô tả công việc persistent, KE xác nhận identity và mục tiêu
+trước, rồi mới tạo workspace và các thư mục cần thiết. Workspace không thay thế
+authorization truy cập tenant, scope App/record hay phê duyệt ghi dữ liệu.
 
 ## Nguyên tắc an toàn
 
 - Mặc định chỉ đọc Kintone khi khảo sát.
 - Mọi thay đổi hoặc deploy đều cần xác nhận theo quy tắc trong `AGENTS.md`.
+- Read-only `enabled_tools` trong `.codex/config.toml` là policy allowlist của
+  công cụ, không phải authorization theo App/account. Tool thiếu do allowlist
+  không được lách qua REST, browser/UI hoặc shell.
 - Không commit credentials, token, dữ liệu cá nhân hoặc tài liệu khách hàng.
 - Không ghi đè output đã tồn tại nếu chưa được user xác nhận.
 

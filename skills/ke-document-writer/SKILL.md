@@ -5,15 +5,22 @@ description: "Create and maintain KE project deliverables such as meeting minute
 
 # KE Document Writer
 
-Create project documents from confirmed facts without copying template files.
-Create output files only when the user requests a saved deliverable.
+Create the requested project deliverable directly from confirmed inputs; do
+not require PM, BA, or another expert when the necessary information is already
+available. Create output files only when the user requests a saved deliverable.
+For a new persistent project, follow
+`../ke-router/references/first-use-and-routing.md` and confirm the interpreted
+project identity/objective before creating its workspace.
 
 ## Document workflow
 
 1. Confirm the project slug, document type, owner, status, and source inputs.
-2. Read source material only from `projects/<project-slug>/input/` and facts
-   confirmed in the conversation. Treat `private/` as confidential input and
-   never reproduce its raw contents in output.
+2. Use facts confirmed in the conversation, the active project's confirmed
+   baselines and artifact index, and approved sanitized evidence relevant to
+   the requested document. For raw customer source material, use only the
+   active project's `input/` or authorized `private/` files; treat `private/`
+   as confidential and never reproduce its raw contents in output. Do not
+   inspect unrelated workspaces.
 3. Separate confirmed facts, decisions, assumptions, and open questions. Do not
    invent participants, policy, requirements, approvals, dates, or test results.
 4. Read `.codex/ke-preferences.toml` when it exists and apply

@@ -5,15 +5,15 @@
   "description": "KE — Kintone Expert MCP runtime for Codex",
   "scripts": {
     "check": "node scripts/check-config.mjs",
-    "app:url": "node --env-file=.env scripts/get-app-url.mjs",
-    "customization:stage": "node --env-file=.env scripts/stage-app-customization.mjs",
-    "process:stage": "node --env-file=.env scripts/stage-process-management.mjs",
-    "test:runtime": "node scripts/test-runtime-helpers.mjs",
-    "test:connection": "node --env-file=.env scripts/test-connection.mjs",
-    "mcp:kintone": "node --env-file-if-exists=.env node_modules/@kintone/mcp-server/dist/index.js"
+    "app:url": "node scripts/get-app-url.mjs",
+    "customization:stage": "node scripts/stage-app-customization.mjs",
+    "process:stage": "node scripts/stage-process-management.mjs",
+    "test:runtime": "node scripts/test-runtime-helpers.mjs && node ../../scripts/test-runtime-hardening.mjs",
+    "test:connection": "node scripts/test-connection.mjs",
+    "mcp:kintone": "node scripts/start-mcp.mjs"
   },
   "dependencies": {
-    "@kintone/mcp-server": "1.9.1"
+    "@kintone/mcp-server": "1.11.2"
   },
   "engines": {
     "node": ">=22"

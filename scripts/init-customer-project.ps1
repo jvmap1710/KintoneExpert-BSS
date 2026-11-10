@@ -50,6 +50,19 @@ if (-not $resolvedTargetPath.StartsWith(
     throw 'The project path must stay inside the repository projects directory.'
 }
 
+foreach ($pathToCheck in @($repositoryRoot, $projectsRoot, $templatePath)) {
+    if (-not (Test-Path -LiteralPath $pathToCheck)) { continue }
+    $pathItem = Get-Item -Force -LiteralPath $pathToCheck
+    if (($pathItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+        throw "Refusing project initialization through a symlink or junction: $pathToCheck"
+    }
+}
+foreach ($templateItem in Get-ChildItem -Force -Recurse -LiteralPath $templatePath) {
+    if (($templateItem.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -ne 0) {
+        throw "Refusing a symlink or junction inside the project template: $($templateItem.FullName)"
+    }
+}
+
 if (-not (Test-Path -LiteralPath $templatePath -PathType Container)) {
     throw "Project template not found: $templatePath"
 }
@@ -119,19 +132,24 @@ if ($ProjectType -notin $allowedTypesByRoute[$EntryRoute]) {
 }
 
 $projectDisplayName = $DisplayName.Trim().Replace("`r", ' ').Replace("`n", ' ')
-$projectDisplayName = $projectDisplayName.Replace('|', '\|')
 $projectObjective = $Objective.Trim().Replace("`r", ' ').Replace("`n", ' ')
-$projectObjective = $projectObjective.Replace('|', '\|')
+$projectDisplayNameMarkdown = $projectDisplayName.Replace('|', '\|')
+$projectObjectiveMarkdown = $projectObjective.Replace('|', '\|')
 
-Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
+try {
+    Copy-Item -LiteralPath $templatePath -Destination $targetPath -Recurse
+}
+catch {
+    throw "Template copy failed; a partial workspace may remain at $targetPath. Inspect it before retrying. $($_.Exception.Message)"
+}
 
 $projectFile = Join-Path $targetPath 'PROJECT.md'
 $projectContent = Get-Content -Raw -Encoding utf8 -LiteralPath $projectFile
 $projectReplacements = @{
     PROJECT_SLUG = $ProjectSlug
-    DISPLAY_NAME = $projectDisplayName
+    DISPLAY_NAME = $projectDisplayNameMarkdown
     PROJECT_TYPE = $projectTypeLabel
-    OBJECTIVE = $projectObjective
+    OBJECTIVE = $projectObjectiveMarkdown
     ENTRY_ROUTE = $entryRouteLabels[$EntryRoute]
     DELIVERY_TRACK = $deliveryTrackLabels[$ProjectType]
     CURRENT_PHASE = $currentPhaseLabels[$EntryRoute]
@@ -155,7 +173,7 @@ $teamNotesFile = Join-Path $targetPath 'TEAM-NOTES.md'
 $teamNotesContent = Get-Content -Raw -Encoding utf8 -LiteralPath $teamNotesFile
 $teamNotesContent = $teamNotesContent.Replace(
     '{{DISPLAY_NAME}}',
-    $projectDisplayName
+    $projectDisplayNameMarkdown
 )
 Set-Content -Encoding utf8 -LiteralPath $teamNotesFile -Value $teamNotesContent
 
@@ -167,11 +185,11 @@ $stateManager = Join-Path $PSScriptRoot 'ke-project.mjs'
     --display-name $projectDisplayName `
     --objective $projectObjective
 if ($LASTEXITCODE -ne 0) {
-    throw "Failed to initialize project state for $ProjectSlug."
+    throw "Failed to initialize project state; partial workspace remains at $targetPath. Inspect it before retrying."
 }
-& node $stateManager use $ProjectSlug
+& node $stateManager use --project $ProjectSlug
 if ($LASTEXITCODE -ne 0) {
-    throw "Failed to activate project $ProjectSlug."
+    throw "Failed to activate project $ProjectSlug; initialized workspace remains at $targetPath."
 }
 
 Write-Output "Created $ProjectType project workspace: $targetPath"

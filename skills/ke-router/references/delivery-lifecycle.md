@@ -1,21 +1,25 @@
 # KE delivery lifecycle
 
-Treat entry routes as selectable starting points, not sequential menu steps.
-Use the canonical lifecycle to control readiness and traceability:
+Treat entry routes as selectable starting points, not a mandatory sequence.
+Use relevant lifecycle gates to control readiness and traceability for
+persistent project work. A standalone question or direct role-specific advice
+does not need engagement setup or unrelated phase artifacts. Coordinated
+end-to-end delivery may use this lifecycle:
 
 `Engagement Setup -> Discovery Intake -> Customer Context -> Current-State
 Assessment -> Future-State Design -> Solution Architecture -> Build & Quick
 Verification -> user OK -> Smoke Test -> UAT -> Handover`
 
-Phases may iterate. Skip a phase only when an existing confirmed baseline
-satisfies its gate. Never infer readiness merely because the user selected a
-later entry route.
+Phases may iterate or be skipped when their work is unnecessary, already
+confirmed, or outside the agreed scope. Never claim a downstream decision is
+ready when missing evidence would materially change it merely because the user
+selected a later entry route.
 
 ## Quality gates
 
 | Gate | Required evidence |
 | --- | --- |
-| G0 Engagement Confirmed | Project identity, engagement type, objective, active entry route, workspace |
+| G0 Engagement Confirmed | For persistent project work: project identity, engagement type, objective, active entry route, workspace |
 | G1 Evidence Baseline Ready | Registered sources, authority classification, traceable findings, missing/conflicting information recorded |
 | G2 Customer Context Confirmed | Objective, scope, stakeholders, systems, constraints, commitments, assumptions reviewed |
 | G3 Current State Confirmed | End-to-end As-Is, evidence-backed pain points, root causes, material conflicts resolved or owned |
@@ -31,15 +35,16 @@ risk.
 
 ## Readiness check
 
-When the user selects Customer Context, Current-State Assessment, Future-State
-Design, Demo/PoC, Project Delivery, or another later route:
+When persistent project work enters Customer Context, Current-State Assessment,
+Future-State Design, Demo/PoC, Project Delivery, or another later route—or a
+requested action depends on upstream evidence:
 
 1. Inspect `PROJECT.md`, the artifact index, and confirmed baselines.
 2. Compare the requested start against the applicable gate.
 3. Reuse confirmed work; do not recreate it.
 4. List only material readiness gaps.
-5. Offer the recommended earlier phase or an explicit fast-track assumption
-   path when safe.
+5. Offer the recommended earlier phase, a bounded fast-track assumption path,
+   or a direct answer limited to available evidence.
 6. Update the current phase only after the user accepts the transition.
 
 Critical gaps involving contract/scope, security, compliance, architecture, or
@@ -67,8 +72,9 @@ analysis merely because the delivery track changes.
 
 ## Minimum Demo/PoC Fast Track
 
-`Mini Intake -> one-page Customer Context -> As-Is/Pain Point Snapshot -> To-Be
-Hypothesis -> PoC Design -> Build/Quick Verification -> user OK -> Smoke Test`
+`(Mini Intake only for material requirement gaps) -> the context/As-Is facts
+needed for this PoC -> To-Be Hypothesis -> PoC Design -> Build/Quick
+Verification -> user OK -> Smoke Test`
 
 Record the demo audience, deadline, success criteria, shortcuts, synthetic
 data, exclusions, and production-hardening backlog.

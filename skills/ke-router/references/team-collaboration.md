@@ -16,11 +16,15 @@ Project state has one machine-owned source and two human-readable views:
 
 ## Context preflight
 
-Whenever an expert joins or resumes a project:
+When an expert joins or resumes a persistent project (not for transient
+offline advice):
 
-1. Run `node scripts/ke-project.mjs current` and
-   `node scripts/ke-project.mjs validate`. If the intended project is not
-   active, run `node scripts/ke-project.mjs use <slug>`.
+1. Resolve the intended project from the user's request, or the active pointer
+   only when it is unambiguous. Run
+   `node scripts/ke-project.mjs current --project <slug>` and
+   `node scripts/ke-project.mjs validate --project <slug>`. If the intended
+   project is not active, select it with
+   `node scripts/ke-project.mjs use --project <slug>`.
 2. Read `PROJECT.md`.
 3. Read the current phase baseline(s) from its artifact index.
 4. Read open Critical/High notes and notes targeted to that expert in
@@ -30,16 +34,20 @@ Whenever an expert joins or resumes a project:
 6. Perform the task without reopening confirmed decisions unless new evidence
    creates a material conflict.
 
-Before leaving a task, append or update a structured note and update
-the project through `node scripts/ke-project.mjs transition ...` when its route, type,
-phase, gate, owner, handoff, or next action changed. Use
-`node scripts/ke-project.mjs note add --from <json>` for concurrent-safe note IDs.
+For persistent project work, append or update a structured note when a
+material finding, decision request, risk, blocker, or hand-off needs to be
+preserved. Update state through
+`node scripts/ke-project.mjs transition <route> --project <slug>` when its
+route, type, phase, gate, owner, handoff, or next action changed. Use
+`node scripts/ke-project.mjs note add --project <slug> --from <json>` for
+concurrent-safe note IDs. Ad-hoc advice does not create project state.
 Content such as baselines, blockers, and artifact links may still be curated
 in `PROJECT.md`, but do not hand-edit state-manager rows.
 
-State writes are atomic and protected by a project-local lock. Validate after
-each transition. Never select a project by folder timestamp or reuse active
-state from another repository.
+Project-state changes go through the state manager's guarded write and recovery
+process; never edit machine-owned rows directly. Validate after each
+transition. Never select a project by folder timestamp or reuse active state
+from another repository.
 
 ## Note contract
 

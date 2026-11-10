@@ -13,13 +13,15 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
   PROJECT_SCHEMA_VERSION,
+  PROJECT_TYPES,
   ROUTES,
   bootstrapState,
+  canonicalProjectRoot,
   listProjects,
-  loadState,
-  projectRoot,
+  projectFilePath,
   saveState,
   validateProject,
+  validateProjectStateData,
 } from "./lib/project-state.mjs";
 
 const ownRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -27,7 +29,10 @@ const args = process.argv.slice(2);
 
 function option(name, fallback) {
   const index = args.indexOf(name);
-  return index < 0 ? fallback : args[index + 1];
+  if (index < 0) return fallback;
+  const value = args[index + 1];
+  if (!value || value.startsWith("--")) throw new Error(`${name} requires a value`);
+  return value;
 }
 
 const repositoryRoot = path.resolve(option("--root", ownRoot));
@@ -46,8 +51,9 @@ async function exists(target) {
   try {
     await stat(target);
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (error.code === "ENOENT") return false;
+    throw error;
   }
 }
 
@@ -61,10 +67,10 @@ function tableValue(markdown, labels) {
 }
 
 function inferType(markdown) {
-  const value = tableValue(markdown, ["Engagement type", "Loại"]) ?? "";
+  const value = tableValue(markdown, ["Engagement type", "Lo\u1ea1i"]) ?? "";
   if (/demo|poc/iu.test(value)) return "demo";
-  if (/assessment|đánh giá/iu.test(value)) return "assessment";
-  if (/analysis|advisory|phân tích/iu.test(value)) return "analysis";
+  if (/assessment|\u0110\u00e1nh gi\u00e1/iu.test(value)) return "assessment";
+  if (/analysis|advisory|ph\u00e2n t\u00edch/iu.test(value)) return "analysis";
   return "customer";
 }
 
@@ -77,175 +83,216 @@ function defaultRoute(type) {
   }[type];
 }
 
+function markdownRoute(markdown, type) {
+  const value = tableValue(markdown, ["Entry route", "Lu\u1ed3ng v\u00e0o"]);
+  if (value) {
+    const match = Object.entries(ROUTES).find(([name, route]) =>
+      route.types.includes(type) &&
+      [name, route.label].some((candidate) => candidate.toLowerCase() === value.toLowerCase()),
+    );
+    if (match) return match[0];
+  }
+  return defaultRoute(type);
+}
+
+function firstText(...values) {
+  return values.find((value) => typeof value === "string" && value.trim())?.trim();
+}
+
+function projectStateFromMarkdown(slug, markdown, currentState) {
+  const projectType = firstText(currentState?.projectType) ?? inferType(markdown);
+  if (!PROJECT_TYPES.includes(projectType)) throw new Error(`${slug}: unknown project type ${projectType}`);
+  const entryRoute = firstText(currentState?.entryRoute) ?? markdownRoute(markdown, projectType);
+  const route = ROUTES[entryRoute];
+  if (!route || !route.types.includes(projectType)) {
+    throw new Error(`${slug}: entry route ${entryRoute} is incompatible with ${projectType}`);
+  }
+  const gateStatus = firstText(currentState?.gateStatus, tableValue(markdown, ["Gate status"])) ?? "pending";
+  if (!["pending", "satisfied"].includes(gateStatus)) {
+    throw new Error(`${slug}: invalid gate status ${gateStatus}`);
+  }
+  return {
+    schemaVersion: PROJECT_SCHEMA_VERSION,
+    projectSlug: slug,
+    projectType,
+    displayName: firstText(
+      currentState?.displayName,
+      tableValue(markdown, ["Display name", "T\u00ean hi\u1ec3n th\u1ecb"]),
+      markdown.match(/^# (.+)$/mu)?.[1],
+      slug,
+    ),
+    objective: firstText(
+      currentState?.objective,
+      tableValue(markdown, ["Objective", "M\u1ee5c ti\u00eau"]),
+      "Not specified",
+    ),
+    entryRoute,
+    deliveryTrack: firstText(currentState?.deliveryTrack, tableValue(markdown, ["Delivery track"]), route.track),
+    currentPhase: firstText(currentState?.currentPhase, tableValue(markdown, ["Current phase"]), route.phase),
+    currentGate: firstText(currentState?.currentGate, tableValue(markdown, ["Current gate"]), route.gate),
+    gateStatus,
+    gateEvidence: firstText(currentState?.gateEvidence, tableValue(markdown, ["Gate evidence"])),
+    gateApprover: firstText(currentState?.gateApprover, tableValue(markdown, ["Gate approver"])),
+    gateApprovalAuthenticated: false,
+    activeOwner: firstText(currentState?.activeOwner, tableValue(markdown, ["Active owner"]), "KE Router"),
+    lastHandoff: firstText(currentState?.lastHandoff, tableValue(markdown, ["Last handoff"]), "None"),
+    nextAction: firstText(
+      currentState?.nextAction,
+      tableValue(markdown, ["Next action"]),
+      `Complete readiness check for ${route.label}`,
+    ),
+    nextOwner: firstText(currentState?.nextOwner, tableValue(markdown, ["Next owner"]), "KE Router"),
+    noteSequences: currentState?.noteSequences ?? {},
+    revision: currentState?.revision ?? 0,
+    updatedAt: firstText(currentState?.updatedAt, new Date().toISOString()),
+  };
+}
+
+async function prepare(slug) {
+  const root = await canonicalProjectRoot(repositoryRoot, slug);
+  const projectPath = await projectFilePath(repositoryRoot, slug, "PROJECT.md");
+  if (!(await exists(projectPath))) return { slug, status: "skipped", reason: "missing PROJECT.md" };
+  const project = await readFile(projectPath, "utf8");
+  const statePath = await projectFilePath(repositoryRoot, slug, ".ke-project.json");
+  const stateExists = await exists(statePath);
+  let currentState;
+  if (stateExists) {
+    try {
+      currentState = JSON.parse(await readFile(statePath, "utf8"));
+    } catch {
+      throw new Error(`${slug}: .ke-project.json is malformed`);
+    }
+    if (!currentState || typeof currentState !== "object" || Array.isArray(currentState)) {
+      throw new Error(`${slug}: .ke-project.json must contain an object`);
+    }
+    const schema = currentState.schemaVersion;
+    if (!Number.isInteger(schema) || ![1, PROJECT_SCHEMA_VERSION].includes(schema)) {
+      throw new Error(`${slug}: project schema ${schema ?? "missing"} is unknown or newer than this Kit`);
+    }
+  }
+
+  const stateNeedsUpgrade = stateExists && (
+    currentState.schemaVersion < PROJECT_SCHEMA_VERSION ||
+    currentState.gateStatus === undefined ||
+    currentState.gateApprovalAuthenticated === undefined ||
+    currentState.noteSequences === undefined
+  );
+  const missingNotes = !(await exists(await projectFilePath(repositoryRoot, slug, "TEAM-NOTES.md")));
+  const missingDirectories = [];
+  for (const name of ["input", "private", "analysis", "output", "history"]) {
+    const target = await projectFilePath(repositoryRoot, slug, name);
+    if (!(await exists(target))) missingDirectories.push(name);
+  }
+  const needsSchema = !project.includes(`| Workspace schema | ${PROJECT_SCHEMA_VERSION} |`);
+  const nextState = projectStateFromMarkdown(slug, project, currentState);
+  if (!stateExists || stateNeedsUpgrade || needsSchema) {
+    const errors = validateProjectStateData(nextState, slug);
+    if (errors.length) throw new Error(`${slug}: cannot migrate state: ${errors.join("; ")}`);
+  } else {
+    const errors = validateProjectStateData(currentState, slug);
+    if (errors.length) throw new Error(`${slug}: existing project state is invalid: ${errors.join("; ")}`);
+  }
+
+  // Resolve every path the apply pass could touch before any project is modified.
+  for (const relative of ["PROJECT.md", ".ke-project.json", "TEAM-NOTES.md", ...missingDirectories]) {
+    await projectFilePath(repositoryRoot, slug, relative);
+  }
+  const notesTemplate = missingNotes
+    ? await readFile(path.join(repositoryRoot, "projects", "_template", "TEAM-NOTES.md"), "utf8")
+    : undefined;
+  const needsMigration = !stateExists || stateNeedsUpgrade || missingNotes || missingDirectories.length || needsSchema;
+  return {
+    slug,
+    status: needsMigration ? "would-migrate" : "current",
+    root,
+    project,
+    stateExists,
+    currentState,
+    nextState,
+    stateNeedsUpgrade,
+    missingNotes,
+    missingDirectories,
+    needsSchema,
+    notesTemplate,
+  };
+}
+
 async function backup(relative, source) {
   const destination = path.join(backupRoot, relative);
   await mkdir(path.dirname(destination), { recursive: true });
   await copyFile(source, destination);
 }
 
-async function migrate(slug) {
-  const root = projectRoot(repositoryRoot, slug);
-  const projectPath = path.join(root, "PROJECT.md");
-  if (!(await exists(projectPath))) return { slug, status: "skipped", reason: "missing PROJECT.md" };
-  let project = await readFile(projectPath, "utf8");
-  const stateExists = await exists(path.join(root, ".ke-project.json"));
-  const currentState = stateExists
-    ? await loadState(repositoryRoot, slug).catch(() => undefined)
-    : undefined;
-  const stateNeedsUpgrade =
-    currentState && currentState.schemaVersion < PROJECT_SCHEMA_VERSION;
-  const futureState =
-    currentState && currentState.schemaVersion > PROJECT_SCHEMA_VERSION;
-  if (futureState) {
-    return {
+async function apply(plan) {
+  const { slug } = plan;
+  const base = path.join("projects", slug);
+  await mkdir(backupRoot, { recursive: true });
+  await backup(path.join(base, "PROJECT.md"), path.join(plan.root, "PROJECT.md"));
+  if (plan.stateExists) await backup(path.join(base, ".ke-project.json"), path.join(plan.root, ".ke-project.json"));
+  const notesPath = path.join(plan.root, "TEAM-NOTES.md");
+  if (!plan.missingNotes) await backup(path.join(base, "TEAM-NOTES.md"), notesPath);
+  for (const name of plan.missingDirectories) await mkdir(path.join(plan.root, name), { recursive: true });
+  if (plan.missingNotes) {
+    await writeFile(
+      notesPath,
+      plan.notesTemplate.replaceAll("{{DISPLAY_NAME}}", plan.nextState.displayName),
+      "utf8",
+    );
+  }
+  if (!plan.stateExists) {
+    await bootstrapState(repositoryRoot, {
       slug,
-      status: "invalid",
-      errors: [
-        `${slug}: project schema ${currentState.schemaVersion} is newer than this Kit`,
-      ],
-    };
-  }
-  const missingNotes = !(await exists(path.join(root, "TEAM-NOTES.md")));
-  const missingDirectories = [];
-  for (const name of ["input", "private", "analysis", "output", "history"]) {
-    if (!(await exists(path.join(root, name)))) missingDirectories.push(name);
-  }
-  const needsSchema = !project.includes(`| Workspace schema | ${PROJECT_SCHEMA_VERSION} |`);
-  if (
-    !stateExists ||
-    stateNeedsUpgrade ||
-    missingNotes ||
-    missingDirectories.length ||
-    needsSchema
-  ) {
-    if (dryRun) {
-      return {
-        slug,
-        status: "would-migrate",
-        state: !stateExists,
-        stateUpgrade: Boolean(stateNeedsUpgrade),
-        teamNotes: missingNotes,
-        directories: missingDirectories,
-        schema: needsSchema,
-      };
-    }
-    await mkdir(backupRoot, { recursive: true });
-    await backup(path.join("projects", slug, "PROJECT.md"), projectPath);
-    if (stateExists) {
-      await backup(
-        path.join("projects", slug, ".ke-project.json"),
-        path.join(root, ".ke-project.json"),
-      );
-    }
-    if (!missingNotes) {
-      await backup(
-        path.join("projects", slug, "TEAM-NOTES.md"),
-        path.join(root, "TEAM-NOTES.md"),
-      );
-    }
-    for (const name of missingDirectories) {
-      await mkdir(path.join(root, name), { recursive: true });
-    }
-    if (missingNotes) {
-      const template = await readFile(
-        path.join(repositoryRoot, "projects", "_template", "TEAM-NOTES.md"),
-        "utf8",
-      );
-      const displayName =
-        tableValue(project, ["Display name", "Tên hiển thị"]) ??
-        project.match(/^# (.+)$/mu)?.[1] ??
-        slug;
-      await writeFile(
-        path.join(root, "TEAM-NOTES.md"),
-        template.replaceAll("{{DISPLAY_NAME}}", displayName),
-        "utf8",
-      );
-    }
-    if (needsSchema) {
-      const separator = /^\| --- \| --- \|$/mu;
-      if (separator.test(project)) {
-        project = project.replace(
-          separator,
-          `| --- | --- |\n| Workspace schema | ${PROJECT_SCHEMA_VERSION} |`,
-        );
-      } else {
-        project += `\n## KE managed project state\n\n| Property | Value |\n| --- | --- |\n| Workspace schema | ${PROJECT_SCHEMA_VERSION} |\n`;
-      }
-      await writeFile(projectPath, project, "utf8");
-    }
-    if (!stateExists) {
-      const type = inferType(project);
-      await bootstrapState(repositoryRoot, {
-        slug,
-        projectType: type,
-        entryRoute: defaultRoute(type),
-        displayName:
-          tableValue(project, ["Display name", "Tên hiển thị"]) ??
-          project.match(/^# (.+)$/mu)?.[1] ??
-          slug,
-        objective:
-          tableValue(project, ["Objective", "Mục tiêu"]) ?? "Not specified",
-      });
-    } else if (stateNeedsUpgrade) {
-      const type = currentState.projectType ?? inferType(project);
-      const routeName =
-        ROUTES[currentState.entryRoute]?.types.includes(type)
-          ? currentState.entryRoute
-          : defaultRoute(type);
-      const route = ROUTES[routeName];
-      await saveState(repositoryRoot, {
-        ...currentState,
-        projectSlug: slug,
-        projectType: type,
-        entryRoute: routeName,
-        displayName:
-          currentState.displayName ??
-          tableValue(project, ["Display name", "Tên hiển thị"]) ??
-          slug,
-        objective:
-          currentState.objective ??
-          tableValue(project, ["Objective", "Mục tiêu"]) ??
-          "Not specified",
-        deliveryTrack: currentState.deliveryTrack ?? route.track,
-        currentPhase: currentState.currentPhase ?? route.phase,
-        currentGate: currentState.currentGate ?? route.gate,
-        activeOwner: currentState.activeOwner ?? "KE Router",
-        lastHandoff: currentState.lastHandoff ?? "None",
-        nextAction:
-          currentState.nextAction ??
-          `Complete readiness check for ${route.label}`,
-        nextOwner: currentState.nextOwner ?? "KE Router",
-      });
-    }
+      projectType: plan.nextState.projectType,
+      entryRoute: plan.nextState.entryRoute,
+      displayName: plan.nextState.displayName,
+      objective: plan.nextState.objective,
+      initialState: plan.nextState,
+    });
+  } else if (plan.stateNeedsUpgrade || plan.needsSchema) {
+    await saveState(repositoryRoot, plan.nextState);
   }
   const errors = await validateProject(repositoryRoot, slug);
-  return {
-    slug,
-    status:
-      errors.length
-        ? "invalid"
-        : stateExists &&
-            !stateNeedsUpgrade &&
-            !missingNotes &&
-            !missingDirectories.length &&
-            !needsSchema
-          ? "current"
-          : "migrated",
-    errors,
-  };
+  return { slug, status: errors.length ? "invalid" : "migrated", errors };
 }
 
+const plans = [];
+for (const slug of await listProjects(repositoryRoot)) {
+  try {
+    plans.push(await prepare(slug));
+  } catch (error) {
+    plans.push({ slug, status: "invalid", errors: [error.message] });
+  }
+}
+
+const preflightFailed = plans.some((plan) => plan.status === "invalid");
 const results = [];
-for (const slug of await listProjects(repositoryRoot)) results.push(await migrate(slug));
+for (const plan of plans) {
+  if (plan.status !== "would-migrate" || dryRun || preflightFailed) {
+    results.push(plan.status === "would-migrate"
+      ? {
+          slug: plan.slug,
+          status: "would-migrate",
+          state: !plan.stateExists,
+          stateUpgrade: plan.stateNeedsUpgrade,
+          teamNotes: plan.missingNotes,
+          directories: plan.missingDirectories,
+          schema: plan.needsSchema,
+        }
+      : { slug: plan.slug, status: plan.status, reason: plan.reason, errors: plan.errors });
+    continue;
+  }
+  results.push(await apply(plan));
+}
+
 const report = {
   schemaVersion: 1,
   dryRun,
   repositoryRoot,
-  backupRoot: dryRun ? null : backupRoot,
+  backupRoot: dryRun || preflightFailed ? null : backupRoot,
   generatedAt: new Date().toISOString(),
   results,
 };
-if (!dryRun) {
+if (!dryRun && !preflightFailed) {
   await mkdir(path.join(repositoryRoot, ".codex"), { recursive: true });
   await writeFile(
     path.join(repositoryRoot, ".codex", "ke-last-migration.json"),
@@ -254,4 +301,4 @@ if (!dryRun) {
   );
 }
 console.log(JSON.stringify(report, null, 2));
-if (results.some((result) => result.status === "invalid")) process.exitCode = 1;
+if (preflightFailed || results.some((result) => result.status === "invalid")) process.exitCode = 1;

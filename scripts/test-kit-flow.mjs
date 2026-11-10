@@ -186,9 +186,50 @@ try {
   const skills = (await readdir(path.join(installedRoot, "skills"))).sort();
   assert(skills.includes("ke-sa-laude"));
   assert(skills.includes("ke-engineer-leba"));
+  assert(skills.includes("karpathy-guidelines"));
   assert(!skills.includes("ke-sa-son"));
   assert(!skills.includes("ke-engineer-binh"));
-  record("installer contains only current expert identities");
+  record("installer excludes retired expert identities");
+
+  const compassSkill = await readFile(
+    path.join(installedRoot, "skills", "karpathy-guidelines", "SKILL.md"),
+    "utf8",
+  );
+  const compassSource = await readFile(
+    path.join(repositoryRoot, "skills", "karpathy-guidelines", "SKILL.md"),
+    "utf8",
+  );
+  assert.equal(compassSkill, compassSource);
+  const compassMetadata = await readFile(
+    path.join(
+      installedRoot,
+      "skills",
+      "karpathy-guidelines",
+      "agents",
+      "openai.yaml",
+    ),
+    "utf8",
+  );
+  const compassMetadataSource = await readFile(
+    path.join(
+      repositoryRoot,
+      "skills",
+      "karpathy-guidelines",
+      "agents",
+      "openai.yaml",
+    ),
+    "utf8",
+  );
+  assert.equal(compassMetadata, compassMetadataSource);
+  const installedConfig = await readFile(
+    path.join(installedRoot, ".codex", "config.toml"),
+    "utf8",
+  );
+  assert.equal(
+    installedConfig.match(/^path = "skills\/karpathy-guidelines"$/gmu)?.length ?? 0,
+    1,
+  );
+  record("installer packages the shared coding compass with one registration");
 
   const e2eRunner = path.join(installedRoot, "scripts", "run-live-e2e.mjs");
   const e2eExample = path.join(
@@ -196,20 +237,45 @@ try {
     "e2e",
     "kintone-playwright-plan.example.json",
   );
+  const e2eProjectSlug = "e2e-plan-fixture";
+  const e2eProject = await runInitializer(installedRoot, {
+    slug: e2eProjectSlug,
+    type: "demo",
+    route: "demo-fast-track",
+  });
+  assert.equal(e2eProject.code, 0, e2eProject.stderr || e2eProject.stdout);
+  const e2ePlan = JSON.parse(await readFile(e2eExample, "utf8"));
+  e2ePlan.projectSlug = e2eProjectSlug;
+  const e2ePlanPath = path.join(sandbox, "e2e-plan.json");
+  await writeFile(e2ePlanPath, JSON.stringify(e2ePlan), "utf8");
   const e2ePreflight = await run(
     process.execPath,
-    [e2eRunner, "--plan", e2eExample, "--dry-run"],
+    [e2eRunner, "--plan", e2ePlanPath, "--dry-run"],
     { cwd: installedRoot },
   );
   assert.equal(e2ePreflight.code, 0, e2ePreflight.stderr);
-  assert.equal(JSON.parse(e2ePreflight.stdout).status, "PREFLIGHT_PASS");
+  const preflight = JSON.parse(e2ePreflight.stdout);
+  assert.equal(preflight.status, "PLAN_VALIDATION_PASS");
+  assert.equal(preflight.execution, "NOT_RUN");
+  assert.equal(preflight.writesPerformed, false);
+  assert.equal(preflight.tenantContacted, false);
+  const e2eRunRoot = path.join(
+    installedRoot,
+    "projects",
+    e2eProjectSlug,
+    "private",
+    "e2e-runs",
+  );
+  assert.equal(await exists(e2eRunRoot), false);
   const e2eWithoutConfirmation = await run(
     process.execPath,
-    [e2eRunner, "--plan", e2eExample],
+    [e2eRunner, "--plan", e2ePlanPath, "--confirm-live"],
     { cwd: installedRoot },
   );
   assert.notEqual(e2eWithoutConfirmation.code, 0);
-  const productionPlan = JSON.parse(await readFile(e2eExample, "utf8"));
+  assert.match(e2eWithoutConfirmation.stderr, /Live E2E execution is disabled/u);
+  assert.equal(await exists(e2eRunRoot), false);
+  const productionPlan = structuredClone(e2ePlan);
   productionPlan.environment = "production";
   const productionPlanPath = path.join(sandbox, "production-e2e.json");
   await writeFile(
@@ -223,7 +289,18 @@ try {
     { cwd: installedRoot },
   );
   assert.notEqual(productionPreflight.code, 0);
-  record("live E2E requires confirmation and refuses production plans");
+  const stringBooleanPlan = structuredClone(e2ePlan);
+  stringBooleanPlan.allowSyntheticWrites = "false";
+  const stringBooleanPath = path.join(sandbox, "string-boolean-e2e.json");
+  await writeFile(stringBooleanPath, JSON.stringify(stringBooleanPlan), "utf8");
+  const stringBooleanResult = await run(
+    process.execPath,
+    [e2eRunner, "--plan", stringBooleanPath, "--dry-run"],
+    { cwd: installedRoot },
+  );
+  assert.notEqual(stringBooleanResult.code, 0);
+  assert.match(stringBooleanResult.stderr, /allowSyntheticWrites must be a JSON boolean/u);
+  record("live E2E preflight is offline, validates canonical projects and strict booleans, and live execution fails closed");
 
   const router = await readFile(
     path.join(installedRoot, "skills", "ke-router", "SKILL.md"),
@@ -303,6 +380,8 @@ try {
   assert.equal(validateResult.code, 0, validateResult.stderr);
   const transitionResult = await runProject(installedRoot, [
     "transition",
+    "--project",
+    "route-discovery",
     "demo-fast-track",
     "--type",
     "demo",
@@ -340,6 +419,8 @@ try {
   );
   const invalidTransition = await runProject(installedRoot, [
     "transition",
+    "--project",
+    "route-discovery",
     "project-delivery",
     "--type",
     "demo",
@@ -618,7 +699,7 @@ try {
     "--yes",
     "--skip-deps",
   ]);
-  assert.equal(conflictResult.code, 2);
+  assert.notEqual(conflictResult.code, 0);
   assert.match(conflictResult.stderr, /stopped to protect existing files/u);
   assert.equal(await readFile(helpFile, "utf8"), "LOCAL USER CONTENT\n");
   record("upgrade conflict protection refuses silent overwrite");

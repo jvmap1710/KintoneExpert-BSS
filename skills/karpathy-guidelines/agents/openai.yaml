@@ -1,0 +1,4 @@
+interface:
+  display_name: "Karpathy Guidelines"
+  short_description: "Cautious coding and review guidance"
+  default_prompt: "Use $karpathy-guidelines while coding, reviewing, or refactoring this work."

@@ -11,13 +11,20 @@ build, verification, and deployment. When MCP lacks a supported operation,
 use an explicitly approved official fallback as defined below. Other experts
 may also use MCP in read-only mode for evidence-based analysis.
 
+Handle suitable direct LeBa requests without requiring PM, BA, or SA first.
+Offline code/design advice needs no tenant credentials; an actual Kintone
+operation does. For persistent project work, follow
+`../ke-router/references/first-use-and-routing.md` and the project preflight
+below. Admin credentials or roles do not authorize broader changes.
+
 ## Guardrails
 
 1. Follow the repository `AGENTS.md` before every Kintone operation.
-2. Run the context preflight in
-   `../ke-router/references/team-collaboration.md`; verify G5 or record the
-   explicitly accepted build-readiness gap.
-3. Inspect the target app and current settings before proposing a change.
+2. For persistent project implementation, run the context preflight in
+   `../ke-router/references/team-collaboration.md`. For a direct, offline
+   technical question, do not create project state.
+3. For tenant changes, verify the approved build scope and any material G5
+   readiness conditions, then inspect the target app and current settings.
 4. Build in the test environment and make small, reviewable settings changes.
 5. Read settings back, summarize app ID and pending changes, then obtain the
    required confirmation before deployment.
@@ -40,18 +47,39 @@ unexpected, or will be used to scope a write.
 
 ## Runtime access
 
-Use `npm --prefix platform/ke-kintone-mcp run check` for local configuration and
-`npm --prefix platform/ke-kintone-mcp run test:connection` only when a connection
-check is needed. Let Codex start the configured `kintone` MCP server for
-Kintone operations. Keep `.env`, attachments, package files, scripts, and
-customizations inside `platform/ke-kintone-mcp/`.
+Only when live Kintone access is needed, tell the user that credentials belong
+in `platform/ke-kintone-mcp/.env`; never request secrets in chat or print their
+values. `npm --prefix platform/ke-kintone-mcp run check` validates local
+configuration only and does not contact the tenant. A tenant connection probe
+is a separate read: only after the user approves the named test plan and
+target, run:
+
+```powershell
+npm --prefix platform/ke-kintone-mcp run test:connection -- --environment test --approved-test-plan <APPROVAL_REFERENCE> --app <APP_ID>
+```
+
+Let Codex start the configured `kintone` MCP server for normal Kintone
+operations. Keep the credential file and shared runtime dependencies under
+`platform/ke-kintone-mcp/`; keep project-specific source, customizations, and
+authorization artifacts with the active project, not in the shared runtime.
+For REST staging writes, follow `references/runtime-authorization.md`: each
+authorization file must reflect current explicit user approval and bind one
+operation, target, and exact limits; its reference string is not approval.
 
 Before inspecting or building an app, verify that the active session exposes
-the `kintone` MCP tools. Call those tools directly for Demo/PoC and production
-projects alike. If the entire MCP server is absent, stop and ask the user to
-check its configuration, reopen/trust the project, and start a fresh chat. If
-MCP is loaded but the required operation is absent from its published tools,
-do not claim that reopening the chat will add that capability.
+the required `kintone` MCP tools. Call those tools directly for Demo/PoC and
+production projects alike. If the entire MCP server is absent, stop and ask the
+user to check its configuration, reopen/trust the project, and start a fresh
+chat. The default tool list in `.codex/config.toml` is read-only. A write tool
+missing because the configured `enabled_tools` allowlist excludes it is
+policy-disabled, not an upstream capability gap; do not fall back to REST,
+UI, or shell to bypass that restriction. For a user-authorized write, show the
+exact narrowly scoped tool(s) to add and the config diff, wait for user review,
+reopen/restart Codex, then restore the read-only allowlist and reopen/restart
+after the task. The allowlist is not App/account-scoped enforcement. Only if a
+tool is genuinely not published by the loaded server after policy is accounted
+for should it be treated as an MCP capability gap; reopening alone will not
+add upstream tools.
 
 Never read `node_modules`, `@kintone/mcp-server/dist`, or package source to
 reverse-engineer tools. Never emulate MCP with shell JSON-RPC or bypass it with
@@ -71,10 +99,11 @@ Prefer native fields, layout, lookup, permissions, views, and calculations.
 Use JavaScript only for a clear gap such as client-side validation or dynamic
 UI. Document field codes and test impact.
 
-Do not confuse an MCP capability gap with a Kintone platform limitation. If
-the active MCP tools do not expose an operation, state that exact limitation
-once and offer the supported choices: the official REST API, the Kintone
-administration UI, or an official Kintone tool. Recommend the practical
+Do not confuse an upstream MCP capability gap with a Kintone platform
+limitation or a policy-disabled tool. If the loaded server genuinely does not
+publish an operation, state that exact limitation once and offer the supported
+choices: the official REST API, the Kintone administration UI, or an official
+Kintone tool. Recommend the practical
 choice. After the user approves REST for a named app and operation, execute
 that scoped path without another channel-choice review; ask again only for the
 separate deployment gate or if scope materially changes. Never claim that
@@ -140,8 +169,9 @@ guardrails still apply.
 
 ## Hand-off
 
-Ask `$ke-sa-laude` to resolve architecture questions and `$ke-ba-teo`
-to resolve requirement ambiguity. Give `$ke-tester-mit` the app IDs,
+When the user authorizes coordinated work, ask `$ke-sa-laude` to resolve
+architecture questions and `$ke-ba-teo` to resolve requirement ambiguity.
+For a direct task, do not switch roles automatically. Give `$ke-tester-mit` the app IDs,
 field codes, behaviors, deployment result, and task acceptance condition for
 mandatory Quick Verification. Keep raw or
 sensitive evidence under `projects/<project-slug>/private/`. When the user

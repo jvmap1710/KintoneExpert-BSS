@@ -1,3 +1,9 @@
+import {
+  loadEffectiveConfig,
+  reportConfigConflicts,
+  validateKintoneBaseUrl,
+} from "./lib/kintone-rest.mjs";
+
 function readArgument(name) {
   const index = process.argv.indexOf(`--${name}`);
   if (index >= 0) return process.argv[index + 1];
@@ -20,26 +26,18 @@ const guestSpaceArgument = readArgument("guest-space");
 const guestSpaceId = guestSpaceArgument
   ? requirePositiveInteger(guestSpaceArgument, "Guest Space ID")
   : null;
-const baseUrl = process.env.KINTONE_BASE_URL;
+const effectiveConfig = await loadEffectiveConfig();
+reportConfigConflicts(effectiveConfig);
+const baseUrl = effectiveConfig.values.KINTONE_BASE_URL;
 
-if (!baseUrl || /your-subdomain|example/u.test(baseUrl)) {
+if (!baseUrl || /your-subdomain|example/iu.test(baseUrl)) {
   console.error("KINTONE_BASE_URL is missing or still uses the placeholder.");
   process.exit(1);
 }
 
 let parsedBaseUrl;
 try {
-  parsedBaseUrl = new URL(baseUrl);
-  if (
-    parsedBaseUrl.protocol !== "https:" ||
-    parsedBaseUrl.username ||
-    parsedBaseUrl.password ||
-    parsedBaseUrl.search ||
-    parsedBaseUrl.hash ||
-    !["", "/"].includes(parsedBaseUrl.pathname)
-  ) {
-    throw new Error();
-  }
+  parsedBaseUrl = validateKintoneBaseUrl(baseUrl);
 } catch {
   console.error("KINTONE_BASE_URL must be an HTTPS base URL, e.g. https://company.cybozu.com");
   process.exit(1);

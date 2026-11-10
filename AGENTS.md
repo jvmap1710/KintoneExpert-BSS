@@ -38,13 +38,17 @@ personal Kintone data in tracked files or terminal output.
 
 ## Project context and delivery gates
 
-For persistent analysis, Demo/PoC, assessment, or Real Project work, select one
-`projects/<project-slug>/` workspace before reading sources or producing
-artifacts. `.ke-project.json` is the machine-owned project state,
+For persistent analysis, Demo/PoC, assessment, or Real Project work, confirm the
+interpreted project identity and objective with the user, then select or create
+one `projects/<project-slug>/` workspace before reading project sources or
+producing project artifacts. Self-contained offline advice and transient
+analysis need no workspace. `.ke-project.json` is the machine-owned project state,
 `.codex/ke-active-project.json` selects the active workspace, `PROJECT.md` is
 the human-readable dashboard, and `TEAM-NOTES.md` is the collaboration log.
-Use `node scripts/ke-project.mjs current`, `use`, `transition`, `validate`, and
-`note add`; do not directly edit fields that the state manager owns.
+Use `node scripts/ke-project.mjs current --project <slug>` and
+`validate --project <slug>` to inspect a named project; select with
+`use --project <slug>`, and pass `--project <slug>` on every `transition` or
+`note add` mutation. Do not directly edit machine-owned fields.
 
 Whenever an expert joins or resumes a project, read `PROJECT.md`, the current
 baseline in its artifact index, and open Critical/High or targeted notes before
@@ -52,21 +56,34 @@ acting. Before handoff, update the dashboard when state changed and
 append/update a structured note. Follow
 `skills/ke-router/references/team-collaboration.md`.
 
-Before any project-scoped action, resolve and validate the active project.
-Never infer it from the most recently modified folder. A transition from
-analysis to Demo/PoC or Real Project updates the same project atomically.
+Before a project-scoped action, resolve the intended project explicitly and
+validate it. For state mutations, pass `--project <slug>`; do not rely on the
+active-project pointer or infer a project from the most recently modified
+folder. Use the active pointer only when the user has not named a workspace
+and the intended project is otherwise unambiguous. A transition from analysis
+to Demo/PoC or Real Project updates the same project atomically.
 
 Entry routes are selectable starting points, not proof that earlier work is
-complete. Apply `skills/ke-router/references/delivery-lifecycle.md`. Reuse
-confirmed baselines, keep analysis-to-Demo/Real-Project transitions in the
-same workspace, and require a PoC-to-Production Gap Assessment before treating
-PoC work as a Real Project input.
+complete or a mandatory waterfall. Apply
+`skills/ke-router/references/first-use-and-routing.md` and
+`skills/ke-router/references/delivery-lifecycle.md` only to the relevant
+persistent project work. Reuse confirmed baselines, keep analysis-to-Demo/Real-Project
+transitions in the same workspace, and require a PoC-to-Production Gap
+Assessment before treating PoC work as a Real Project input.
 
-Use `skills/ke-router/references/phase-template-index.md` to select the owner,
-working template, and completion gate. Load only the current and next-phase
-templates; do not generate every artifact by default. A template structures
-confirmed facts but does not authorize Kintone writes, deployments, or test
-data.
+For persistent coordinated project work, use
+`skills/ke-router/references/phase-template-index.md` to select the relevant
+owner, working template, and completion gate. Load only templates needed for
+the current task or next hand-off; do not generate every artifact by default.
+A template structures confirmed facts but does not authorize Kintone writes,
+deployments, or test data.
+
+## Shared development compass
+
+When coding, reviewing, refactoring, or delegating implementation, read and
+apply `skills/karpathy-guidelines/SKILL.md`. It does not override the user's
+scope, KE expert routing, security requirements, or approval gates, and it
+does not grant blanket permission to delegate.
 
 ## Record-read diagnostics
 
@@ -92,17 +109,30 @@ the user to run the configuration checks, reopen/trust the project, and start
 a fresh chat. Do not recommend a fresh chat when MCP is loaded and its
 published tool list simply does not include the required operation.
 
-Do not inspect or modify `node_modules`, MCP `dist/` files, or package source to
-discover tool names or schemas. Do not construct JSON-RPC calls in the shell,
-start the MCP server manually for an operation, or call Kintone REST APIs as an
-unapproved fallback. Use only the schema exposed by the active MCP tool. If a
-tool is unavailable, times out, or still fails after one corrected call, report
-the exact failure and stop instead of reverse-engineering the runtime.
+The configured `enabled_tools` list in `.codex/config.toml` is read-only by
+default. If a write tool is absent because this allowlist excludes it, classify
+it as policy-disabled, not an upstream capability gap. Never switch to REST,
+browser/UI, or shell to bypass the policy. For a user-authorized write, name
+only the upstream tool(s) needed, show the exact allowlist diff and obtain the
+user's review before applying/reopening Codex; restore the read-only list and
+reopen after the task. Do not remove the allowlist wholesale or claim it
+restricts access by App/account. Follow
+`skills/ke-router/references/first-use-and-routing.md`.
 
-MCP is the default channel, not the exclusive channel. An MCP capability gap
-is not a Kintone platform limitation. If the active MCP tools genuinely do not
-expose a supported Kintone operation, explain the gap once and offer an
-official UI/tool path or the official REST API. Do not switch silently. When
+Do not inspect or modify `node_modules`, MCP `dist/` files, or package source to
+discover tool names or schemas. Do not construct JSON-RPC calls in the shell or
+start the MCP server manually. Use only the schema exposed by active tools. If
+the server is loaded and a needed tool is genuinely not published upstream
+(after checking the allowlist), explain the capability gap once and offer an
+explicitly approved official path. If a tool times out or still fails after
+one corrected call, report the exact failure and stop instead of
+reverse-engineering the runtime.
+
+MCP is the default channel, not the exclusive channel. A real upstream MCP
+capability gap is not a Kintone platform limitation; a configured read-only
+allowlist is not that gap. If the active MCP tools genuinely do not expose a
+supported Kintone operation after policy is accounted for, explain the gap
+once and offer an official UI/tool path or the official REST API. Do not switch silently. When
 the user approves REST for the named app and operation, that approval
 authorizes the scoped REST implementation; proceed without repeatedly asking
 the user to return to MCP or review the channel choice. REST still follows
@@ -141,9 +171,11 @@ against the live App with synthetic data.
 ## Visible expert and role closure
 
 The user must always know which KE expert is speaking. On the first response
-after routing or a hand-off, start with `Mình là <name> — <role> của KE.` and
-state what was received and what this role will do. Do not use an unidentified
-`Mình sẽ...` at the start of a new role.
+after routing or a hand-off, introduce the expert in the effective chat
+language, preserving the expert name and role (for example Vietnamese
+`Mình là <name> — <role> của KE.` or English `I am <name> — <role> with KE.`),
+then state what was received and what this role will do. Do not use an
+unidentified equivalent of “I will...” at the start of a new role.
 
 Use these identities consistently: Tí — PM, Tèo — BA, LauDe — SA, LeBa —
 Kintone Engineer, Mít — Tester, and Cò — Expert Panel. During the same role,
@@ -165,24 +197,30 @@ material multi-role trade-offs, not a mandatory step after every expert.
 
 ## Expert-team routing
 
-At the start of a conversation, when the user says hi, hello, xin chào, xin
-chao, asks for help, or asks what KE can do, invoke `ke-router`. Introduce KE,
-its expert team, the standard flow, and the read-only MCP / controlled-write
-boundary.
-For a greeting-only message, show the numbered entry choices defined by
-`skills/ke-router/references/entry-routing.md`. If the greeting already
-contains a clear intent, skip the menu and route it directly.
+At first contact, use `ke-router` for a greeting-only message, a broad request
+for help, or a question about KE. Briefly introduce the relevant experts and
+the read-only / controlled-write boundary. Follow
+`skills/ke-router/references/first-use-and-routing.md` for first-time
+onboarding, direct expert calls, route priority, and when workspace or tenant
+setup is needed. For a greeting-only message, show the numbered entry choices
+defined by `skills/ke-router/references/entry-routing.md`. If the greeting
+already contains a clear request, skip the menu and route it immediately.
 
-Demo / PoC Fast Track does not start with Tí by default. A process, workflow,
-or form PoC starts with Tèo for Mini Intake; an explicitly architecture-led
-PoC may start with LauDe. A broad Existing Solution Assessment starts with Tí,
-while a narrow role-specific diagnostic routes directly to that expert.
+Demo / PoC Fast Track does not start with Tí by default. Use Tèo's Mini Intake
+only when material requirements are missing or ambiguous; an architecture-led
+PoC may start with LauDe, and an approved build-ready specification may go
+directly to LeBa. A broad Existing Solution Assessment may need Tí for
+coordination, while a narrow role-specific diagnostic routes directly to that
+expert.
 
-Entry-route ownership takes precedence over the generic end-to-end fallback:
-Discovery Intake, Customer Context, Current-State, and Future-State start with
-Tèo; Project Delivery starts with Tí; broad Existing Solution Assessment
-starts with Tí; and an explicit Expert Panel request starts with Cò. Use the
-generic Tí fallback only when no entry-route or role-specific owner is clear.
+An explicitly requested expert takes priority when the task is within that
+expert's scope; otherwise follow the clearest intent and entry-route owner.
+Use Tí only for genuine broad project coordination, not as a default
+end-to-end waterfall. Discovery Intake, Customer Context, Current-State, and
+Future-State commonly start with Tèo; Project Delivery or a broad Existing
+Solution Assessment may need Tí; an explicit Expert Panel request goes to Cò.
+See `skills/ke-router/references/first-use-and-routing.md` for the complete
+priority and workspace rules.
 
 A raw Presales/customer source package such as survey, MoM, SOW, email, or
 attachments that still needs registration, classification, or synthesis is
@@ -190,12 +228,11 @@ Discovery Intake. Customer Context begins from a confirmed evidence register
 or after intake gaps are resolved; do not skip Intake merely because the
 sources describe the customer.
 
-Use the project skills when their role matches the request: Tí/Ti (PM),
-Tèo/Teo (BA), LauDe (SA), LeBa (Kintone Engineer), Mít/Mit (Tester),
-and Cò/Co (cross-role expert panel). Tí coordinates an end-to-end request and
-keeps decisions, scope, and hand-offs clear. Use Cò when the user explicitly
-requests a multi-role discussion or needs options and trade-offs at any project
-stage.
+Use the project skill that matches the requested role: Tí/Ti (PM), Tèo/Teo
+(BA), LauDe (SA), LeBa (Kintone Engineer), Mít/Mit (Tester), and Cò/Co
+(cross-role expert panel). Users may call a suitable expert directly and skip
+unneeded roles. Tí coordinates when broad delivery ownership is actually
+needed; Cò is optional for requested or material cross-role trade-offs.
 Use `ke-document-writer` when the user requests a saved or exported project
 deliverable. Support standalone HTML and native DOCX, XLSX, or PPTX under
 `projects/<project-slug>/output/`; never overwrite an existing file without

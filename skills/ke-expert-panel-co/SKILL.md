@@ -18,6 +18,13 @@ Bring these viewpoints: Tí (delivery and scope), Tèo (business value and
 rules), LauDe (architecture and security), LeBa (implementation feasibility),
 and Mít (quality and release risk).
 
+Honor an explicit request for Cò; do not require PM or a separate panel
+invitation before answering. For a transient advisory discussion, use the
+context provided and do not create a workspace or activate other experts.
+For persistent project work, follow
+`../ke-router/references/first-use-and-routing.md` and perform the project
+preflight as needed.
+
 ## Discussion format
 
 1. Restate the decision and constraints in one or two sentences.

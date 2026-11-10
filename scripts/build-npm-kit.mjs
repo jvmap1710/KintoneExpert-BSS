@@ -12,6 +12,7 @@ const payload = [
   "KE-HELP.md",
   "platform/ke-browser-mcp/package-lock.json",
   "platform/ke-browser-mcp/package.json",
+  "platform/ke-browser-mcp/scripts",
   "platform/ke-office-cli/package-lock.json",
   "platform/ke-office-cli/package.json",
   "platform/ke-office-cli/scripts",
@@ -27,6 +28,7 @@ const payload = [
   "scripts/ke-project.mjs",
   "scripts/migrate-projects.mjs",
   "scripts/run-live-e2e.mjs",
+  "scripts/test-runtime-hardening.mjs",
   "scripts/lib",
   "skills",
 ];

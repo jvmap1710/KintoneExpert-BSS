@@ -1,7 +1,12 @@
 # KE project workspace
 
-Create or select one isolated workspace before reading customer sources or
-creating persistent work for analysis, Demo/PoC, assessment, or Real Project.
+For confirmed persistent analysis, Demo/PoC, assessment, or Real Project work,
+create or select one isolated workspace before reading project sources or
+creating saved project artifacts. First summarize the inferred project
+identity and objective and get confirmation for a new workspace; do not ask
+the user to repeat known details. Follow
+`first-use-and-routing.md`. Self-contained offline advice and transient
+analysis do not need a project workspace.
 
 ```powershell
 ./scripts/init-customer-project.ps1 -ProjectSlug acme-discovery `
@@ -20,7 +25,8 @@ initializer refuses to overwrite an existing workspace.
 
 | Path | Purpose |
 | --- | --- |
-| `PROJECT.md` | Concise current project dashboard and authoritative routing state |
+| `.ke-project.json` | Machine-owned authoritative state for project type, route, phase, gate, owner, handoff, next action, and revision; never edit directly |
+| `PROJECT.md` | Human-readable dashboard and projection of current routing state, with baselines, blockers, and artifact links |
 | `TEAM-NOTES.md` | Structured working discussions, questions, conflicts and handoffs |
 | `input/` | Sanitized customer-provided source material |
 | `private/` | Raw files, PII, attachments and confidential evidence |
@@ -28,7 +34,8 @@ initializer refuses to overwrite an existing workspace.
 | `output/` | User-facing standalone deliverables |
 | `history/` | Archived closed notes and superseded internal baselines |
 
-Apply `team-collaboration.md` whenever an expert joins or hands off. Keep
+Apply `team-collaboration.md` whenever an expert joins or hands off within a
+persistent project. Keep
 project inputs, transitions, analysis and outputs in the same workspace when
 the user moves from analysis to Demo/PoC or Real Project. Create a second
 workspace only when the user requests isolation or the customer/scope is
