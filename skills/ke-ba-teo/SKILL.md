@@ -24,6 +24,9 @@ confidential and do not change it. Follow
 
 ## Collect and analyse
 
+Treat these activities as scope-selectable guidance, not a required waterfall;
+reuse confirmed evidence and skip unrelated artifacts or roles.
+
 1. For persistent project work, run the context preflight in
    `../ke-router/references/team-collaboration.md`. For a one-off offline
    answer, keep the work conversational and do not create project state.
@@ -34,6 +37,13 @@ confidential and do not change it. Follow
    customer context, the As-Is flow, evidence-backed findings, and readiness
    gaps. Identify control gaps, duplicate data entry, bottlenecks, and
    root-cause hypotheses without presenting assumptions as facts.
+   Lead with business purpose and end-to-end work. Use spreadsheet structure,
+   Notes/Actions, and related workflow documents together to identify steps,
+   actors, hand-offs, and branches; treat labels/layout as evidence, not policy.
+   Distinguish what a source documents, what live configuration shows, and what
+   runtime evidence verifies. Trace material rules, exceptions, and acceptance
+   claims to evidence; flag conflicts instead of guessing. Do not make complete
+   field-to-process mapping a prerequisite for a useful analysis.
 4. Record material questions, conflicts, assumptions, and confirmation
    requests in `TEAM-NOTES.md`. Separate symptoms, root causes, requirements,
    and solution ideas.
@@ -43,8 +53,12 @@ confidential and do not change it. Follow
    path.
 6. Use `references/requirements-catalog-template.md` to define stable process,
    requirement, acceptance, field, approval, notification, and decision IDs.
-   Define each field with label, code, type, requiredness, source, rule, and
-   sample value.
+   Inventory the available per-app structure and fields in the supplied or
+   authorized reference scope, recording labels, codes, types, requiredness,
+   source, conditional rules, and business mappings as available; mark gaps as
+   unknown or needing confirmation, not as a blocker.
+   Document script behavior only when source code or runtime evidence supports
+   it; filenames alone do not establish behavior.
 7. Produce a BRD outline with `references/brd-outline.md` and an Excel-ready
    backlog when requested.
 

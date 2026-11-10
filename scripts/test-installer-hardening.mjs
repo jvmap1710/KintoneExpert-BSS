@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   chmod,
+  copyFile,
   mkdir,
   mkdtemp,
   readFile,
@@ -17,7 +18,7 @@ import path from "node:path";
 import process from "node:process";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
-import { gzipSync } from "node:zlib";
+import { gzipSync, gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -87,6 +88,77 @@ async function buildInstaller(name, options) {
   const installer = path.join(tempRoot, `${name}.mjs`);
   await writeFile(installer, source, "utf8");
   return { installer, payload: records.map((record) => record.path) };
+}
+
+async function testPackageTemplatePrivacy() {
+  const builderPath = "scripts/build-npm-kit.mjs";
+  const builderSource = await readFile(path.join(repositoryRoot, builderPath), "utf8");
+  const payloadMatch = builderSource.match(/const payload = \[([\s\S]*?)\r?\n\];/u);
+  assert.ok(payloadMatch, "package builder payload list must be discoverable");
+  const payloadPaths = [...payloadMatch[1].matchAll(/^\s*"([^"]+)",?\s*$/gmu)]
+    .map((match) => match[1]);
+  const fixtureRoot = path.join(tempRoot, "package-privacy-fixture");
+  const fixtureFiles = new Set([
+    ".gitignore",
+    "package.json",
+    "cli/ke-installer.mjs",
+    builderPath,
+  ]);
+  for (const relative of payloadPaths) {
+    const absolute = path.join(repositoryRoot, relative);
+    if ((await stat(absolute)).isDirectory()) {
+      for (const file of await filesBelow(repositoryRoot, relative)) fixtureFiles.add(file);
+    } else {
+      fixtureFiles.add(relative);
+    }
+  }
+  for (const relative of fixtureFiles) {
+    const destination = path.join(fixtureRoot, relative);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await copyFile(path.join(repositoryRoot, relative), destination);
+  }
+
+  const fixtureRelative = "projects/_template/input/package-privacy-fixture.pdf";
+  const marker = "KE_SYNTHETIC_PACKAGE_PRIVACY_FIXTURE_7af80d";
+  await writeFile(path.join(fixtureRoot, fixtureRelative), marker, "utf8");
+  const build = spawnSync(
+    process.execPath,
+    [path.join(fixtureRoot, builderPath)],
+    { cwd: fixtureRoot, encoding: "utf8" },
+  );
+  assert.equal(build.status, 0, build.stderr || build.stdout);
+
+  const builtInstaller = await readFile(
+    path.join(fixtureRoot, "dist", "ke-installer.mjs"),
+    "utf8",
+  );
+  const embeddedPayload = builtInstaller.match(/const embeddedPayload = "([^"]+)";/u);
+  assert.ok(embeddedPayload, "built installer must contain its payload");
+  const records = JSON.parse(
+    gunzipSync(Buffer.from(embeddedPayload[1], "base64")).toString("utf8"),
+  );
+  const templatePaths = records
+    .filter((record) => record.path.startsWith("projects/_template/"))
+    .map((record) => record.path)
+    .sort();
+  assert.deepEqual(templatePaths, [
+    "projects/_template/PROJECT.md",
+    "projects/_template/TEAM-NOTES.md",
+    "projects/_template/analysis/.gitkeep",
+    "projects/_template/history/.gitkeep",
+    "projects/_template/input/.gitkeep",
+    "projects/_template/output/.gitkeep",
+    "projects/_template/private/.gitkeep",
+  ]);
+  assert.equal(records.some((record) => record.path === fixtureRelative), false);
+  assert.equal(
+    records.some((record) =>
+      Buffer.from(record.content, "base64").includes(Buffer.from(marker)),
+    ),
+    false,
+  );
+  checks += 1;
+  console.log("PASS: package excludes synthetic customer data from the project template");
 }
 
 function runInstaller(installer, args, env = process.env) {
@@ -183,6 +255,7 @@ async function createRecoveryFixture(name, { includeBackup = true } = {}) {
 }
 
 try {
+  await testPackageTemplatePrivacy();
   const normal = await buildInstaller("normal", {});
   const lateFailure = await buildInstaller("late-migration-failure", { failMigrationLate: true });
   const absentTarget = path.join(tempRoot, "dryrun-absent");

@@ -99,6 +99,12 @@ approval/notification logic, permissions/reporting/integrations, acceptance
 criteria, assumptions, and open decisions. Link requirements to acceptance
 criteria with stable IDs.
 
+### Business-process and current-state documents
+
+Use [references/business-process.md](references/business-process.md) for
+business-first narrative structure, evidence distinctions, and process/app
+structure visuals and inventories.
+
 ### Survey summary
 
 Include population and response count, collection period, method, data-quality

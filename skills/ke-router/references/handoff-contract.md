@@ -23,6 +23,11 @@ The sending expert closes with:
 - the recommended receiver and reason; and
 - a choice to continue, invite Cò for a material trade-off, or stop.
 
+For business-process or current-state work, include a concise brief when useful:
+accepted scope, major steps, material rules and exceptions, evidence/source
+distinctions, and open items. Keep it within the already authorized hand-off;
+it does not require a new role or separate artifact.
+
 For an ad-hoc question, wait for the user's choice before activating another
 expert. For an end-to-end flow already authorized by the user, announce
 `<from> hand-off → <to>` and continue. Do not silently change perspective or
