@@ -17,6 +17,51 @@ operation does. For persistent project work, follow
 `../ke-router/references/first-use-and-routing.md` and the project preflight
 below. Admin credentials or roles do not authorize broader changes.
 
+## Persistent build intake preflight
+
+For a concrete persistent build request, including “I have design docs and
+need to build on Kintone,” do these offline checks before asking for more
+inputs or stopping because tenant tooling is unavailable:
+
+- Keep pure advice, greetings, and transient diagnostics out of this
+  preflight. Resolve scope from an explicitly named project, or use the active
+  pointer only when it identifies one unambiguous workspace. If neither does,
+  a names-only inventory of project slugs may suggest a candidate, but a sole
+  folder is not proof it matches; do not open or search customer workspace
+  contents. Validate only the explicit or unambiguous candidate before reading
+  sources. If the user wants to continue
+  an existing project but it remains unclear, defer asking for its name/path
+  until the remaining offline checks are done; never choose by folder
+  timestamps.
+- If no suitable workspace is identified, summarize the inferred identity,
+  objective, and type (Demo/PoC or Real Project), then ask before creating it
+  after the remaining offline checks.
+  A current request to create a workspace authorizes creation, but does not
+  supply unknown identity, objective, or type; ask only for material facts
+  that cannot be inferred. If creation is not yet authorized, combine the
+  missing facts with “Shall I create this project?” in one question. After
+  selection/creation and project preflight,
+  read design files only from the user-authorized path in that workspace. If
+  files are missing, give the exact validated `input/` or `private/` folder
+  path and request only the missing materials, not a vague attachment.
+- Inspect the active session's published `kintone` tools and verify the shared
+  runtime/check entrypoint exists before running the local config check
+  (`npm --prefix platform/ke-kintone-mcp run check`). If the runtime or helper
+  is missing, report that blocker; do not install anything. Never open `.env`,
+  print secrets, or request credentials in chat. If config is missing or
+  invalid, report only the required key names and exact `.env` path so the user
+  can update it locally. Do not change configuration. The config check does
+  not prove API or MCP connectivity. Do not run probes just because a build
+  was requested; use only the minimum in-scope read-only Kintone inspection
+  needed after the target is identified. Never infer tenant access from local
+  config or a listed server, or use this request for tenant-wide discovery.
+- If MCP/runtime access is unavailable, keep safe workspace preparation and
+  design review moving. Mark only the tenant action `BLOCKED` and name the
+  exact missing capability; report API/MCP as `NOT RUN` or `BLOCKED` unless
+  actually tested. Complete all available non-network preflight checks before
+  sending one concise message with only the remaining material gaps. Do not
+  start a PM/BA/SA chain by default.
+
 ## Guardrails
 
 1. Follow the repository `AGENTS.md` before every Kintone operation.

@@ -1,6 +1,6 @@
 # KE — Kintone Expert Kit
 
-> **Beta `1.0.23-beta.2` — chỉ dùng có giám sát; chưa sẵn sàng cho production.**
+> **Beta `1.0.23-beta.3` — chỉ dùng có giám sát; chưa sẵn sàng cho production.**
 > Chỉ dùng trong môi trường dev/test được phép, với dữ liệu synthetic và người vận
 > hành theo dõi. Không dùng cho production app hoặc dữ liệu production. Các ví dụ
 > cài đặt bên dưới pin đúng beta tag này.
@@ -30,14 +30,14 @@ Yêu cầu:
 Mở terminal tại thư mục muốn cài KE và chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.2 install
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.3 install
 ```
 
 Nâng một Kit đã cài mà vẫn giữ cấu hình và project:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.2 upgrade --dry-run
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.2 upgrade
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.3 upgrade --dry-run
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.3 upgrade
 ```
 
 Upgrade kiểm tra file KE đã bị sửa, backup dưới `.codex/ke-backups/`, migrate
@@ -49,14 +49,14 @@ Không chạy lại `install` để nâng phiên bản. Tại đúng thư mục 
 chạy dry-run trước:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.2 upgrade --dry-run
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.3 upgrade --dry-run
 ```
 
 Đọc các mục `conflicts`, `fromVersion`, `toVersion` và `backupRoot`. Nếu không
 có conflict ngoài dự kiến, chạy:
 
 ```powershell
-npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.2 upgrade
+npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.3 upgrade
 ```
 
 Upgrade xử lý cấu hình hiện có như sau:
