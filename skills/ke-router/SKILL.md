@@ -84,6 +84,9 @@ When continuing an existing workspace, select it explicitly with
 `node scripts/ke-project.mjs use --project <slug>` and validate it. Change
 tracks with `node scripts/ke-project.mjs transition <entry-route> --project
 <slug>` instead of editing the phase, gate, route, or owner rows manually.
+For a requested upload location for a later customer phase in that workspace,
+follow `references/project-workspace.md`; customer phases are not KE workflow
+phases or gate approvals.
 
 Example interpretation:
 
@@ -119,6 +122,9 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
    project and before reading project sources or producing saved work. Do not
    create a workspace for a greeting, capability question, or transient
    offline advice.
+   For an upload-location request in a confirmed existing workspace, use that
+   reference's customer-phase folder procedure; do not infer the workspace
+   from the most recently changed folder.
 8. Apply `references/team-collaboration.md` whenever an expert joins, resumes,
    or leaves a project, and use `references/handoff-contract.md` for every
    cross-role hand-off.

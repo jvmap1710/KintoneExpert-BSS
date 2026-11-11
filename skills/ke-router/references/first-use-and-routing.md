@@ -57,6 +57,9 @@ registration, classification, or synthesis.
   current request. Select it explicitly and validate it; never guess from the
   most recently changed folder. Reuse confirmed baselines and create only
   artifacts needed for the current task.
+- When asked where to upload a later customer phase in a confirmed workspace,
+  prepare and verify only its safe phase input folder per
+  `project-workspace.md`; do not treat this as a KE gate transition.
 - A route selection or greeting is not consent to create a workspace or access
   a tenant. Workspace setup is not permission to read Kintone or make changes.
 

@@ -15,6 +15,10 @@ Kintone access is needed. For persistent project work, follow the shared
 onboarding and project-context rules in
 `../ke-router/references/first-use-and-routing.md` and
 `../ke-router/references/team-collaboration.md`.
+For later customer-phase inputs, follow the safe folder procedure in
+`../ke-router/references/project-workspace.md`; preserve prior baselines and
+separate changes, new/retained requirements, questions, and conflicts without
+confusing customer phases with KE workflow gates.
 
 Use Kintone MCP read-only inspection when existing app configuration or data
 materially affects the requested analysis or To-Be design; live access is not
