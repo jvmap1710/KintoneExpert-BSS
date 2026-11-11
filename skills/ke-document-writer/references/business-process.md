@@ -18,6 +18,9 @@ visible gaps or conflicts; do not guess a reconciliation. Trace material
 rules, approvals, exceptions, and decisions to evidence, without requiring a
 formal trace link for every field or sentence.
 
+For consistent labels and JavaScript limits in BA assessments, use the shared
+[BA evidence guide](../../ke-ba-teo/references/customization-assessment.md).
+
 For a useful structure appendix, inventory available per-app field groups and
 fields, including labels, codes, types, requiredness, source, conditional rules,
 business mapping, and next action as available. Include app relationships and
@@ -46,3 +49,16 @@ that improves comprehension. Cross-check every diagram against its supporting
 table and narrative for consistent actors, sequence, labels, branches, and
 rules. Use standalone HTML or SVG that remains readable on screen and in print;
 keep assets local/embedded and ensure text is legible at page scale.
+
+## Readability check
+
+Keep the main flow understandable as trigger → actor and App → action →
+outcome. For each App described, make its purpose, users, record timing,
+inputs/action/output, relationships, status-versus-approval meaning, and known
+exceptions or evidence gaps clear; the BA
+[per-app profile](../../ke-ba-teo/references/discovery-assessment-template.md)
+is a prompt, not a mandatory set of headings. Show master/reference data beside
+the main sequence unless creating or maintaining it is itself a process step.
+For example, selecting a supplier from a catalogue is not a supplier-setup
+step in every purchasing request. Define acronyms in context on first use and
+add a short glossary when terms need to be reused or clarified.

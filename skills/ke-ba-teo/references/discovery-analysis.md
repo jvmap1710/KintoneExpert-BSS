@@ -56,17 +56,17 @@ question/conflict, priority, and owner. Distinguish:
 - verified As-Is behavior from stakeholder recollection;
 - standardization opportunity from an approved To-Be decision.
 
-Keep evidence levels explicit: `Documented` for supplied source material,
-`Config observed` for read-only live settings, and `Runtime verified` only for
-behavior actually observed in a running flow. Note source-versus-live
-differences as conflicts or gaps; do not silently reconcile them. A
-reference-only/document-based assessment does not require live browser
-evidence, but must not imply runtime validation. Trace material rules,
-approvals, exceptions, and acceptance claims to evidence. Inventory available
-per-app fields and relevant scripts in a separate structure appendix when in
-scope; record unknown metadata and mapping gaps without making 100% field
-mapping a gate. Describe script behavior only when supported by source code or
-runtime evidence, never from a filename alone.
+Use the shared evidence labels in
+[`customization-assessment.md`](customization-assessment.md); existing
+`Documented`, `Config observed`, and `Runtime verified` labels remain
+compatible. Note source-versus-live differences as conflicts or gaps; do not
+silently reconcile them. A reference-only/document-based assessment does not
+require live browser evidence, but must not imply runtime validation. Trace
+material rules, approvals, exceptions, and acceptance claims to evidence.
+Inventory available per-app fields and relevant scripts in a separate
+structure appendix when in scope; record unknown metadata and mapping gaps
+without making 100% field mapping a gate. Describe script behavior only when
+supported by source code or runtime evidence, never from a filename alone.
 
 ## Confirmation
 
