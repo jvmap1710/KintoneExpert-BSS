@@ -57,6 +57,11 @@ first expert acts.
 
 ## Natural-language project start
 
+For a persistent build request, first apply the **Build intake** contract in
+`references/first-use-and-routing.md`, even for direct LeBa entry. Do not end
+the first intake reply with only credential/MCP instructions when the project
+still needs selection or explicit creation consent.
+
 When one message contains enough information to start persistent analysis,
 Demo/PoC, assessment, or customer implementation, prepare a workspace after
 the user's confirmation. A self-contained offline question or ad-hoc advice

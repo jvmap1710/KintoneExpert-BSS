@@ -72,12 +72,16 @@ try {
     try {
       await runCodex(prompt, output);
       const actual = JSON.parse(await readFile(output, "utf8"));
-      const mismatches = [
+      const comparedFields = [
         "entryRoute",
         "projectType",
         "firstRole",
         "workspaceAction",
-      ].filter((field) => actual[field] !== item[field]);
+      ];
+      if (typeof item.needsClarification === "boolean") {
+        comparedFields.push("needsClarification");
+      }
+      const mismatches = comparedFields.filter((field) => actual[field] !== item[field]);
       const status = mismatches.length ? "FAIL" : "PASS";
       results.push({
         id: item.id,
@@ -87,6 +91,9 @@ try {
           projectType: item.projectType,
           firstRole: item.firstRole,
           workspaceAction: item.workspaceAction,
+          ...(typeof item.needsClarification === "boolean"
+            ? { needsClarification: item.needsClarification }
+            : {}),
         },
         actual,
         mismatches,

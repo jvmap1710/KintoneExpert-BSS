@@ -1,5 +1,50 @@
 [
   {
+    "id": "build-no-project-no-mcp",
+    "prompt": "LeBa, I have design documents for an OT PoC. Build it on Kintone. Context: no project exists, customer identity is not supplied, and MCP is unavailable.",
+    "entryRoute": "demo-fast-track",
+    "projectType": "demo",
+    "firstRole": "LeBa",
+    "workspaceAction": "select-or-create",
+    "needsClarification": true
+  },
+  {
+    "id": "build-explicit-create",
+    "prompt": "LeBa, create a new workspace called ACME OT PoC for a demo implementing my design. Context: no workspace exists and no design files have been uploaded. Prepare the input folder now; do not access any tenant.",
+    "entryRoute": "demo-fast-track",
+    "projectType": "demo",
+    "firstRole": "LeBa",
+    "workspaceAction": "select-or-create",
+    "needsClarification": false
+  },
+  {
+    "id": "build-existing-project-offline",
+    "prompt": "LeBa, continue building the approved ACME OT PoC design. Context: the explicitly named acme-ot-poc workspace is validated, its input/design.md is authorized, and MCP is missing. Review the design offline first.",
+    "entryRoute": "demo-fast-track",
+    "projectType": "demo",
+    "firstRole": "LeBa",
+    "workspaceAction": "select-or-create",
+    "needsClarification": false
+  },
+  {
+    "id": "build-ambiguous-project",
+    "prompt": "LeBa, continue the PoC build. Context: there are two unrelated customer demo workspaces, no active pointer, and no project identity in the conversation.",
+    "entryRoute": "demo-fast-track",
+    "projectType": "demo",
+    "firstRole": "LeBa",
+    "workspaceAction": "select-or-create",
+    "needsClarification": true
+  },
+  {
+    "id": "engineer-offline-advice",
+    "prompt": "LeBa, explain how an OT employee lookup could be designed. This is an offline advice question only; do not start a project or inspect Kintone.",
+    "entryRoute": "expert-consultation",
+    "projectType": "analysis",
+    "firstRole": "LeBa",
+    "workspaceAction": "none",
+    "needsClarification": false
+  },
+  {
     "id": "greeting-vi",
     "prompt": "Xin chào",
     "entryRoute": "menu",

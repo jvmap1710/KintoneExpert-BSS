@@ -63,6 +63,43 @@ registration, classification, or synthesis.
 - A route selection or greeting is not consent to create a workspace or access
   a tenant. Workspace setup is not permission to read Kintone or make changes.
 
+## Build intake: Router and direct LeBa entry
+
+Apply this contract before a persistent build checklist, including when the
+user calls LeBa directly. A supplied design may go directly to LeBa for
+readiness review; do not claim it is approved or build-ready before review.
+
+1. Resolve an explicitly named project or an unambiguous active project using
+   `project-workspace.md`. Inventory names only if needed; a sole folder,
+   `_template`, or the most recent folder does not establish customer scope.
+2. If no project is resolved, include an actionable creation question in the
+   first intake reply, not merely "confirm the project" or "send documents."
+   Summarize the inferred goal; ask only for missing customer/project identity,
+   Demo/PoC versus Real Project, and consent to create the workspace, together.
+   Example: "What project/customer name should I use, is this Demo/PoC or a
+   Real Project, and shall I create its workspace for your design documents?"
+   Translate to the chat language and omit facts already known. An explicit
+   request to create the project is consent; ask only for material missing
+   facts rather than requesting the same approval again.
+3. Once authorized and sufficiently identified, initialize/select and validate
+   the project, read back its objective, and return the verified absolute
+   `input/` path (or `private/` for confidential/raw sources). Do this before
+   telling the user to upload files. Never claim creation before executing it.
+4. LeBa performs the safe local preflight in its skill. Missing configuration
+   or MCP must not suppress the creation question or block authorized local
+   setup/design review. Run available checks rather than handing routine
+   commands to the user; ask only for missing local inputs/capabilities. Do
+   not probe a tenant without an identified, authorized target.
+
+Before sending the intake reply, check that it either identifies a validated
+workspace and upload path or explicitly asks to resolve/create one. If tools
+cannot inspect/create it, report that limitation rather than asserting the
+workspace is absent. Avoid repeating completed checks and confirmed facts
+after "done"; resume the outstanding step. Carry project slug, objective,
+Demo/Real type, authorized design path, config/API/MCP evidence, and current
+operation approvals through any actual hand-off. Workspace consent is not
+tenant write/deploy consent.
+
 ## Kintone access and first-time setup
 
 Offline/ad-hoc work, including a transient connection diagnostic, needs no

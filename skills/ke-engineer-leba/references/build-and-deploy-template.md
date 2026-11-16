@@ -2,6 +2,11 @@
 
 ## Build identity
 
+Plan status: `PREFLIGHT`, `DRAFT - NOT RECONCILED WITH TENANT`, or
+`READY FOR BUILD REVIEW`. Ready for review is not approval to execute.
+Use Draft while material design, target, access, or inspection evidence is
+missing; list those gaps rather than guessing creation/reuse decisions.
+
 | Item | Content |
 | --- | --- |
 | Objective / acceptance | Requirement and acceptance IDs |
@@ -9,6 +14,42 @@
 | Baseline | Live revision and inspected settings |
 | Approved scope | Fields, layout, views, workflow, permissions, customization |
 | Execution channel | MCP or approved official REST/UI per operation |
+
+## Design-to-tenant reconciliation
+
+| Component / requirement | Design source / version | Inspected target / revision | Evidence / limits | Disposition | Dependency / open question |
+| --- | --- | --- | --- | --- | --- |
+|  |  |  |  | Reuse / Modify / Create / Needs clarification |  |
+
+Record Config/API/MCP outcomes separately (`PASS`, `FAIL`, `BLOCKED`, or
+`NOT RUN`) with executed-check evidence. Include operation-level tool/policy
+availability; neither connectivity nor credentials establish write approval.
+State the authorized inspection boundary, changes proposed for approval,
+and any excluded/unverified remainder. Do not mark absent/denied evidence as
+proof a new Space/App is needed.
+
+## Whole-build capability inventory
+
+List every applicable operation, including Space/UI prerequisites and runtime
+verification, before proposing one consolidated configuration change. Use
+exact verified tool names rather than guessing names from the examples below.
+
+| Operation / dependency | Target / environment | Channel / exact server and tool | Read / write effect | Policy / approval | Installed / configured / session loaded | Verification evidence / blocker |
+| --- | --- | --- | --- | --- | --- | --- |
+| Space inspection / creation / App placement |  |  |  |  |  |  |
+| App / fields / layout / views |  |  |  |  |  |  |
+| Lookup / related records / actions |  |  |  |  |  |  |
+| Workflow / permissions |  |  |  |  |  |  |
+| JS/CSS attachment, if needed |  |  |  |  |  |  |
+| Read-back / deployment / status polling |  |  |  |  |  |  |
+| Playwright runtime evidence / scoped testing |  |  |  |  |  |  |
+
+Split rows when tools/effects/approvals differ. Mark unneeded operations `N/A`
+with a reason and unknown tool names `UNRESOLVED`. Record the exact proposed
+config diff, dependency installation scope, user approval reference, required
+host reload, post-load inventory check, and read-only restoration plan.
+Configuration approval is not tenant-operation approval. Do not validate write
+availability by executing an unapproved write.
 
 ## Change inventory
 

@@ -19,6 +19,14 @@ below. Admin credentials or roles do not authorize broader changes.
 
 ## Persistent build intake preflight
 
+Use the shared **Build intake** contract in
+`../ke-router/references/first-use-and-routing.md` for both routed and direct
+requests. Before replying, ensure there is either a validated project/upload
+path or a concrete question to select/create the project. Missing MCP does
+not remove that question. After consent, execute local setup before asking
+for upload; do not delegate routine folder creation to the user when tools
+can do it. Preserve known answers when the user replies "done".
+
 For a concrete persistent build request, including “I have design docs and
 need to build on Kintone,” do these offline checks before asking for more
 inputs or stopping because tenant tooling is unavailable:
@@ -61,6 +69,91 @@ inputs or stopping because tenant tooling is unavailable:
   actually tested. Complete all available non-network preflight checks before
   sending one concise message with only the remaining material gaps. Do not
   start a PM/BA/SA chain by default.
+
+## Evidence before a technical build plan
+
+LeBa owns the technical implementation plan for a supplied design; PM, BA,
+and SA are not mandatory predecessors. Reading a design is not approval of it.
+Before proposing a plan for build approval:
+
+- Read the authorized design files in the validated workspace. Review App/data
+  structure, field codes/types, lookup/related-record/action dependencies,
+  material rules, and unresolved contradictions. Cite the source/version;
+  do not infer the design from filenames or a verbal summary alone.
+- Perform the safe config/tool checks above and separate Config, API, and MCP
+  results. Local config PASS is not connection PASS, and a successful read is
+  not evidence of write permission or tool availability.
+- Within an identified and user-authorized read scope, inspect the relevant
+  Space/App metadata and settings, including candidate reusable masters and
+  required dependencies. Verify the active tools needed per operation. Do not
+  interpret "check everything" as tenant-wide discovery, record reads, script
+  downloads, or permission to change anything. Ask for missing target/read
+  scope instead of guessing; never bypass the configured tool policy.
+- Reconcile design with observed settings using `Reuse`, `Modify`, `Create`,
+  or `Needs clarification` per component. Include evidence, target IDs where
+  known, dependencies, intended changes, channel/tool limitations, and approval
+  boundaries in `references/build-and-deploy-template.md`. An empty or denied
+  lookup does not prove an App is absent or authorize duplicate creation.
+
+Before those checks, offer a **Preflight / investigation plan**, not a verified
+build solution. If files, access, or observations are missing, continue useful
+offline review but label the proposal **Draft - not reconciled with tenant**,
+list what is unverified, and do not request execution approval for affected
+changes. An independently evidenced, explicitly bounded subset may proceed
+through its own approval; never silently treat the draft remainder as approved.
+Build approval follows the evidence-backed change summary; deployment and
+deletion retain their separate gates. No Space/App is created during planning.
+
+Keep ordinary build planning with LeBa. Recommend Teo for material business-rule
+gaps, LauDe for architecture/data/integration/permission design decisions, or
+Ti for broad delivery coordination only when needed. For a direct request,
+explain the gap and offer that hand-off rather than silently switching roles.
+
+## Complete capability inventory and approved loading
+
+After reviewing the design, inventory tools for the whole intended build,
+not only the first write. Use the capability table in
+`references/build-and-deploy-template.md` before requesting configuration
+approval. Cover applicable operations: Space inspection/creation and App
+placement; App creation; fields/layout/views; lookups/related records/actions;
+workflow/permissions; JavaScript/CSS attachment; read-back; deployment/status;
+browser runtime verification and Mit's scoped tests. Mark excluded operations
+`N/A` with a reason instead of enabling every possible tool. In particular,
+App-write readiness alone does not establish Space or browser readiness.
+
+For each operation, list the exact server/tool name and published schema when
+available, proposed channel, target/environment, read/write effect, policy
+status, local dependency/config status, session-loaded status, approval, and
+verification evidence. Never invent a tool name from an operation label. Use
+active published schemas or a trusted upstream tool declaration to identify
+an exact candidate; otherwise mark it `UNRESOLVED` and explain the discovery
+blocker without reverse-engineering runtime internals. An upstream declaration
+is not proof that a tool is loaded in this session.
+
+Gather all known missing dependencies/servers and the minimal allowlist diff
+into one reviewable configuration proposal. Include Playwright up front when
+Space UI work or runtime evidence requires it; DevTools remains diagnostic,
+not an automatic replacement. Separate approval to install/configure/load
+tools from authority to perform tenant writes, deploy, delete, or create test
+records. Project creation or general plan approval alone does not approve
+security/config changes. Do not install dependencies or edit config silently.
+
+Once the user approves the explicit configuration proposal, apply only that
+diff and any explicitly approved setup using the existing Kit tooling;
+preserve unrelated settings and the original read-only policy for restoration.
+Request host trust/reload/restart once for all identified changes when needed;
+do not claim the agent can hot-load tools. Resume by checking the entire
+inventory against the tools actually exposed by the new session. Keep
+`INSTALLED`, `CONFIGURED`, `SESSION LOADED`, and `VERIFIED` distinct. Verify
+with safe schema/local checks and authorized scoped reads; do not issue dummy
+writes to test readiness. A loaded write tool is not an executed write PASS.
+
+Before the first dependent write, report remaining blockers and do not label
+the whole build ready while a required capability is unavailable. An approved,
+independent subset may proceed only with the remainder explicitly blocked.
+If scope changes, update the inventory and seek approval only for the new
+configuration/operation delta. Restore temporary write allowlist changes at
+task closure and explain any host reload needed for restoration.
 
 ## Guardrails
 

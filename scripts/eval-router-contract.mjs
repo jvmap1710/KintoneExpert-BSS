@@ -15,6 +15,9 @@ for (const item of cases) {
   assert(item.projectType, `${item.id}: project type is missing`);
   assert(item.firstRole, `${item.id}: first role is missing`);
   assert(item.workspaceAction, `${item.id}: workspace action is missing`);
+  if ("needsClarification" in item) {
+    assert.equal(typeof item.needsClarification, "boolean", `${item.id}: clarification must be boolean`);
+  }
   routes.add(item.entryRoute);
 }
 for (const route of [
