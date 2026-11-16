@@ -37,7 +37,7 @@ exact verified tool names rather than guessing names from the examples below.
 | Operation / dependency | Target / environment | Channel / exact server and tool | Read / write effect | Policy / approval | Installed / configured / session loaded | Verification evidence / blocker |
 | --- | --- | --- | --- | --- | --- | --- |
 | Space inspection / creation / App placement |  |  |  |  |  |  |
-| App / fields / layout / views |  |  |  |  |  |  |
+| App / fields / layout / views / new-App icon |  |  |  |  |  |  |
 | Lookup / related records / actions |  |  |  |  |  |  |
 | Workflow / permissions |  |  |  |  |  |  |
 | JS/CSS attachment, if needed |  |  |  |  |  |  |
@@ -45,11 +45,12 @@ exact verified tool names rather than guessing names from the examples below.
 | Playwright runtime evidence / scoped testing |  |  |  |  |  |  |
 
 Split rows when tools/effects/approvals differ. Mark unneeded operations `N/A`
-with a reason and unknown tool names `UNRESOLVED`. Record the exact proposed
-config diff, dependency installation scope, user approval reference, required
-host reload, post-load inventory check, and read-only restoration plan.
-Configuration approval is not tenant-operation approval. Do not validate write
-availability by executing an unapproved write.
+with a reason and unknown tool names `UNRESOLVED`. Record any required config
+change, dependency scope, user approval reference, one planned consolidated
+initial host reload after setup is ready, and the post-load inventory check.
+Respect user-owned tool filters; do not plan a routine read-only-filter
+restoration. Configuration approval is not tenant-operation approval. Do not
+validate write availability by executing an unapproved write.
 
 ## Change inventory
 
@@ -61,6 +62,16 @@ Use only clear states: `PLANNED`, `STAGED`, `DEPLOYED`, `RUNTIME VERIFIED`, or
 `BLOCKED`. Never collapse staged, deployed, and runtime-verified states.
 
 ## Verification and deployment gates
+
+For each newly created App, record the chosen icon, rationale/branding match,
+staged read-back, and released evidence (or explicit blocker). Reused App icons
+are unchanged unless approved. Stage icons before the first deploy when possible.
+
+Sample-data status: `NOT REQUESTED`, `OFFERED - AWAITING APPROVAL`, `DECLINED`,
+or `APPROVED / CREATED` with the actual execution state distinguished. Record
+Apps/environment, quantities, scenarios, approval reference and created IDs
+only when applicable. Build/release approval alone does not authorize records;
+after release/icon verification, offer once and wait unless already requested.
 
 | Gate | Evidence | Result |
 | --- | --- | --- |

@@ -7,7 +7,11 @@ khi công việc thực sự cần hoặc bạn yêu cầu.
 
 ## Bắt đầu lần đầu
 
-1. Mở repository trong Codex và trust project khi được hỏi.
+1. Cài đủ dependencies, hoàn tất cấu hình/credentials nếu cần tenant, rồi
+   trust project và reload Codex một lần để nạp chung MCP/skills. Cài mới
+   chuẩn bị toàn bộ tool server cung cấp (build, deploy/status, browser, test
+   records), không yêu cầu nạp thêm theo giai đoạn. Host policy hoặc lỗi startup
+   vẫn có thể chặn; `--skip-deps` không phải trạng thái tool-ready.
 2. Gõ `hello` để xem các lựa chọn, hoặc mô tả trực tiếp mục tiêu, quy trình/App
    liên quan, đối tượng sử dụng và đầu ra bạn muốn.
 3. Nếu đã biết vai trò cần hỗ trợ, gọi trực tiếp, ví dụ: `Tèo, review luồng
@@ -72,12 +76,21 @@ spec đã approved và build-ready có thể đi thẳng tới LeBa.
 
 ## An toàn và xác minh
 
-Mặc định Kintone MCP chỉ cung cấp tool đọc. Việc thiếu write tool do cấu hình
-read-only không phải lý do chuyển sang REST/UI/shell để vượt qua policy. Nếu
-bạn duyệt một thao tác ghi cụ thể, KE sẽ hướng dẫn bật đúng tool cần thiết,
-cho bạn review cấu hình, rồi khôi phục chế độ read-only sau tác vụ. Phê duyệt
-vẫn phải nêu rõ app, thao tác và phạm vi; credentials hoặc quyền admin không
-thay cho approval.
+Mặc định mới cung cấp toàn bộ tool upstream và giữ approval mode `writes`;
+khảo sát vẫn chỉ đọc. Không bật/tắt lại allowlist sau mỗi tác vụ. Tool sẵn
+không thay cho phê duyệt app, thao tác và phạm vi; credentials/quyền admin
+không thay approval. Hạn chế user/host đặt riêng vẫn được tôn trọng, không
+lách qua REST/UI/shell. Khi upgrade cấu hình KE cũ có filter, installer mới
+dừng trước khi thay file; chỉ đổi sau review với `--enable-all-tools` (có thể
+preview cùng `--dry-run`). `--force` không tự cho phép đổi policy này.
+
+Playwright mặc định dùng isolated session, nạp được khi chưa có project và
+không chia sẻ persisted login. Xác nhận project/account trước khi dùng browser;
+đóng context và đăng nhập thủ công lại khi đổi project/account/role. Evidence
+staging trong `.tmp/browser-session-*` phải được đưa về private evidence của
+project đã validate trước khi báo cáo. Profile persistent project/role là
+tùy chọn với đủ `KE_PROJECT_SLUG` + `KE_BROWSER_IDENTITY`; thiếu/sai binding
+sẽ bị chặn, không âm thầm dùng profile khác.
 
 Mỗi task implementation/fix của LeBa cần Mít Quick Verification 1–3 checks.
 Đây không phải smoke test. Full smoke test 5–10 cases và synthetic records

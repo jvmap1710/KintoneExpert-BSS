@@ -66,6 +66,7 @@ Options:
                       Output languages separated by comma (default: English)
   --skip-deps         Do not install Kintone, browser, or Office dependencies
   --force             Overwrite conflicting KE-managed files
+  --enable-all-tools  Explicitly replace existing KE MCP tool restrictions with the full-tool default
   --dry-run           Show an upgrade plan without changing files
   --help              Show this help
   --version           Show the package version
@@ -625,7 +626,7 @@ async function readUpgradeManifest(target, isUpgrade) {
   return validated;
 }
 
-async function collectPreflight(target, isUpgrade, force) {
+async function collectPreflight(target, isUpgrade, force, enableAllTools = false) {
   const preflightPaths = [
     ...payloadFiles.map(payloadDestination),
     ".codex/ke-kit-manifest.json",
@@ -671,6 +672,15 @@ async function collectPreflight(target, isUpgrade, force) {
       const start = merged.indexOf(begin);
       const finish = merged.indexOf(end);
       validateTomlCollisions(`${merged.slice(0, start)}${merged.slice(finish + end.length)}`, content.toString("utf8"));
+      const previousStart = current.indexOf(begin);
+      const previousEnd = current.indexOf(end);
+      const previousBlock = previousStart >= 0 && previousEnd > previousStart
+        ? current.slice(previousStart, previousEnd) : "";
+      if (/^\s*(?:enabled_tools|disabled_tools)\s*=/mu.test(previousBlock) &&
+          !/^\s*(?:enabled_tools|disabled_tools)\s*=/mu.test(content.toString("utf8")) &&
+          !enableAllTools) {
+        throw new Error("Existing KE MCP tool restrictions would be removed. No files changed. Review the full-tool policy, then opt in with --enable-all-tools (also available with --dry-run). --force does not approve this policy change.");
+      }
     }
     mergedFiles.set(payloadPath, { destination: relative, content, merged });
   }
@@ -1054,7 +1064,7 @@ async function installerMain() {
 
   console.log(`\nKE Kit ${packageVersion} ${isUpgrade ? "upgrade" : "installer"}`);
   console.log(`Target: ${target}`);
-  const preflight = await collectPreflight(target, isUpgrade, force);
+  const preflight = await collectPreflight(target, isUpgrade, force, args.includes("--enable-all-tools"));
   const migration = migrationWritePaths(preflight.migrationReport);
   const backupRoot = createBackupRoot(target, preflight.previousManifest);
   if (dryRun) {
@@ -1187,7 +1197,9 @@ async function installerMain() {
     console.log("2. For an API token, prepare and approve a named test-tenant plan, then run: npm --prefix platform/ke-kintone-mcp run test:connection -- --environment test --approved-test-plan <APPROVAL_REFERENCE> --app <APP_ID>");
     console.log("3. Run: npm --prefix platform/ke-kintone-mcp run check");
     console.log("4. Run: npm --prefix platform/ke-office-cli run check");
-    console.log("5. Open this project in Codex and trust it.");
+    console.log("5. After dependencies/config/credentials are ready, trust this project and reload Codex once to load all configured MCP servers/tools together (build, deploy/status, browser, record tests). Host policy/startup failures can still block loading.");
+    console.log("   Loaded tools are not permission to write: inspect read-only unless the current task authorizes the exact changes; deploy/delete/test-data gates still apply.");
+    if (skipDependencies) console.log("   Dependencies were skipped: install all runtime dependencies before that reload; this installation is not tool-ready yet.");
     console.log('6. In a new chat, say "hello", "hi", or "xin chào"; a clear goal can be described directly.');
     console.log("7. A greeting and route menu need no Kintone configuration; browser sign-in is deferred until browser work first needs it.");
   } catch (error) {

@@ -574,6 +574,22 @@ try {
   assert.equal(configManifest.fileHashes[".codex/config.toml"], configHash);
   checks += 1;
 
+  const restrictedConfig = config.replace("[mcp_servers.kintone]", '[mcp_servers.kintone]\nenabled_tools = ["kintone-get-app"]');
+  await writeFile(path.join(configTarget, ".codex", "config.toml"), restrictedConfig);
+  for (const options of [[], ["--force"], ["--dry-run"]]) {
+    const denied = await runInstaller(normal.installer, ["upgrade", "--yes", "--skip-deps", "--directory", configTarget, ...options]);
+    assert.notEqual(denied.code, 0);
+    assert.match(denied.stderr, /--enable-all-tools/u);
+    assert.equal(await readFile(path.join(configTarget, ".codex", "config.toml"), "utf8"), restrictedConfig);
+  }
+  const policyPreview = await runInstaller(normal.installer, ["upgrade", "--dry-run", "--enable-all-tools", "--directory", configTarget]);
+  assert.equal(policyPreview.code, 0, policyPreview.stderr);
+  assert.equal(await readFile(path.join(configTarget, ".codex", "config.toml"), "utf8"), restrictedConfig);
+  const optedIn = await runInstaller(normal.installer, ["upgrade", "--yes", "--skip-deps", "--enable-all-tools", "--directory", configTarget]);
+  assert.equal(optedIn.code, 0, optedIn.stderr);
+  assert.doesNotMatch(await readFile(path.join(configTarget, ".codex", "config.toml"), "utf8"), /^enabled_tools/mu);
+  checks += 1;
+
   const markdownLegacyTarget = path.join(tempRoot, "markdown-only-legacy");
   const markdownLegacy = await writeLegacyProject(markdownLegacyTarget);
   await writeFixtureManifest(markdownLegacyTarget, normal.payload);

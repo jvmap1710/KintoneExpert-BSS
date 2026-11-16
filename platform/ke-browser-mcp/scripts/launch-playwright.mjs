@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { lstat, mkdir, realpath } from "node:fs/promises";
+import { lstat, mkdir, mkdtemp, realpath } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateProject } from "../../../scripts/lib/project-state.mjs";
@@ -62,9 +62,10 @@ async function ensurePrivateSubdirectory(privateRoot, segments, description) {
 export function getBrowserBinding(env = process.env) {
   const projectSlug = env.KE_PROJECT_SLUG;
   const identity = env.KE_BROWSER_IDENTITY;
+  if (projectSlug === undefined && identity === undefined) return null;
   if (!projectSlug || !identity) {
     throw new Error(
-      "Playwright browser needs an explicit project/role binding: set KE_PROJECT_SLUG and KE_BROWSER_IDENTITY, then restart the browser MCP session. Greetings and chat-only onboarding do not need browser login or this binding.",
+      "Explicit Playwright binding requires both KE_PROJECT_SLUG and KE_BROWSER_IDENTITY. Remove both for isolated startup or supply a complete validated binding.",
     );
   }
   if (!safeIdentityPattern.test(projectSlug)) {
@@ -140,16 +141,33 @@ export function buildPlaywrightArgs(paths) {
     "file",
     "--output-dir",
     paths.evidenceDirectory,
-    "--user-data-dir",
-    paths.profileDirectory,
+    ...(paths.profileDirectory ? ["--user-data-dir", paths.profileDirectory] : ["--isolated"]),
   ];
+}
+
+export async function resolveIsolatedBrowserPaths({ repositoryRoot: root = repositoryRoot } = {}) {
+  const canonicalRoot = await realpath(root);
+  const temporaryRoot = path.join(canonicalRoot, ".tmp");
+  await mkdir(temporaryRoot, { recursive: true });
+  await requireCanonicalDirectory(temporaryRoot, "Browser temporary root");
+  const evidenceDirectory = await mkdtemp(path.join(temporaryRoot, "browser-session-"));
+  await requireCanonicalDirectory(evidenceDirectory, "Isolated browser evidence");
+  return { evidenceDirectory };
+}
+
+export function browserProcessEnv(env = process.env) {
+  // Do not let inherited browser options attach another profile, restore storage,
+  // or redirect evidence outside the paths validated by this launcher.
+  return Object.fromEntries(Object.entries(env).filter(([key]) => !key.toUpperCase().startsWith("PLAYWRIGHT_MCP_")));
 }
 
 async function main() {
   const binding = getBrowserBinding();
-  const paths = await resolveBrowserPaths(binding);
+  const paths = binding ? await resolveBrowserPaths(binding) : await resolveIsolatedBrowserPaths();
   console.error(
-    `Playwright profile bound to project ${paths.projectSlug}, role/profile ${paths.identity}. This local label does not verify the signed-in Kintone user or enforce read-only access; use the approved least-privilege account.`,
+    binding
+      ? `Playwright profile bound to project ${paths.projectSlug}, role/profile ${paths.identity}. This local label does not verify the signed-in Kintone user or enforce read-only access; use the approved least-privilege account.`
+      : `Playwright isolated session ready; private evidence staging: ${paths.evidenceDirectory}. Confirm project/account scope before browser use; close the browser between customers or roles. No tenant login was performed.`,
   );
   const cliPath = path.join(
     packageRoot,
@@ -160,7 +178,7 @@ async function main() {
   );
   const child = spawn(process.execPath, [cliPath, ...buildPlaywrightArgs(paths)], {
     cwd: repositoryRoot,
-    env: process.env,
+    env: browserProcessEnv(),
     stdio: "inherit",
   });
   for (const signal of ["SIGINT", "SIGTERM"]) {

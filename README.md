@@ -43,6 +43,20 @@ npx github:jvmap1710/KintoneExpert-BSS#v1.0.23-beta.4 upgrade
 Upgrade kiểm tra file KE đã bị sửa, backup dưới `.codex/ke-backups/`, migrate
 workspace cũ và validate lại. Chỉ dùng `--force` sau khi đã review conflict.
 
+Cấu hình cài mới chuẩn bị toàn bộ tool do các MCP server cung cấp, gồm build,
+deploy/status, browser và thao tác record phục vụ test. Sau khi dependencies,
+cấu hình và credentials cần thiết đã sẵn sàng, trust project và reload Codex
+một lần để nạp chung; không bật/tắt tool theo từng giai đoạn. Đây là luồng dự
+kiến, không bảo đảm host không cần reload thêm khi lỗi hoặc đổi cấu hình.
+`--skip-deps` chưa tạo một môi trường tool-ready. Tool được nạp không cấp quyền
+thao tác: mọi ghi, deploy, xóa và test data vẫn theo phạm vi được duyệt.
+
+Nếu installer mới báo cấu hình KE cũ có `enabled_tools`/`disabled_tools`, nó
+dừng trước khi thay file. Chỉ khi muốn đổi sang full-tool default, thêm
+`--enable-all-tools --dry-run` vào lệnh upgrade để review, sau đó chạy upgrade
+với `--enable-all-tools`. `--force` không thay thế opt-in này; hạn chế do host
+hoặc quản trị viên áp dụng vẫn có hiệu lực.
+
 ### Nếu đã cài và cấu hình KE từ phiên bản cũ
 
 Không chạy lại `install` để nâng phiên bản. Tại đúng thư mục project đã cài KE,
@@ -180,8 +194,16 @@ Không cần điền credentials hoặc chạy probe để chào hỏi, tư vấ
 ## Browser evidence
 
 Playwright là kênh browser khi task cần kiểm tra giao diện hoặc luồng nghiệp vụ.
-Trước khi mở browser, xác nhận workspace/project và gán binding cụ thể cho
-process Codex/browser MCP, sau đó khởi động lại MCP:
+Mặc định server nạp được ngay khi chưa có project, dùng session isolated,
+không dùng chung persisted login. Xác nhận project/account/phạm vi trước khi
+thao tác và để user đăng nhập thủ công. Đổi project/account/role phải đóng
+browser context rồi đăng nhập lại, không cần đổi MCP config để tạo project.
+Evidence mặc định staging trong `.tmp/browser-session-*` (Git-ignored); lưu
+hoặc chuyển evidence vào `private/browser-evidence/` của project đã validate
+trước khi dùng cho báo cáo. Không đọc cookies, token hay browser storage.
+
+Chỉ khi muốn profile persistent riêng theo project/role, gán đủ hai biến cho
+process Codex/browser MCP rồi khởi động lại server (đây là tùy chọn riêng):
 
 ```powershell
 $env:KE_PROJECT_SLUG = "<project-slug>"
@@ -251,14 +273,13 @@ Demo và dự án thật ưu tiên thao tác Kintone qua MCP tool trực tiếp.
 chưa được nạp, KE sẽ dừng và hướng dẫn kiểm tra cấu hình; agent không được dò
 `node_modules`, tự dựng JSON-RPC hoặc âm thầm gọi REST API thay thế.
 
-MCP không hiện write tool có thể do read-only `enabled_tools` allowlist trong
-`.codex/config.toml`, không phải giới hạn upstream. Allowlist mặc định không
-ghi và không phải rào quyền theo App/account. Không chuyển sang REST, UI hay
-shell để né policy. Với thao tác write đã được user duyệt rõ theo App và phạm
-vi cụ thể, chỉ thêm upstream tool cần cho thao tác đó, review diff cấu hình,
-khởi động lại Codex, làm theo các gate hiện hành rồi khôi phục allowlist
-read-only và khởi động lại. Chỉ gọi là upstream capability gap nếu server đã
-được nạp, policy đã được tính đến và tool thực sự không được cung cấp.
+Cài mới không dùng read-only allowlist mặc định; giữ
+`default_tools_approval_mode = "writes"` cho cả ba server. Khảo sát vẫn chỉ đọc
+theo ý định công việc. Nếu user đã đặt `enabled_tools`/`disabled_tools` riêng,
+KE tôn trọng và không lách qua REST/UI/shell. Thiếu tool do policy khác với
+upstream capability gap. Không tự thu hẹp rồi mở lại tool sau từng task;
+chỉ đề nghị reload thêm khi có thay đổi hoặc lỗi host cụ thể, và luôn phân
+biệt đã cấu hình với thực sự đã nạp trong phiên.
 
 Khi bất kỳ kênh nào (MCP, REST, browser/UI hay shell) được chấp thuận cho một
 thao tác, workspace approval không thay thế phê duyệt tenant/App, record scope
@@ -386,9 +407,8 @@ authorization truy cập tenant, scope App/record hay phê duyệt ghi dữ li�
 
 - Mặc định chỉ đọc Kintone khi khảo sát.
 - Mọi thay đổi hoặc deploy đều cần xác nhận theo quy tắc trong `AGENTS.md`.
-- Read-only `enabled_tools` trong `.codex/config.toml` là policy allowlist của
-  công cụ, không phải authorization theo App/account. Tool thiếu do allowlist
-  không được lách qua REST, browser/UI hoặc shell.
+- Bộ tool được nạp không phải authorization theo App/account. Các hạn chế
+  user/host đặt riêng không được lách qua REST, browser/UI hoặc shell.
 - Không commit credentials, token, dữ liệu cá nhân hoặc tài liệu khách hàng.
 - Không ghi đè output đã tồn tại nếu chưa được user xác nhận.
 

@@ -5,6 +5,7 @@ import {
   mkdtemp,
   mkdir,
   readFile,
+  realpath,
   rm,
   symlink,
   writeFile,
@@ -29,8 +30,10 @@ import {
 import { toUpdateSettings } from "../platform/ke-kintone-mcp/scripts/lib/customization-verification.mjs";
 import {
   buildPlaywrightArgs,
+  browserProcessEnv,
   getBrowserBinding,
   resolveBrowserPaths,
+  resolveIsolatedBrowserPaths,
 } from "../platform/ke-browser-mcp/scripts/launch-playwright.mjs";
 
 const tenantOrigin = "https://fixture-tenant.example";
@@ -241,10 +244,28 @@ try {
   assert.equal(gatedConnection.status, 1);
   assert.match(gatedConnection.stderr, /No tenant call was made/u);
 
-  assert.throws(
-    () => getBrowserBinding({}),
-    /Greetings and chat-only onboarding do not need browser login/u,
-  );
+  assert.equal(getBrowserBinding({}), null);
+  for (const invalid of [{ KE_PROJECT_SLUG: projectSlug }, { KE_BROWSER_IDENTITY: "engineer" },
+    { KE_PROJECT_SLUG: "", KE_BROWSER_IDENTITY: "" },
+    { KE_PROJECT_SLUG: "../escape", KE_BROWSER_IDENTITY: "engineer" }]) {
+    assert.throws(() => getBrowserBinding(invalid));
+  }
+  const isolated = await resolveIsolatedBrowserPaths({ repositoryRoot: testRoot });
+  const isolatedSecond = await resolveIsolatedBrowserPaths({ repositoryRoot: testRoot });
+  assert.notEqual(isolated.evidenceDirectory, isolatedSecond.evidenceDirectory);
+  assert.equal(path.dirname(isolated.evidenceDirectory), await realpath(path.join(testRoot, ".tmp")));
+  assert(buildPlaywrightArgs(isolated).includes("--isolated"));
+  assert(!buildPlaywrightArgs(isolated).includes("--user-data-dir"));
+  assert.deepEqual(browserProcessEnv({ PATH: "fixture-path", PLAYWRIGHT_MCP_STORAGE_STATE: "secret", PLAYWRIGHT_MCP_CDP_ENDPOINT: "foreign", playwright_mcp_user_data_dir: "other-profile" }), { PATH: "fixture-path" });
+  const freshBrowserRoot = path.join(testRoot, "fresh-browser-install");
+  await mkdir(freshBrowserRoot);
+  const freshBrowser = await resolveIsolatedBrowserPaths({ repositoryRoot: freshBrowserRoot });
+  assert(buildPlaywrightArgs(freshBrowser).includes("--isolated"));
+  await assert.rejects(readFile(path.join(freshBrowserRoot, ".codex", "ke-active-project.json")), { code: "ENOENT" });
+  const unsafeRoot = path.join(testRoot, "unsafe-browser-root");
+  await mkdir(unsafeRoot);
+  await symlink(path.join(testRoot, ".tmp"), path.join(unsafeRoot, ".tmp"), process.platform === "win32" ? "junction" : "dir");
+  await assert.rejects(resolveIsolatedBrowserPaths({ repositoryRoot: unsafeRoot }), /non-symlink|canonical/u);
   assert.deepEqual(
     getBrowserBinding({
       KE_PROJECT_SLUG: projectSlug,
@@ -311,24 +332,16 @@ try {
     /\[mcp_servers\.kintone\]([\s\S]*?)(?=\n\[|$)/u,
   )?.[1];
   assert(kintoneConfig, "Kintone MCP server config must be present");
-  const allowlist = kintoneConfig.match(/enabled_tools\s*=\s*\[([\s\S]*?)\]/u)?.[1];
-  assert(allowlist, "Kintone MCP must have an explicit tool allowlist");
-  const allowedTools = [...allowlist.matchAll(/"([a-z0-9-]+)"/gu)].map((match) => match[1]);
-  assert.deepEqual(allowedTools, [
-    "kintone-get-apps",
-    "kintone-get-app",
-    "kintone-get-form-fields",
-    "kintone-get-form-layout",
-    "kintone-get-process-management",
-    "kintone-get-app-deploy-status",
-    "kintone-get-general-settings",
-    "kintone-get-customization",
-    "kintone-get-records",
-    "kintone-get-record-comments",
-    "kintone-get-space",
-  ]);
+  assert.doesNotMatch(kintoneConfig, /^\s*(?:enabled_tools|disabled_tools)\s*=/mu,
+    "Fresh Kintone config exposes upstream tools without staged allowlist changes");
   assert.match(kintoneConfig, /default_tools_approval_mode\s*=\s*"writes"/u);
   assert.match(kintoneConfig, /not per-App\/account enforcement/u);
+  for (const server of ["kintone", "playwright", "chrome-devtools"]) {
+    const section = codexConfig.match(new RegExp(`\\[mcp_servers\\.${server}\\]([\\s\\S]*?)(?=\\n\\[|$)`, "u"))?.[1];
+    assert(section, `${server} must be configured from the initial installation`);
+    assert.match(section, /default_tools_approval_mode\s*=\s*"writes"/u);
+    assert.doesNotMatch(section, /^\s*(?:enabled_tools|disabled_tools)\s*=/mu);
+  }
 
   let fetchCalls = [];
   const readonlyClient = createKintoneRestClient({

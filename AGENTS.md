@@ -112,30 +112,39 @@ then report MCP blocked and ask only for trust/reopen/restart. Do not recommend
 a fresh chat when MCP is loaded and its published tool list simply does not
 include the required operation.
 
-The configured `enabled_tools` list in `.codex/config.toml` is read-only by
-default. If a write tool is absent because this allowlist excludes it, classify
-it as policy-disabled, not an upstream capability gap. Never switch to REST,
-browser/UI, or shell to bypass the policy. For a user-authorized write, name
-only the upstream tool(s) needed, show the exact allowlist diff and obtain the
-user's review before applying/reopening Codex; restore the read-only list and
-reopen after the task. Do not remove the allowlist wholesale or claim it
-restricts access by App/account. Follow
+For a fresh KE setup, configure the installed MCP servers to expose all tools
+they publish, rather than installing a read-only `enabled_tools` allowlist.
+Keep Codex's `default_tools_approval_mode = "writes"` so write calls still use
+the host's write-approval flow. Tool exposure is not tenant authorization:
+discovery and analysis remain read-only by intent, and every write still needs
+current approval for its exact operation, target, and data scope. Deployment,
+deletion, and synthetic test-data gates remain separate.
+
+Respect any existing user-owned `enabled_tools` or `disabled_tools` restrictions.
+Do not silently broaden a customized config during upgrade or toggle a default
+read-only list on and off for each task. If a required tool is excluded by a
+deliberate customization, explain that policy limitation and ask before
+proposing a config change; do not bypass it through REST, browser/UI, or shell.
+An explicit `--enable-all-tools` upgrade option may replace KE-managed tool
+filters only after the user reviews the dry-run; `--force` alone does not
+override them. A customized filter is not an upstream capability gap and is
+not App/account-scoped authorization. Follow
 `skills/ke-router/references/first-use-and-routing.md`.
 
 Do not inspect or modify `node_modules`, MCP `dist/` files, or package source to
 discover tool names or schemas. Do not construct JSON-RPC calls in the shell or
-start the MCP server manually. Use only the schema exposed by active tools. If
-the server is loaded and a needed tool is genuinely not published upstream
-(after checking the allowlist), explain the capability gap once and offer an
-explicitly approved official path. If a tool times out or still fails after
-one corrected call, report the exact failure and stop instead of
-reverse-engineering the runtime.
+start the MCP server manually. Use only the schema exposed by active tools. A
+tool configured for exposure is not proof that it is loaded in the active
+session. If the loaded server genuinely does not publish a needed operation,
+explain the capability gap once and offer an explicitly approved official path.
+If a tool times out or still fails after one corrected call, report the exact
+failure and stop instead of reverse-engineering the runtime.
 
 MCP is the default channel, not the exclusive channel. A real upstream MCP
-capability gap is not a Kintone platform limitation; a configured read-only
-allowlist is not that gap. If the active MCP tools genuinely do not expose a
-supported Kintone operation after policy is accounted for, explain the gap
-once and offer an official UI/tool path or the official REST API. Do not switch silently. When
+capability gap is not a Kintone platform limitation; a user-configured tool
+filter is not that gap and must not be bypassed. If the active MCP tools
+genuinely do not expose a supported Kintone operation, explain the gap once and
+offer an official UI/tool path or the official REST API. Do not switch silently. When
 the user approves REST for the named app and operation, that approval
 authorizes the scoped REST implementation; proceed without repeatedly asking
 the user to return to MCP or review the channel choice. REST still follows
@@ -280,9 +289,15 @@ HTML report contract below. Follow
 Playwright MCP is the primary browser channel for every KE expert whenever a
 claim depends on the live Kintone UI or user journey. PM, BA, SA, Engineer, and
 Tester may gather role-appropriate browser evidence; browser writes follow the
-same scope and approval boundary as MCP/REST writes. Use the project-scoped
-persistent browser profile, let the user sign in manually, and never expose
-credentials, cookies, tokens, storage state, or unrelated tabs.
+same scope and approval boundary as MCP/REST writes. By default, use an isolated
+browser session with no shared persisted login. An explicit, valid
+`KE_PROJECT_SLUG` plus `KE_BROWSER_IDENTITY` binding opts into the project/role
+persistent profile; partial or invalid bindings fail closed. Let the user sign
+in manually. Before switching project, account, or role, close the browser
+context and sign in again; never reuse a customer session across projects. Do
+not read or expose credentials, cookies, tokens, or storage state. Save or move
+evidence from ignored `.tmp` staging to the validated project's private
+evidence path before reporting it.
 
 Chrome DevTools MCP is an escalation channel, not the routine browser. Use it
 only after Playwright reproduces a JavaScript, network, DOM/CSS, or performance

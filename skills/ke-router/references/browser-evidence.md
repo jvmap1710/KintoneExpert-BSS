@@ -9,9 +9,14 @@ runtime JavaScript, responsive behavior, or a final deployed result.
 
 1. Confirm the target project, environment, App ID/link, account role, and
    intended evidence before opening or changing anything.
-2. Reuse the project-scoped persistent Chrome profile. Ask the user to sign in
-   manually when authentication is needed; never read, request, type, expose,
-   or store a password, cookie, token, or browser storage value.
+2. By default, start an isolated browser session with no shared persisted
+   login. A valid explicit `KE_PROJECT_SLUG` plus `KE_BROWSER_IDENTITY` binding
+   opts into the project/role persistent profile; partial or invalid bindings
+   fail closed. Ask the user to sign in manually when authentication is needed;
+   never read, request, type, expose, or store a password, cookie, token, or
+   browser storage value. Before switching project, account, or role, close the
+   browser context and sign in again. Never reuse a customer session across
+   projects.
 3. Prefer accessibility and DOM evidence for text, values, controls, and
    state. Add a screenshot when visual layout, color, spacing, or presentation
    is material.
@@ -20,9 +25,12 @@ runtime JavaScript, responsive behavior, or a final deployed result.
    authorizes only its bounded synthetic records and workflow actions.
 5. Keep navigation within the configured customer tenant and links required by
    the task. Do not inspect unrelated open tabs or browser-profile data.
-6. Save raw screenshots, traces, and browser logs under
+6. The isolated default stages artifacts in ignored `.tmp` storage. Before
+   project reporting, validate the project and save or move raw screenshots,
+   traces, and browser logs to
    `projects/<project-slug>/private/browser-evidence/<run-id>/`. Reports under
-   `output/` contain redacted evidence IDs, not secrets or customer data.
+   `output/` contain redacted evidence IDs, not secrets or customer data; never
+   report a staging path as project evidence.
 7. Record evidence with: evidence ID, timestamp, page URL/App ID, account role,
    action, expected result, actual result, and artifact path when applicable.
 8. If Playwright cannot execute a required runtime check, mark it `BLOCKED`.

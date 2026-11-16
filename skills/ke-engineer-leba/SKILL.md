@@ -118,8 +118,10 @@ approval. Cover applicable operations: Space inspection/creation and App
 placement; App creation; fields/layout/views; lookups/related records/actions;
 workflow/permissions; JavaScript/CSS attachment; read-back; deployment/status;
 browser runtime verification and Mit's scoped tests. Mark excluded operations
-`N/A` with a reason instead of enabling every possible tool. In particular,
-App-write readiness alone does not establish Space or browser readiness.
+`N/A` with a reason instead of using them outside the task. Fresh KE
+configuration exposes all tools published by configured servers; this does not
+authorize out-of-scope operations. App-write readiness alone does not establish
+Space or browser readiness.
 
 For each operation, list the exact server/tool name and published schema when
 available, proposed channel, target/environment, read/write effect, policy
@@ -130,20 +132,25 @@ an exact candidate; otherwise mark it `UNRESOLVED` and explain the discovery
 blocker without reverse-engineering runtime internals. An upstream declaration
 is not proof that a tool is loaded in this session.
 
-Gather all known missing dependencies/servers and the minimal allowlist diff
-into one reviewable configuration proposal. Include Playwright up front when
-Space UI work or runtime evidence requires it; DevTools remains diagnostic,
-not an automatic replacement. Separate approval to install/configure/load
-tools from authority to perform tenant writes, deploy, delete, or create test
-records. Project creation or general plan approval alone does not approve
-security/config changes. Do not install dependencies or edit config silently.
+Gather all known missing dependencies/servers into one reviewable configuration
+proposal. Include Playwright up front when Space UI work or runtime evidence
+requires it; DevTools remains diagnostic, not an automatic replacement.
+Preserve user-owned tool filters on upgrade. If a required tool is excluded,
+explain the limitation and ask before proposing a config change. Separate
+approval to install/configure/load tools from authority to perform tenant
+writes, deploy, delete, or create test records. Project creation or general
+plan approval alone does not approve security/config changes. Do not install
+dependencies or edit config silently.
 
-Once the user approves the explicit configuration proposal, apply only that
-diff and any explicitly approved setup using the existing Kit tooling;
-preserve unrelated settings and the original read-only policy for restoration.
-Request host trust/reload/restart once for all identified changes when needed;
-do not claim the agent can hot-load tools. Resume by checking the entire
-inventory against the tools actually exposed by the new session. Keep
+Once setup is authorized, apply the approved configuration and setup using the
+existing Kit tooling, preserving unrelated and user-owned settings. Keep
+`default_tools_approval_mode = "writes"`; tool exposure is not tenant
+authorization. Plan one consolidated host trust/reload/restart after all
+dependencies, configuration, and required local credentials are ready. Do not
+request stage-driven reloads or claim the agent can hot-load tools. If the host
+still fails, diagnose the observed issue and follow its required recovery.
+Resume by checking the entire inventory against tools actually exposed by the
+new session. Keep
 `INSTALLED`, `CONFIGURED`, `SESSION LOADED`, and `VERIFIED` distinct. Verify
 with safe schema/local checks and authorized scoped reads; do not issue dummy
 writes to test readiness. A loaded write tool is not an executed write PASS.
@@ -152,8 +159,8 @@ Before the first dependent write, report remaining blockers and do not label
 the whole build ready while a required capability is unavailable. An approved,
 independent subset may proceed only with the remainder explicitly blocked.
 If scope changes, update the inventory and seek approval only for the new
-configuration/operation delta. Restore temporary write allowlist changes at
-task closure and explain any host reload needed for restoration.
+configuration/operation delta. Do not toggle tool filters for ordinary tasks;
+preserve any custom filter unless the user explicitly approves changing it.
 
 ## Guardrails
 
@@ -214,7 +221,7 @@ that guest-space target is also known.
 If MCP is absent, or no suitable published metadata tool/scope is available,
 finish safe requested diagnostics and report `MCP: BLOCKED`; ask only for
 trust/reopen/restart when the server itself is missing. Do not inspect runtime
-internals or use the probe to bypass the MCP allowlist for other work.
+internals or use the probe to bypass a user-configured MCP tool filter.
 
 Let Codex start the configured `kintone` MCP server for normal Kintone
 operations. Keep the credential file and shared runtime dependencies under
@@ -225,20 +232,18 @@ authorization file must reflect current explicit user approval and bind one
 operation, target, and exact limits; its reference string is not approval.
 
 Before inspecting or building an app, verify that the active session exposes
-the required `kintone` MCP tools. Call those tools directly for Demo/PoC and
-production projects alike. For a missing MCP server, follow the requested-check
-diagnostics above when applicable; otherwise report MCP blocked and ask the
-user to trust/reopen/restart as needed. The default tool list in
-`.codex/config.toml` is read-only. A write tool
-missing because the configured `enabled_tools` allowlist excludes it is
-policy-disabled, not an upstream capability gap; do not fall back to REST,
-UI, or shell to bypass that restriction. For a user-authorized write, show the
-exact narrowly scoped tool(s) to add and the config diff, wait for user review,
-reopen/restart Codex, then restore the read-only allowlist and reopen/restart
-after the task. The allowlist is not App/account-scoped enforcement. Only if a
-tool is genuinely not published by the loaded server after policy is accounted
-for should it be treated as an MCP capability gap; reopening alone will not
-add upstream tools.
+the required `kintone` MCP tools. For a missing server, follow requested-check
+diagnostics above or report the specific host recovery indicated by the
+observed state. Fresh setup exposes all tools published by configured servers
+and keeps `default_tools_approval_mode = "writes"`; this does not replace
+operation-scoped user approval. Preserve existing user-owned `enabled_tools`
+or `disabled_tools` filters. If one excludes a required tool, ask before
+proposing a change. To opt an existing KE-managed config into all tools, review
+`upgrade --dry-run --enable-all-tools` first, then pass `--enable-all-tools` to
+upgrade only with the user's explicit choice; `--force` alone does not override
+the filter. Never bypass a custom restriction through REST, UI, or shell. Only
+an operation genuinely absent from the loaded server's published tools is an
+upstream capability gap.
 
 Never read `node_modules`, `@kintone/mcp-server/dist`, or package source to
 reverse-engineer tools. Never emulate MCP with shell JSON-RPC or bypass it with
@@ -246,6 +251,42 @@ an unapproved REST call. For a parameter error, use the tool schema supplied by
 the active session and make at most one corrected call. For an unavailable
 tool, timeout, or repeated failure, return the exact error and the preflight
 commands; do not continue investigating runtime internals.
+
+## New-App icons and optional sample records
+
+Include a suitable icon for each newly created App in the proposed build
+scope. After App creation, select a native icon available on the tenant that
+matches the App's business purpose (for example people for Employee Master,
+a ticket for requests, or a tool for work orders). Respect supplied branding;
+do not change icons of reused Apps unless explicitly included in scope. No
+external images, paid assets, or custom uploads are implied by this default.
+
+Inspect the published general-settings tool schema or the approved UI path;
+never invent an icon identifier or assume an icon-setting tool is available.
+Prefer staging the icon before the initial deployment, then read it back and
+include it in the pending-change summary. If it requires a later settings
+change, retain the normal read-back/deploy gates. If the approved channel
+cannot set it, report icon selection `BLOCKED`, not complete, and offer a
+supported path without bypassing policy. Verify the released icon using
+settings evidence and Playwright when the claim depends on its appearance.
+
+Never create sample/demo/seed records merely because the user requested a
+build, Demo/PoC, icon selection, or release. Create records only on an explicit
+request or acceptance of a concrete sample-data proposal, with the named
+Apps, environment, quantity, and purpose resolved. An explicitly approved
+scoped smoke test may already authorize its required synthetic records; do
+not ask the same approval again. Quick Verification does not implicitly
+authorize record creation. Use synthetic data, respect dependencies and
+automation side effects, and do not delete records without separate approval.
+
+After deployment reaches `SUCCESS`, icons are verified, and required Quick
+Verification is reported, proactively offer sample data once if no prior
+request/decision exists. For example: "Would you like synthetic sample
+records? I can propose the Apps, counts, and scenarios before creating them."
+Wait for an explicit request/acceptance; silence or general release approval
+is not consent. Keep the released App usable with no sample data, report
+whether records were not requested, declined, or created under approval, and
+do not claim an unrun smoke test passed.
 
 ## Implementation boundary
 

@@ -5,27 +5,15 @@ command = "npm.cmd"
 args = ["--prefix", "platform/ke-kintone-mcp", "run", "--silent", "mcp:kintone"]
 startup_timeout_sec = 30
 tool_timeout_sec = 120
-# Default to inspection only. A write skill must request only the named upstream
-# tool(s) needed for the approved operation; review this diff and reopen Codex,
-# then restore this list. This is not per-App/account enforcement.
-enabled_tools = [
-  "kintone-get-apps",
-  "kintone-get-app",
-  "kintone-get-form-fields",
-  "kintone-get-form-layout",
-  "kintone-get-process-management",
-  "kintone-get-app-deploy-status",
-  "kintone-get-general-settings",
-  "kintone-get-customization",
-  "kintone-get-records",
-  "kintone-get-record-comments",
-  "kintone-get-space",
-]
+# Expose all tools published by the pinned server from the initial load,
+# including build, deploy/status and record testing. Loaded is not authorized.
+# This is not per-App/account enforcement; task scope and approval still apply.
 # `writes` prompts for tools not marked read-only; it does not make tools read-only.
 default_tools_approval_mode = "writes"
 
 # Primary browser channel for every KE expert. It opens a project-scoped
-# persistent Chrome profile so the user signs in to Kintone only once.
+# isolated session by default, without requiring a project at server startup.
+# Explicit project/role env binding opts into a persistent private profile.
 [mcp_servers.playwright]
 command = "npm.cmd"
 args = ["--prefix", "platform/ke-browser-mcp", "run", "--silent", "mcp:playwright"]
