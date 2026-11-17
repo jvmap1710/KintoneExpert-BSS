@@ -102,6 +102,12 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 ## Route requests
 
+For workflow-to-Excel requests, route interpretation/review to Teo using
+`../ke-ba-teo/references/workflow-excel-intake.md`, with Document Writer for
+the XLSX. A request for a blank BA form goes directly to Document Writer's
+packaged template; a returned BA form goes to Teo for review. Keep Structure
+separate. Neither upload nor a completed form starts a build or tenant check.
+
 1. Route a clear role-specific request to its expert skill.
 2. Route requests to save or export MoM, BRD, decisions, reports, hand-offs, or
    other project documents to `$ke-document-writer`. Route user guides, SOPs,

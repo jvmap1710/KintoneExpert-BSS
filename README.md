@@ -18,6 +18,18 @@ KE hỗ trợ Demo/PoC, triển khai dự án khách hàng, kiểm tra app hiệ
 vấn giải pháp. Kit dùng Kintone MCP cho cấu hình/dữ liệu, Playwright MCP cho
 trải nghiệm thật trên trình duyệt và Chrome DevTools MCP cho debug sâu.
 
+## Mẫu BA: Workflow và Business Rules
+
+Template Excel trống nằm ở
+[`skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`](skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx).
+Structure là file riêng, không gộp vào mẫu này.
+
+- BA tự điền: nhắn “Cho tôi mẫu Workflow và Business Rules”, điền rồi gửi lại để Tèo review.
+- Agent điền hộ: gửi sơ đồ PDF/ảnh/drawio hoặc mô tả và nhắn “Điền vào mẫu Workflow và Business Rules cho BA review”.
+- Bản Agent điền là Draft; BA sửa trực tiếp rồi gửi lại. Không tự build/deploy từ file upload.
+
+Sample dự án và hình khách hàng không được đóng gói vào template public.
+
 ## Cài đặt
 
 Yêu cầu:

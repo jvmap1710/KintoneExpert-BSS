@@ -72,6 +72,12 @@ inputs or stopping because tenant tooling is unavailable:
 
 ## Evidence before a technical build plan
 
+Treat BA Structure and Workflow/Business Rules as separate design inputs.
+Review their accepted versions and reconcile material business gaps before
+implementation; follow `../ke-ba-teo/references/workflow-excel-intake.md` when
+a workbook is still a BA draft. Upload/content acceptance is not build or
+deployment approval. Keep technical capability checks out of the BA form.
+
 LeBa owns the technical implementation plan for a supplied design; PM, BA,
 and SA are not mandatory predecessors. Reading a design is not approval of it.
 Before proposing a plan for build approval:

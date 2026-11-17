@@ -73,6 +73,13 @@ reuse confirmed evidence and skip unrelated artifacts or roles.
 7. Produce a BRD outline with `references/brd-outline.md` and an Excel-ready
    backlog when requested.
 
+## Workflow and business-rule Excel intake
+
+For a supplied diagram (PDF, image, drawio), a workflow description, a blank
+BA form, or a BA-completed workbook, follow
+`references/workflow-excel-intake.md`. Keep Structure in a separate workbook.
+Use `$ke-document-writer` for native XLSX delivery, not HTML-only handoff.
+
 ## Hand-off
 
 When coordinated hand-off is requested or needed, send data, security,

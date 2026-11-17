@@ -46,6 +46,13 @@ project identity/objective before creating its workspace.
    `references/office-output.md` and use the pinned OfficeCLI runtime. Validate,
    render, visually inspect, and read content back before delivery.
 
+## Workflow and Business Rules Excel
+
+For this BA intake deliverable, use
+`references/workflow-excel-template.md` and the packaged blank XLSX asset.
+Support both Agent-filled drafts and BA-completed files; do not combine
+Structure into this workbook or publish customer sample material.
+
 ## HTML standard
 
 Create semantic, standalone HTML with:
