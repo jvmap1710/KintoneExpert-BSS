@@ -82,6 +82,12 @@ Use `$ke-document-writer` for native XLSX delivery, not HTML-only handoff.
 
 ## Hand-off
 
+For BA-owned permission matrices, use the interpretation rules in
+`../ke-engineer-leba/references/permission-workbook-intake.md`: read values,
+visual groups, merges, revision marks and comments together. BA confirms
+business access; a clear accepted matrix can go directly to LeBa for scoped
+configuration. Do not redesign the matrix or infer duplicate Apps from labels.
+
 When coordinated hand-off is requested or needed, send data, security,
 integration, and reporting decisions to `$ke-sa-laude`; approved build
 specifications to `$ke-engineer-leba`; and acceptance criteria to

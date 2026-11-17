@@ -63,6 +63,13 @@ Use only clear states: `PLANNED`, `STAGED`, `DEPLOYED`, `RUNTIME VERIFIED`, or
 
 ## Verification and deployment gates
 
+Permission work: apply `permission-workbook-intake.md`. Record source/version
+and ranges, visual/merge/comment inspection, excluded revision scopes, resolved
+App/field/principal identities, ordered active ACLs and approved grant/revoke
+differences. Preserve out-of-scope entries. Read staged/released ACLs back and
+separate configuration evidence from permitted role-based allow/deny checks;
+do not call admin-only inspection proof of restricted-user access.
+
 For each newly created App, record the chosen icon, rationale/branding match,
 staged read-back, and released evidence (or explicit blocker). Reused App icons
 are unchanged unless approved. Stage icons before the first deploy when possible.

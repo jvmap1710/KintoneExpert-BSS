@@ -102,6 +102,11 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 ## Route requests
 
+A supplied permission workbook with a request to configure routes directly to
+LeBa's `../ke-engineer-leba/references/permission-workbook-intake.md` contract.
+A read/review-only request remains read-only; BA retains business-policy
+ownership. Do not require a PM chain or treat file upload as tenant-write consent.
+
 For workflow-to-Excel requests, route interpretation/review to Teo using
 `../ke-ba-teo/references/workflow-excel-intake.md`, with Document Writer for
 the XLSX. A request for a blank BA form goes directly to Document Writer's

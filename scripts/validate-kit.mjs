@@ -71,6 +71,7 @@ for (const required of [
   "skills/ke-engineer-leba/references/javascript-customization.md",
   "skills/ke-engineer-leba/references/process-management.md",
   "skills/ke-engineer-leba/references/record-query-diagnostics.md",
+  "skills/ke-engineer-leba/references/permission-workbook-intake.md",
   "skills/ke-engineer-leba/references/build-and-deploy-template.md",
   "skills/ke-pm-ti/references/delivery-plan.md",
   "skills/ke-pm-ti/references/project-control-template.md",
@@ -478,7 +479,7 @@ for (const [skillName, skill, references] of [
     ],
   ],
   ["ke-sa-laude", saSkill, ["solution-blueprint.md"]],
-  ["ke-engineer-leba", engineerSkill, ["build-and-deploy-template.md"]],
+  ["ke-engineer-leba", engineerSkill, ["build-and-deploy-template.md", "permission-workbook-intake.md"]],
   [
     "ke-tester-mit",
     testerSkill,
