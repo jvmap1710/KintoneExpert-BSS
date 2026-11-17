@@ -1,47 +1,67 @@
 # Workflow and Business Rules intake
 
-Support either entry without a mandatory PM/SA or tenant connection:
+Support either entry without requiring a PM/SA or tenant connection:
 
-- **Agent fills:** read the user-authorized diagram/text, follow connectors,
-  arrow directions, loops and labels, then fill the workbook for BA review.
-- **BA fills:** provide a project-local copy of the blank template. On return,
-  read both sheets, compare with the prior version when available, preserve BA
-  edits and IDs, and ask only about material omissions or contradictions.
+- **Agent draft:** read the authorized diagram or description and create a
+  **Draft for BA Review** from the shared workbook template.
+- **BA completion:** provide a project-local copy of the blank template. The
+  BA edits that same workbook/template. On return, review the BA-edited copy
+  against the prior version when available and preserve the submitted versions.
 
-Use the asset and layout contract in
-`../../ke-document-writer/references/workflow-excel-template.md`.
-Structure stays separate; do not recreate its field catalogue in this file.
+Use the asset, sheet, and exact column contract in
+`../../ke-document-writer/references/workflow-excel-template.md`. Keep one
+workflow per workflow sheet, with multiple workflows allowed in one workbook.
+Keep Structure and Permissions in separate workbooks. Rules belong inline in
+the applicable workflow row; do not create a separate Business Rules sheet.
+IDs and codes are optional and must not be required to use the form.
 
 ## Source interpretation
 
-Read the diagram visually as well as its extracted text. Inspect unclear
-connectors at higher resolution before asking a question. Trace incoming and
-outgoing paths, reassignment loops, waiting states and cross-App conditions.
-Do not declare a missing path solely because it was absent from text extraction.
-Distinguish user-confirmed clarification from the source diagram; neither is
-proof of a live implementation. Preserve a short source/version record.
+Read diagrams visually as well as through extracted text. Trace connectors,
+arrow direction, branches, waiting states, returns, reassignment loops, and
+cross-App conditions. Inspect unclear connections at higher resolution before
+asking a question. Do not declare a path missing solely because it is absent
+from text extraction. Distinguish source statements from BA-confirmed
+clarifications; neither alone proves live implementation. Preserve concise
+source/version information.
 
-Write business facts in plain terms: who acts, who receives work, the condition,
-and the result. Do not mix implementation speculation (native action support,
-API/query, assignee configuration) into BA input/sample cells. Do not introduce
-unrequested questions about reopening or hypothetical cardinality. Conversely,
-do not invent an actor, missing-value behavior, automation trigger or a rule
-just to remove an unknown. Put `Chưa chốt` (or the document-language equivalent)
-in the relevant cell for a real unresolved requirement.
+Describe the business process in plain language: who is assigned, the status
+before acting, conditions for the action, the action, the resulting status,
+and any relevant business rule or desired behavior. Do not invent an actor,
+missing-value behavior, automation trigger, or policy to remove an unknown.
+Step IDs, rule IDs, and field codes are optional references, not a requirement.
+Do not ask speculative questions about reopening or hypothetical cardinality.
 
-Ask only material business questions, identifying the exact step ID and
-`current state → action → next state`; quote or show the relevant diagram
-region. Do not ask again about an explicit arrow or a confirmed answer. Put
-technical verification in the Engineer handoff rather than the BA table.
-Project-specific rules (e.g. selecting the newest related record) are never
-universal template defaults.
+Normalize only clear, evidence-backed errors. Make each correction visible to
+the BA in a concise change note containing the original wording, normalized
+wording, and supporting evidence. Do not silently change uncertain meaning or
+resolve a conflict by assumption. Ask only about unresolved material
+ambiguity; name the affected workflow row and show the relevant source evidence.
+
+The native Kintone/plugin and JavaScript columns express implementation
+proposals only. Do not present a classification as verified until LeBa checks
+the actual Kintone/plugin capability and approved scope. If the implementation
+approach is unknown, leave those columns blank; the BA may state desired
+behavior in the business-rule cell without selecting an approach. Keep
+technical capability questions for the LeBa hand-off, not as mandatory BA
+questions.
 
 ## Review and return
 
-Check that step/rule IDs are unique, cross-references resolve, branch conditions
-are understandable, initial/end states are identifiable, and waiting/return
-paths follow evidence. Show remaining business gaps without claiming build-ready.
-Agent-filled work is **Draft for BA Review**. Keep user-confirmed decisions in
-project notes and the next workbook version; do not silently overwrite prior
-versions or approvals. A returned Excel file or BA content confirmation alone
-does not authorize tenant writes, deployment or test records.
+Check that each workflow is on its own sheet and the eight column meanings and
+order match the template. Use the packaged Vietnamese headers unless the
+requested/configured output language calls for translated labels; do not add
+columns. Confirm that status/action transitions are understandable, branch
+conditions and assignees are clear where the source establishes them, and
+initial/end states are identifiable without fictitious actions. Check that
+business rules remain inline with the relevant workflow and that no separate
+rule or Structure/Permissions workbook has been folded in. Show unresolved
+material gaps without claiming build-ready.
+
+The Agent creates a Draft for BA Review; the BA edits that same workbook and
+the BA-reviewed workbook becomes the final workflow input for LeBa when the
+user requests that hand-off or implementation is already authorized. Do not
+ask again for an already authorized hand-off. A workbook upload, BA review, or content
+confirmation alone does not authorize tenant inspection, writes, deployment,
+or test records. Preserve prior versions and approvals; do not silently
+overwrite them.

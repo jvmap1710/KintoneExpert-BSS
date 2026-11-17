@@ -1,40 +1,69 @@
 # BA Workflow and Business Rules workbook
 
-Packaged blank asset (relative to this skill):
-`assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`.
-It is generated independently of customer workbooks; no customer samples,
-diagrams, comments, hidden sheets or stale shared strings belong in this asset.
+The packaged blank asset is `assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`.
+It is generated independently of customer workbooks. Never put customer
+examples, diagrams, comments, hidden sheets, or customer data in this shared
+asset.
 
-Copy it to a new versioned path in the selected project's `output/`; never edit
-the shipped asset or overwrite a BA-returned workbook. It has three sheets:
+Copy the blank asset to a new versioned path in the selected project's
+`output/`; never edit the shipped asset or silently overwrite a prior or
+BA-returned version. Keep Structure and Permissions in separate workbooks.
 
-1. `01_HuongDan`: short plain paragraphs and a small synthetic text example;
-   no fixed instruction table, customer analysis or Agent questionnaire.
-2. `02_Workflow`: App, step ID, current state, action, next state, actor,
-   recipient, condition, related rule IDs, notes.
-3. `03_BusinessRules`: App, rule ID, rule name, applicable step/global scope,
-   trigger, condition, business result, notification/recipient, exceptions.
+Use a short guidance sheet with simple paragraphs. Do not add a compulsory
+instruction table, customer analysis, or questionnaire. Put one workflow on
+each workflow sheet; one workbook may contain multiple workflows. Every
+workflow sheet has exactly these eight columns, in this meaning and order.
+The Vietnamese packaged asset uses the labels below; for a requested or
+configured different output language, translate the labels while preserving
+all eight meanings and their order:
 
-Keep input rows blank when providing a form. Use short business wording in
-headers and filled cells. Mark real unknowns locally, not with long speculative
-technical notes. Identify initial/end states in notes without fictitious actions.
-IDs are document references, not Kintone IDs. Preserve source-language status
-labels where exact mapping matters. Apply configured output languages; this
-Vietnamese asset is a starting layout, not an override of language preferences.
+1. `Assignees`
+2. `Status before taking action`
+3. `Conditions to take this action`
+4. `Action Name`
+5. `Status After Action Taken`
+6. `Business Rules làm rõ bổ sung`
+7. `Xử lý kèm theo (config bằng standard function/plugin native của Kintone)`
+8. `Xử lý kèm theo (customize bổ sung bằng javascript)`
 
-For an Agent-filled deliverable, work with Teo's
-`../../ke-ba-teo/references/workflow-excel-intake.md` interpretation contract.
-Fill the two work sheets, or add two clearly named sample tabs while preserving
-the blank form if the user requests examples. Add source diagram regions with
-captions beside/below the related sample and preserve readability/aspect ratio.
-Do not stretch a full diagram into unreadable labels or overlap the table.
-Use only authorized project sources; customer samples/images remain project-local
-unless publication of that exact material is explicitly authorized.
+Keep business rules in the relevant workflow row; do not create a separate
+Business Rules sheet or add extra workflow columns. Use plain language. Step
+IDs, rule IDs, field codes, and other technical codes are optional references,
+not required workbook content.
+Show initial and end states in the status cells or a short note; do not invent
+actions to represent them.
 
-Before delivery, use the Office quality loop in `office-output.md`: validate,
-render/inspect representative instructions and tables, read content back, and
-verify references and blank rows where applicable. Retain the Draft for BA
-Review label until content acceptance; acceptance is not deployment authority.
+The Agent may create a Draft from an authorized source. The BA reviews and
+edits that same workbook/template; keep versions for review history. Normalize
+only clear, evidence-backed errors. Make every normalization visible to the BA
+as a concise paragraph on the guidance sheet showing the original wording,
+normalized wording, and supporting source; do not add a workflow column for
+the change record. Do not resolve uncertain meaning by guesswork. Ask only
+about unresolved material ambiguity, and identify the relevant workflow row
+and source evidence.
+
+The native Kintone/plugin and JavaScript columns are implementation proposals,
+not verified capability or authorization. Leave them blank when the approach
+is unknown; the BA can describe the desired behavior in the business-rule cell
+without selecting an implementation. Any proposed native, plugin, or JavaScript
+classification must be verified by LeBa against the available capability and
+approved scope before implementation. Send the final workflow input to LeBa
+from the BA-reviewed workbook when requested or already authorized as part of
+implementation. Do not ask again for that authorized hand-off. A completed
+or BA-confirmed workbook is not permission to inspect a tenant, build, or
+deploy.
+
+For diagram-based drafts, inspect the diagram visually as well as its extracted
+text. Preserve useful source/version information and readable evidence without
+stretching or obscuring the workflow sheet. Customer examples and source
+material remain in the project workspace; share them only with explicit
+authorization for that exact material.
+
+Before delivery, follow `office-output.md`: validate, render and inspect the
+guidance and representative workflow sheets, read content back, and confirm
+that the eight headers, blank rows where applicable, and version are correct.
+Keep an Agent-filled file labeled **Draft for BA Review** until the BA reviews
+it.
 
 Maintainers can reproduce the clean Vietnamese asset with the pinned runtime:
 
@@ -43,4 +72,4 @@ node skills/ke-document-writer/scripts/build-workflow-template.mjs --output <new
 ```
 
 The builder refuses existing destinations. Do not regenerate a customer file
-with it; revise that file through the normal versioned review workflow.
+with it; revise customer workbooks through the normal versioned review process.

@@ -50,8 +50,13 @@ project identity/objective before creating its workspace.
 
 For this BA intake deliverable, use
 `references/workflow-excel-template.md` and the packaged blank XLSX asset.
-Support both Agent-filled drafts and BA-completed files; do not combine
-Structure into this workbook or publish customer sample material.
+Keep one workflow per sheet, allow multiple workflows in one workbook, and
+keep business rules inline without requiring IDs/codes or a separate rules
+sheet. Keep Structure and Permissions in separate workbooks. The Agent creates
+a Draft for BA Review and the BA edits that same workbook; preserve versions
+and make evidence-backed normalizations visible. Customer examples remain
+private and are never shared template assets. A BA-reviewed workbook does not
+authorize tenant inspection, build, or deployment.
 
 ## HTML standard
 

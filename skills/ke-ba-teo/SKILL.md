@@ -61,8 +61,10 @@ reuse confirmed evidence and skip unrelated artifacts or roles.
    explicit fast-track assumption is recorded. Advise workflow logic only; the
    actual Kintone workflow configuration is handled with the approved build
    path.
-6. Use `references/requirements-catalog-template.md` to define stable process,
-   requirement, acceptance, field, approval, notification, and decision IDs.
+6. Use `references/requirements-catalog-template.md` for a fuller requirements
+   catalog when requested. Its stable process, requirement, acceptance, field,
+   approval, notification, and decision IDs are not required in the simple
+   Workflow and Business Rules workbook.
    Inventory the available per-app structure and fields in the supplied or
    authorized reference scope, recording labels, codes, types, requiredness,
    source, conditional rules, and business mappings as available; mark gaps as
@@ -77,8 +79,12 @@ reuse confirmed evidence and skip unrelated artifacts or roles.
 
 For a supplied diagram (PDF, image, drawio), a workflow description, a blank
 BA form, or a BA-completed workbook, follow
-`references/workflow-excel-intake.md`. Keep Structure in a separate workbook.
-Use `$ke-document-writer` for native XLSX delivery, not HTML-only handoff.
+`references/workflow-excel-intake.md`. Keep Structure and Permissions in
+separate workbooks. Use `$ke-document-writer` for the native XLSX template and
+delivery, not an HTML-only handoff. The BA-reviewed workbook is the final
+workflow input for LeBa when that hand-off is requested or already authorized;
+it does not itself authorize
+tenant inspection, build, or deployment.
 
 ## Hand-off
 

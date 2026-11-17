@@ -109,9 +109,15 @@ ownership. Do not require a PM chain or treat file upload as tenant-write consen
 
 For workflow-to-Excel requests, route interpretation/review to Teo using
 `../ke-ba-teo/references/workflow-excel-intake.md`, with Document Writer for
-the XLSX. A request for a blank BA form goes directly to Document Writer's
-packaged template; a returned BA form goes to Teo for review. Keep Structure
-separate. Neither upload nor a completed form starts a build or tenant check.
+the XLSX. Use the shared contract in
+`../ke-document-writer/references/workflow-excel-template.md`: one workflow
+per sheet, rules inline, no required IDs/codes or separate Business Rules
+sheet, and Structure and Permissions remain separate workbooks. A request for
+a blank BA form goes directly to Document Writer's packaged template; a
+returned BA form goes to Teo for review. An Agent-created Draft is edited by
+the BA in the same workbook; any normalization must be evidence-backed and
+visible for review. Neither upload nor a completed form starts a build, tenant
+check, or deployment.
 
 1. Route a clear role-specific request to its expert skill.
 2. Route requests to save or export MoM, BRD, decisions, reports, hand-offs, or

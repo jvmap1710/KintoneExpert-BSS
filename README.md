@@ -22,13 +22,32 @@ trải nghiệm thật trên trình duyệt và Chrome DevTools MCP cho debug s�
 
 Template Excel trống nằm ở
 [`skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`](skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx).
-Structure là file riêng, không gộp vào mẫu này.
+Mỗi workflow nằm trên một sheet; một workbook có thể chứa nhiều workflow.
+Mỗi sheet workflow có đúng 8 cột theo thứ tự và ý nghĩa sau; template tiếng
+Việt đang đóng gói dùng các tiêu đề dưới đây. Nếu ngôn ngữ output được
+yêu cầu/cấu hình khác, có thể dịch tiêu đề nhưng phải giữ nguyên ý nghĩa và
+thứ tự, không thêm cột:
+
+1. `Assignees`
+2. `Status before taking action`
+3. `Conditions to take this action`
+4. `Action Name`
+5. `Status After Action Taken`
+6. `Business Rules làm rõ bổ sung`
+7. `Xử lý kèm theo (config bằng standard function/plugin native của Kintone)`
+8. `Xử lý kèm theo (customize bổ sung bằng javascript)`
+
+Business Rules được ghi ngay trên dòng workflow liên quan; không có sheet
+Business Rules riêng và không bắt buộc ID/code. Structure và Permissions là
+hai workbook riêng, không gộp vào mẫu này.
 
 - BA tự điền: nhắn “Cho tôi mẫu Workflow và Business Rules”, điền rồi gửi lại để Tèo review.
 - Agent điền hộ: gửi sơ đồ PDF/ảnh/drawio hoặc mô tả và nhắn “Điền vào mẫu Workflow và Business Rules cho BA review”.
-- Bản Agent điền là Draft; BA sửa trực tiếp rồi gửi lại. Không tự build/deploy từ file upload.
+- Bản Agent điền là Draft; BA chỉnh sửa cùng workbook đó. Chỉ chuẩn hóa lỗi rõ ràng, có bằng chứng và để lại change note hiển thị cho BA; chỉ hỏi khi còn mơ hồ trọng yếu.
+- Phân loại native/plugin/JavaScript chỉ là đề xuất cho tới khi LeBa xác minh capability. BA có thể để trống hai cột triển khai và ghi hành vi mong muốn trong cột Business Rules.
+- Workbook BA review là input cuối cho LeBa khi có hand-off; upload hoặc BA xác nhận nội dung không tự cho phép kiểm tra tenant, build hay deploy.
 
-Sample dự án và hình khách hàng không được đóng gói vào template public.
+Ví dụ và nguồn của khách hàng được giữ riêng trong project; không chia sẻ hay đóng gói vào template public.
 
 ## Cài đặt
 

@@ -72,11 +72,19 @@ inputs or stopping because tenant tooling is unavailable:
 
 ## Evidence before a technical build plan
 
-Treat BA Structure and Workflow/Business Rules as separate design inputs.
-Review their accepted versions and reconcile material business gaps before
-implementation; follow `../ke-ba-teo/references/workflow-excel-intake.md` when
-a workbook is still a BA draft. Upload/content acceptance is not build or
-deployment approval. Keep technical capability checks out of the BA form.
+Treat Structure, Workflow, and Permissions as separate design workbooks.
+For Workflow, use the BA-reviewed workbook as the final workflow input to
+LeBa, following `../ke-ba-teo/references/workflow-excel-intake.md` and
+`../ke-document-writer/references/workflow-excel-template.md`. Each workflow
+is on its own sheet with exactly eight specified columns; business rules are
+inline, with no required IDs/codes or separate rules sheet. If an Agent draft
+is present, route it through BA review first. Any correction must be a clear,
+evidence-backed normalization with a visible change note. Native Kintone,
+plugin, and JavaScript classifications are proposals until LeBa verifies the
+actual capability; if the implementation columns are blank, use the BA's
+stated desired behavior. A returned or BA-reviewed workbook is design input,
+not approval for tenant inspection, build, or deployment; those operations
+retain their own scope and approval gates.
 
 LeBa owns the technical implementation plan for a supplied design; PM, BA,
 and SA are not mandatory predecessors. Reading a design is not approval of it.

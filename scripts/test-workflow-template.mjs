@@ -27,7 +27,7 @@ for (let i = 0; i < bytes.readUInt16LE(end + 10); i++) {
 }
 const xml = buffer => buffer.toString().replace(/(<\/?)[A-Za-z_][\w.-]*:/gu, '$1');
 const workbook = xml(entries.get('xl/workbook.xml'));
-assert.deepEqual([...workbook.matchAll(/<sheet\s[^>]*name="([^"]+)"/gu)].map(m => m[1]), ['01_HuongDan', '02_Workflow', '03_BusinessRules']);
+assert.deepEqual([...workbook.matchAll(/<sheet\s[^>]*name="([^"]+)"/gu)].map(m => m[1]), ['01_HuongDan', '02_Workflow']);
 assert(!/state="(?:hidden|veryHidden)"/u.test(workbook));
 let inputSheets = 0;
 for (const [name, content] of entries) {
@@ -37,15 +37,20 @@ for (const [name, content] of entries) {
   assert(!/Ticket|Responsible Person|Device Serial|1518|1515|cybozu\.com|kintone\.com|Repairing|WF-14/u.test(text), `Customer source in ${name}`);
   assert(!/<f(?:\s|>)/u.test(text), 'Unexpected executable formula');
   if (!name.startsWith('xl/worksheets/')) continue;
-  if (text.includes('Trạng thái hiện tại') || text.includes('Tên quy tắc')) {
+  if (text.includes('Status before taking action')) {
     inputSheets++;
+    assert(text.includes('Assignees') && text.includes('Business Rules làm rõ bổ sung'));
+    assert(text.includes('standard function/plugin native') && text.includes('customize bổ sung bằng javascript'));
     for (const match of text.matchAll(/<c\b[^>]*\br="([A-Z]+)(\d+)"[^>]*>([\s\S]*?)<\/c>/gu)) {
       if (+match[2] < 5 || +match[2] > 29) continue;
       assert(!/<v>[^<]+<\/v>|<t(?:\s[^>]*)?>[^<]+<\/t>/u.test(match[3]), `Nonblank BA input ${match[1]}${match[2]}`);
     }
   }
 }
-assert.equal(inputSheets, 2, 'Both input sheets must be checked');
+assert.equal(inputSheets, 1, 'Workflow input sheet must be checked');
+const tables = [...entries].filter(([name]) => /^xl\/tables\/[^/]+\.xml$/u.test(name));
+assert.equal(tables.length, 1, 'One native editable workflow table');
+assert(xml(tables[0][1]).includes('ref="A4:H29"'), 'Eight columns and 25 blank input rows');
 // Installer must carry exact binary bytes, not just mention the asset path.
 const cli = await readFile(path.join(root, 'dist/ke-installer.mjs'), 'utf8');
 const embedded = cli.match(/const embeddedPayload = "([A-Za-z0-9+/=]+)"/u);
@@ -53,4 +58,4 @@ assert(embedded, 'Build installer before testing packaged asset');
 const payload = JSON.parse(gunzipSync(Buffer.from(embedded[1], 'base64')).toString());
 assert.equal(payload.find(record => record.path === asset)?.content, bytes.toString('base64'), 'Installer must preserve exact XLSX bytes');
 assert(!payload.some(record => /TicketSample|ticket-workflow-review|\.build\.json|\/input\/.+\.(?:pdf|html|xlsx)/iu.test(record.path)), 'Customer material must not be packaged');
-console.log('PASS: clean 3-sheet BA template; no customer source, images, macros, formulas or external links; installer asset present.');
+console.log('PASS: clean guide + 8-column workflow template; blank native table; no customer source, images, macros, formulas or external links; installer asset present.');
