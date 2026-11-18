@@ -37,8 +37,12 @@ under `../ke-router/references/browser-evidence.md`.
    reporting/views.
 5. Identify integrations, identity dependencies, failure handling, and data
    migration needs.
-6. Distinguish native Kintone configuration from JavaScript customization and
-   document operational constraints.
+6. Distinguish standard Kintone configuration, Native plug-ins, and custom
+   JavaScript/integrations. When considering plug-ins, read
+   `references/native-plugin-catalog.md` for capabilities, compatibility and
+   source evidence; recheck the selected release before choosing it. Record
+   remaining gaps and test conditions, not just a plugin name. Catalog entries
+   are documented candidates, not installed or runtime-verified capabilities.
 7. Complete every applicable row of the blueprint with requirement/decision
    IDs, owner, status, and acceptance impact. Never hand LeBa an unresolved
    placeholder as an approved design.

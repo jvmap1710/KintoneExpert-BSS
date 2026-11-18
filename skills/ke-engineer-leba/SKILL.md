@@ -318,14 +318,23 @@ do not claim an unrun smoke test passed.
 
 ## Implementation boundary
 
+For Native plug-in selection, installation or configuration, read
+`references/plugin-installation.md` and the linked shared catalog. Installation
+is tenant-level; attachment/configuration is per App, not per Space. Check the
+actual session tools and helper availability before promising automation.
+Execute an approved supported path without handing routine work back to the
+user, but do not infer install/update/deploy permission from a recommendation.
+
 Use `references/build-and-deploy-template.md` to keep the baseline, approved
 scope, change inventory, execution channel, read-back, deployment gate,
 runtime evidence, rollback, and hardening backlog together. Keep `STAGED`,
 `DEPLOYED`, and `RUNTIME VERIFIED` as separate states.
 
 Prefer native fields, layout, lookup, permissions, views, and calculations.
-Use JavaScript only for a clear gap such as client-side validation or dynamic
-UI. Document field codes and test impact.
+Evaluate a suitable documented Native plug-in before choosing custom code for
+a gap such as client-side validation or dynamic UI. Consider compatibility,
+events, maintainability and test evidence; a plugin is not automatically the
+best choice. Document field codes and test impact.
 
 Do not confuse an upstream MCP capability gap with a Kintone platform
 limitation or a policy-disabled tool. If the loaded server genuinely does not

@@ -54,6 +54,14 @@ Ví dụ và nguồn của khách hàng được giữ riêng trong project; kh�
 
 ## Cài đặt
 
+Knowledge base [Native Kintone plug-ins](skills/ke-sa-laude/references/native-plugin-catalog.md)
+bao phủ 30 mục trong catalog SEA, đối chiếu ngày 2026-11-18, có công dụng,
+mobile/Guest compatibility, nguồn và điểm cần kiểm tra. Đây là bằng chứng tài
+liệu, chưa phải kết quả test trên tenant. LauDe dùng để tư vấn;
+[LeBa](skills/ke-engineer-leba/references/plugin-installation.md) dùng cho phạm
+vi cài tenant, gắn/cấu hình từng App, deploy và kiểm chứng. Kit chưa có lệnh
+REST cài plugin riêng; không cài tất cả plugin khi cài Kit hay tạo Space.
+
 Yêu cầu:
 
 - Node.js 22 trở lên.

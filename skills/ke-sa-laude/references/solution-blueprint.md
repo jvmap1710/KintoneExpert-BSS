@@ -27,7 +27,7 @@
 | Access | Role, least-privilege app/record/field permissions, audit need |  |
 | Workflow | Complete statuses, transitions, assignee rules, conditions, notifications |  |
 | Integration | Direction, endpoint, official auth owner, mapping, retry/error handling |  |
-| Customization | Native gap, affected events/devices, dependencies, support owner |  |
+| Customization | Standard vs Native plug-in vs custom code; source/version, remaining gap, events/devices, compatibility, dependencies, support owner and test evidence |  |
 | Operations | Views, reporting, backup/export, monitoring, support ownership |  |
 
 ## Non-functional and hand-off gate

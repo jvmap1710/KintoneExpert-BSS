@@ -102,6 +102,14 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 ## Route requests
 
+Native Kintone plug-in advice routes to LauDe with
+`../ke-sa-laude/references/native-plugin-catalog.md`; an explicit install or
+configuration task routes to LeBa using
+`../ke-engineer-leba/references/plugin-installation.md`.
+A Space is not the plugin installation unit: resolve
+tenant installation and named App attachment separately. Catalog research is
+offline advice and does not authorize tenant access or changes.
+
 A supplied permission workbook with a request to configure routes directly to
 LeBa's `../ke-engineer-leba/references/permission-workbook-intake.md` contract.
 A read/review-only request remains read-only; BA retains business-policy
