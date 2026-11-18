@@ -10,6 +10,9 @@ Support either entry without requiring a PM/SA or tenant connection:
 
 Use the asset, sheet, and exact column contract in
 `../../ke-document-writer/references/workflow-excel-template.md`. Keep one
+canonical BA-review style for blank forms, Agent drafts and BA final versions;
+copy the packaged asset and preserve its formatting rather than rebuilding it.
+Keep one
 workflow per workflow sheet, with multiple workflows allowed in one workbook.
 Keep Structure and Permissions in separate workbooks. Rules belong inline in
 the applicable workflow row; do not create a separate Business Rules sheet.

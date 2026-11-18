@@ -22,6 +22,9 @@ trải nghiệm thật trên trình duyệt và Chrome DevTools MCP cho debug s�
 
 Template Excel trống nằm ở
 [`skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`](skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx).
+Đây là mẫu BA review duy nhất (header cam nâu), dùng chung cho bản trống,
+Agent điền Draft và BA gửi final. Mẫu teal cũ đã được thay thế; khi xuất file,
+copy mẫu này rồi điền, giữ nguyên style và 8 cột.
 Mỗi workflow nằm trên một sheet; một workbook có thể chứa nhiều workflow.
 Mỗi sheet workflow có đúng 8 cột theo thứ tự và ý nghĩa sau; template tiếng
 Việt đang đóng gói dùng các tiêu đề dưới đây. Nếu ngôn ngữ output được

@@ -20,14 +20,14 @@ function set(sheet, address, props) {
 }
 function cell(sheet, c, r, text, header = false) {
   set(sheet, `${col(c)}${r}`, { value: text, numberformat: '@',
-    'font.name': 'Calibri', 'font.size': header ? '12pt' : '11pt',
+    'font.name': 'Calibri', 'font.size': '11pt',
     'font.bold': String(header), 'font.color': header ? 'FFFFFF' : '203B4D',
-    fill: header ? '176D7A' : 'FFFFFF',
+    fill: header ? 'A6511B' : 'FFFFFF',
     'alignment.wrapText': 'true', 'alignment.vertical': 'top' });
 }
 const guide = '01_HuongDan';
 const definitions = [
-  ['02_Workflow', 'WORKFLOW — App: … | Luồng: … | Trạng thái ban đầu: … | Draft — chờ BA review', ['Assignees', 'Status before taking action', 'Conditions to take this action', 'Action Name', 'Status After Action Taken', 'Business Rules làm rõ bổ sung', 'Xử lý kèm theo (config bằng standard function/plugin native của Kintone)', 'Xử lý kèm theo (customize bổ sung bằng javascript)'], [30, 26, 44, 28, 26, 48, 48, 48]],
+  ['02_Workflow', 'WORKFLOW — App: … | Luồng: … | Trạng thái ban đầu: … | Draft — chờ BA review', ['Assignees', 'Status before taking action', 'Conditions to take this action', 'Action Name', 'Status After Action Taken', 'Business Rules làm rõ bổ sung', 'Xử lý kèm theo (config bằng standard function/plugin native của Kintone)', 'Xử lý kèm theo (customize bổ sung bằng javascript)'], [30, 26, 43, 29, 26, 53, 48, 65]],
 ];
 for (const name of [guide, ...definitions.map(d => d[0])]) {
   commands.push({ command: 'add', parent: '/', type: 'sheet', props: { name } });
@@ -45,7 +45,7 @@ const paragraphs = [
   [17, 'Tên trạng thái dùng nhất quán. Không thêm nút cho điểm kết thúc. Quy tắc chung ghi rõ phạm vi Toàn workflow, không tạo chuyển trạng thái giả.'],
   [19, 'BA điền từ đầu hoặc sửa bản Draft do Agent điền. BA gửi bản final trên cùng mẫu để triển khai; các ô chuẩn hóa được đánh dấu để BA review.'],
   [21, 'Phân loại standard/plugin/JavaScript cần được kiểm tra khi triển khai. Gửi file hoặc chốt nội dung không tự cấp quyền build/deploy.'],
-  [23, 'KE-BA-WF-BR • Template 2.0 • Structure và Phân quyền nằm trong các file riêng.'],
+  [23, 'KE-BA-WF-BR • Template 2.1 — mẫu BA review thống nhất • Structure và Phân quyền nằm trong các file riêng.'],
   [25, 'Các ví dụ chỉ minh họa. Không nhập thông tin đăng nhập hoặc dữ liệu cá nhân thật vào mẫu.'],
 ];
 for (const [r, text] of paragraphs) {
@@ -59,7 +59,7 @@ for (const [name, title, headers, widths] of definitions) {
   }
   widths.forEach((w, c) => set(name, `col[${col(c)}]`, { width: String(w) }));
   headers.forEach((h, c) => cell(name, c, 4, h, true));
-  set(name, 'row[4]', { height: '64' });
+  set(name, 'row[4]', { height: '68' });
   for (let r = 5; r <= 29; r++) {
     headers.forEach((_, c) => cell(name, c, r, ''));
     set(name, `row[${r}]`, { height: '42' });

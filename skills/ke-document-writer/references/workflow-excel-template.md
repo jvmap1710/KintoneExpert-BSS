@@ -5,6 +5,15 @@ It is generated independently of customer workbooks. Never put customer
 examples, diagrams, comments, hidden sheets, or customer data in this shared
 asset.
 
+This is the single canonical BA-review template, shared by blank forms,
+Agent-filled drafts, and BA final handoffs. The former teal variant is retired.
+Copy this asset before filling it; do not rebuild a differently styled workbook
+from scratch. Preserve its eight-column layout, brown-orange headers (`A6511B`),
+white header text, Calibri font, wrapping, filters and frozen panes. Expand row
+heights for filled content and duplicate the workflow sheet for additional
+workflows. Change the style only if the user explicitly requests it. Customer
+sample rows and diagrams are not part of the reusable blank template.
+
 Copy the blank asset to a new versioned path in the selected project's
 `output/`; never edit the shipped asset or silently overwrite a prior or
 BA-returned version. Keep Structure and Permissions in separate workbooks.

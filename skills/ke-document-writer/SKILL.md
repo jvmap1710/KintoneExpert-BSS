@@ -50,6 +50,9 @@ project identity/objective before creating its workspace.
 
 For this BA intake deliverable, use
 `references/workflow-excel-template.md` and the packaged blank XLSX asset.
+Use this single BA-review template for blank forms and filled drafts alike;
+copy it and preserve its brown-orange style instead of generating a separate
+teal or otherwise redesigned template.
 Keep one workflow per sheet, allow multiple workflows in one workbook, and
 keep business rules inline without requiring IDs/codes or a separate rules
 sheet. Keep Structure and Permissions in separate workbooks. The Agent creates
