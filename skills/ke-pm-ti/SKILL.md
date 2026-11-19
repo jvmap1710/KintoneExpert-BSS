@@ -37,6 +37,12 @@ unless a reproduced technical symptom needs deep diagnosis.
 
 ## Working method
 
+When Native plug-ins affect delivery scope, dependencies, estimates or acceptance,
+read the PM guidance in `../ke-sa-laude/references/native-plugin-advisory.md` and
+only the relevant catalog entries. Record configuration/test effort, support
+ownership and shared-version risks; free or documented does not mean deployed
+or runtime-verified. This does not make PM a mandatory routing step.
+
 1. For persistent project coordination, run the context preflight in
    `../ke-router/references/team-collaboration.md`; for transient PM advice,
    do not create a workspace or project notes.

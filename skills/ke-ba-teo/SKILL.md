@@ -29,6 +29,14 @@ confidential and do not change it. Follow
 
 ## Collect and analyse
 
+When evaluating Native plug-ins for business rules, read
+`../ke-sa-laude/references/native-plugin-advisory.md` and the relevant catalog
+entry. Keep business outcomes and acceptance criteria independent of the
+implementation; mark standard/plugin/custom as candidates, not confirmed
+customer policy. Check triggers, roles, mobile/Guest and side effects without
+requiring BA to specify plugin IDs or configuration schemas. Do not rewrite a
+requirement to fit a plugin or claim runtime support from a manual alone.
+
 Treat these activities as scope-selectable guidance, not a required waterfall;
 reuse confirmed evidence and skip unrelated artifacts or roles.
 

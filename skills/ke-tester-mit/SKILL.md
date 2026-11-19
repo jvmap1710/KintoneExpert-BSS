@@ -21,6 +21,13 @@ separate completion and approval gate below.
 
 ## Test method
 
+For Native plug-in test planning, read
+`../ke-sa-laude/references/native-plugin-advisory.md` and the selected plugin's
+section in `../ke-engineer-leba/references/native-plugin-configuration.md`.
+Use documented triggers, limits, roles, device/Guest support and cross-App or
+bulk effects to design scoped cases. Those suggested cases are not executed
+evidence; retain the existing test-data, settings and deployment boundaries.
+
 1. For persistent project work, run the context preflight in
    `../ke-router/references/team-collaboration.md`. For an ad-hoc offline
    request, do not create project state.

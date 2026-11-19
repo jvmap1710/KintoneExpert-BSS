@@ -102,13 +102,19 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 ## Route requests
 
-Native Kintone plug-in advice routes to LauDe with
+Native Kintone plug-in solution-selection advice routes to LauDe with
 `../ke-sa-laude/references/native-plugin-catalog.md`; an explicit install or
 configuration task routes to LeBa using
 `../ke-engineer-leba/references/plugin-installation.md`.
 A Space is not the plugin installation unit: resolve
 tenant installation and named App attachment separately. Catalog research is
 offline advice and does not authorize tenant access or changes.
+
+PM planning, BA requirements and Tester cases involving plugins stay with their
+requested role and use `../ke-sa-laude/references/native-plugin-advisory.md`.
+Sharing this KB does not force an SA hand-off or a PM-led sequence. Read the
+relevant configuration entry only when technical details affect the task;
+catalog/manual support is not runtime evidence.
 
 A supplied permission workbook with a request to configure routes directly to
 LeBa's `../ke-engineer-leba/references/permission-workbook-intake.md` contract.

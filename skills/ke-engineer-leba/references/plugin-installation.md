@@ -4,6 +4,13 @@ Source review: 2026-11-18. Read the relevant entries in the
 [native plugin catalog](../../ke-sa-laude/references/native-plugin-catalog.md)
 before proposing a plugin. Catalog documentation is not runtime verification.
 
+For the selected plugin, read its entry in
+[manual-based configuration](native-plugin-configuration.md), including the
+manual version/page references and limitations. Use
+[shared advice](../../ke-sa-laude/references/native-plugin-advisory.md) when
+requirements still need a standard/plugin/custom comparison. Read only the
+relevant entries; these references do not authorize installation or record writes.
+
 ## Scope and current capability
 
 A plugin is installed in the **Kintone tenant**, then added/configured for
@@ -45,6 +52,48 @@ REST configuration endpoint. Config keys are plugin-specific; do not guess them
 or inject undocumented calls. Prefer the supplied settings interface.
 
 ## Execution contract
+
+### Approved-plan download and installation
+
+When an approved implementation plan explicitly includes named Native plugins,
+the target tenant/Apps, installation or reuse, configuration scope and expected
+data effects, LeBa owns the complete scoped workflow: obtain the official
+package, verify it, install/reuse, attach, configure and read back. Do not ask
+the user to download/install manually when the approved tools can do it. A
+candidate in a draft plan is not installation approval; clarify only missing
+material scope before proceeding.
+
+For gated downloads, ask the current Kit user for the information required by
+the actual official form (for example name, work email, company, Kintone
+subdomain and customer/trial status). Do not use the Kit author's personal
+details, a sample profile or information from another user/project. Ask only
+for missing values if this user has already supplied and confirmed them for
+the current download scope. Show the recipient, purpose and selected plugins,
+and obtain consent to submit the details and accept required terms/privacy
+conditions before submitting. Public downloads without a form need no profile.
+Do not request passwords or tokens for a download form. Never put personal
+form details in shared skills, templates, knowledge bases, reports or Git.
+Use them in the current session without creating a saved profile by default;
+persist only at the user's explicit request in validated project-private,
+ignored storage. Do not select optional marketing subscriptions. New or
+materially changed terms, payment, login or CAPTCHA requirements need the
+appropriate user action; do not bypass them.
+
+Use the official product page and visible Gallery/download links. Record
+release/version, package type, source and hash; a manual PDF is not the plugin
+ZIP. Inspect the package without executing its code locally. Preserve the
+original ZIP for Kintone upload and keep binaries outside the shared Kit.
+Do not infer a package URL or plugin ID from the catalog name. If a suitable
+plugin is installed, reuse it; a shared-plugin update needs impact review and
+explicit update approval, not silent replacement. Download consent does not
+authorize tenant installation, nor does an installation authorize sample data.
+
+At implementation preflight check all required capabilities together (download,
+tenant install/read-back, App attachment/settings, deploy/status and relevant
+browser verification). After read-back, apply the existing pending-change
+summary/deployment approval gate; report configured, deployed and runtime-tested
+states separately. On a concrete tool or vendor blocker, finish safe preparation
+and ask for only the action needed to unblock; do not hand back the entire task.
 
 1. **Inspect within scope.** Resolve project, tenant/environment, App IDs and
    normal/Guest Space. Check installed plugin ID/version, App associations,

@@ -324,6 +324,9 @@ is tenant-level; attachment/configuration is per App, not per Space. Check the
 actual session tools and helper availability before promising automation.
 Execute an approved supported path without handing routine work back to the
 user, but do not infer install/update/deploy permission from a recommendation.
+For a registration-gated download, ask the current user for the form's required
+information and submission/terms consent; never reuse the Kit author's personal
+profile. Keep those details out of shared skills, knowledge bases and Git.
 
 Use `references/build-and-deploy-template.md` to keep the baseline, approved
 scope, change inventory, execution channel, read-back, deployment gate,

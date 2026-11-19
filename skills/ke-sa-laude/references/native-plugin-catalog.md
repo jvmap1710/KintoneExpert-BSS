@@ -9,6 +9,22 @@ Kiểm tra lại điều khoản tải/sử dụng và phiên bản khi lựa ch
 
 ## Cách sử dụng và mức bằng chứng
 
+Điểm vào theo nhiệm vụ: [tư vấn chung PM/BA/SA](native-plugin-advisory.md);
+[cấu hình theo từng manual cho LeBa và test planning cho Mít](../../ke-engineer-leba/references/native-plugin-configuration.md).
+Đã thu thập manual cho 30 plugin và một migration guide. Thu thập file không
+đồng nghĩa đã test; xem mức review và version tại từng mục cấu hình.
+
+**Khác biệt nguồn cần giữ lại:** trang Media Player trong snapshot catalog ghi
+Guest: No, nhưng manual tải kèm Gallery v2.7.0, trang 16 ghi Guest: Yes. Dùng
+manual phù hợp version khi thiết kế và kiểm thử Guest trước khi cam kết;
+không coi hàng snapshot bên dưới là kết luận duy nhất cho mọi phiên bản.
+
+Hướng dẫn sâu đầu tiên: [Advanced Lookup](native-plugin-advanced-lookup.md)
+(July 2026, 20 trang); các mục khác tra cứu trong cấu hình theo manual ở trên.
+Manual Advanced Lookup
+xác nhận mobile **không hỗ trợ Partial Search/Smart Lookup**, dù trang giới thiệu
+ghi Mobile: Yes.
+
 - **Documented**: đã đọc trang chi tiết chính thức cho cả 30 mục; tính năng và
   tương thích dưới đây là tuyên bố của nguồn. **Chưa cài, chưa test runtime**.
 - Không tuyên bố đã đọc manual đầy đủ, xem hết video, xác minh ZIP, phiên bản

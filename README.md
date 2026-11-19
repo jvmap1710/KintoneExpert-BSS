@@ -62,6 +62,11 @@ liệu, chưa phải kết quả test trên tenant. LauDe dùng để tư vấn;
 vi cài tenant, gắn/cấu hình từng App, deploy và kiểm chứng. Kit chưa có lệnh
 REST cài plugin riêng; không cài tất cả plugin khi cài Kit hay tạo Space.
 
+KB được đọc theo nhiệm vụ: [tư vấn chung cho PM/BA/SA](skills/ke-sa-laude/references/native-plugin-advisory.md)
+và [cấu hình theo manual cho LeBa, test planning cho Mít](skills/ke-engineer-leba/references/native-plugin-configuration.md).
+Chỉ đọc mục plugin liên quan, không ép đi qua mọi role. Manual hỗ trợ một tính
+năng không đồng nghĩa tính năng đã được kiểm thử trên App của khách hàng.
+
 Yêu cầu:
 
 - Node.js 22 trở lên.

@@ -39,6 +39,7 @@ under `../ke-router/references/browser-evidence.md`.
    migration needs.
 6. Distinguish standard Kintone configuration, Native plug-ins, and custom
    JavaScript/integrations. When considering plug-ins, read
+   `references/native-plugin-advisory.md` for requirement trade-offs and
    `references/native-plugin-catalog.md` for capabilities, compatibility and
    source evidence; recheck the selected release before choosing it. Record
    remaining gaps and test conditions, not just a plugin name. Catalog entries
