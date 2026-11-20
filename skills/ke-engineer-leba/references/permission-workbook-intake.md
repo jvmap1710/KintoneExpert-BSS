@@ -2,6 +2,36 @@
 
 ## Scope and ownership
 
+For a new BA permission workbook, use the canonical
+`../../ke-document-writer/assets/KE-BA-Permissions-Template-vi.xlsx` with App,
+Record and Field levels. Its small labelled synthetic examples illustrate
+entry conventions only, not a default access policy. Remove example values
+for blank intake and require BA-confirmed project rules before configuration.
+Keep source customer workbooks unchanged and use versioned working copies.
+
+The canonical workbook also contains two identity-intake sheets: Groups and
+Users. Groups has Group Code, Group Name, Parent Group Code, Description,
+Requested Operation and Note. Users has User Code / Login Name, Display Name,
+Email, Group Codes, Requested Operation and Note. One row defines one identity;
+semicolon-separated Group Codes list a user's explicit memberships. Empty
+parent means a root group. Create/Reuse records intent, not executed changes.
+Never collect passwords/tokens in these sheets.
+
+Resolve parent references and membership codes against Groups (or explicitly
+confirmed existing tenant identities). Report duplicate codes, missing parents,
+cycles and ambiguous principals before dependent configuration. Preserve user
+codes/login names exactly; names alone are not reliable technical identities.
+Parent/subgroup expresses the BA's intended hierarchy: check the chosen
+platform entity and its supported hierarchy before implementation. Do not infer
+nested-group support, inherited membership or permissions, and do not silently
+replace a Group with a Department. Explain a supported mapping for BA review
+when the requested hierarchy cannot be represented directly.
+
+Account/group creation and membership changes are tenant-level operations with
+their own explicit scope; App permission approval does not imply that authority.
+Read existing identities first and propose the concrete create/reuse/membership
+delta. Do not invite, deactivate or delete users from a template entry alone.
+
 BA defines and confirms business access. LeBa reads that definition, resolves
 technical identities, identifies material gaps, and configures only the approved
 targets. A review request is offline/read-only unless the user also authorizes

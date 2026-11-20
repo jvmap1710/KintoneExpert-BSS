@@ -18,9 +18,26 @@ KE hỗ trợ Demo/PoC, triển khai dự án khách hàng, kiểm tra app hiệ
 vấn giải pháp. Kit dùng Kintone MCP cho cấu hình/dữ liệu, Playwright MCP cho
 trải nghiệm thật trên trình duyệt và Chrome DevTools MCP cho debug sâu.
 
-## Mẫu BA: Workflow và Business Rules
+## Ba mẫu Excel chuẩn cho BA
 
-Template Excel trống nằm ở
+Structure dùng mẫu có ví dụ giả lập
+[Database Design v3](skills/ke-document-writer/assets/KE-BA-Structure-Template-v3.xlsx):
+6 sheet Danh sách app, Database, Plug-in, Views, Customization, Value List.
+Database gom các App và có cột Customization; sheet Customization là checklist
+tổng hợp, gồm cả business rule liên App. Không cần một sheet cho mỗi App.
+Nhắn “Cho tôi mẫu Structure v3” để tạo bản làm việc trong project.
+Workflow/Business Rules vẫn dùng workbook riêng bên dưới. Permissions hiện có
+[hướng dẫn đọc/config ma trận BA](skills/ke-engineer-leba/references/permission-workbook-intake.md),
+và [template Permissions](skills/ke-document-writer/assets/KE-BA-Permissions-Template-vi.xlsx).
+Cả ba workbook là mẫu chuẩn; ví dụ giả lập chỉ hướng dẫn cách điền, không phải
+nghiệp vụ/quyền mặc định. Tạo bản sao trong project trước khi điền; xóa sample
+khi cần mẫu trống. BA xác nhận bản điền thực tế trước khi giao cấu hình.
+Permissions gồm 5 sheet: Groups, Users, Apps, Records, Fields. Groups khai báo
+nhóm và mã nhóm cha; Users khai báo user cùng Group Codes (nhiều nhóm phân cách
+bằng dấu `;`). Quan hệ nhóm cha/con cần đối chiếu khả năng tenant khi triển khai;
+không tự suy ra kế thừa quyền. Không điền mật khẩu vào workbook.
+
+Template Workflow gồm sheet nhập trống và sample giả lập nằm ở
 [`skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`](skills/ke-document-writer/assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx).
 Đây là mẫu BA review duy nhất (header cam nâu), dùng chung cho bản trống,
 Agent điền Draft và BA gửi final. Mẫu teal cũ đã được thay thế; khi xuất file,

@@ -70,6 +70,14 @@ differences. Preserve out-of-scope entries. Read staged/released ACLs back and
 separate configuration evidence from permitted role-based allow/deny checks;
 do not call admin-only inspection proof of restricted-user access.
 
+Layout review: record related fields placed side by side, useful widths,
+business reading order, target web viewport, and any in-scope narrow-screen
+check. Avoid clipped labels, cramped inputs and horizontal overflow. For each
+in-scope `GROUP`, verify `openGroup: true` (Show fields in this group); record
+the design file/section for every explicitly requested collapsed exception.
+Keep field-settings read-back and layout read-back separate; verify the
+released appearance with Playwright or mark UI verification blocked/not run.
+
 For each newly created App, record the chosen icon, rationale/branding match,
 staged read-back, and released evidence (or explicit blocker). Reused App icons
 are unchanged unless approved. Stage icons before the first deploy when possible.

@@ -14,6 +14,13 @@ project identity/objective before creating its workspace.
 
 ## Document workflow
 
+The reusable BA Excel library contains exactly three canonical workbooks:
+Structure v3, Workflow with inline Business Rules, and Permissions. Keep any
+synthetic teaching samples inside those files, not in competing template
+variants. Existing project inputs/outputs are source/history, not library
+assets; never delete them as template cleanup. This restriction does not remove
+Markdown guidance for other document types or prevent project deliverables.
+
 1. Confirm the project slug, document type, owner, status, and source inputs.
 2. Use facts confirmed in the conversation, the active project's confirmed
    baselines and artifact index, and approved sanitized evidence relevant to
@@ -46,10 +53,20 @@ project identity/objective before creating its workspace.
    `references/office-output.md` and use the pinned OfficeCLI runtime. Validate,
    render, visually inspect, and read content back before delivery.
 
+## Structure Excel
+
+For a Structure/Database Design XLSX (not a workflow workbook), use
+`../ke-ba-teo/references/database-design-v3.md` as the canonical creation
+contract. Create the six-sheet consolidated layout with Database.Customization
+and the separate Customization checklist, starting from the packaged
+`assets/KE-BA-Structure-Template-v3.xlsx`. Do not reuse the workflow asset or
+split every App into its own sheet. Never package customer-filled source data.
+
 ## Workflow and Business Rules Excel
 
 For this BA intake deliverable, use
-`references/workflow-excel-template.md` and the packaged blank XLSX asset.
+`references/workflow-excel-template.md` and its packaged XLSX asset with blank
+input and synthetic example sheets.
 Use this single BA-review template for blank forms and filled drafts alike;
 copy it and preserve its brown-orange style instead of generating a separate
 teal or otherwise redesigned template.
@@ -60,6 +77,16 @@ a Draft for BA Review and the BA edits that same workbook; preserve versions
 and make evidence-backed normalizations visible. Customer examples remain
 private and are never shared template assets. A BA-reviewed workbook does not
 authorize tenant inspection, build, or deployment.
+
+## Permissions Excel
+
+Use `assets/KE-BA-Permissions-Template-vi.xlsx` for new permission workbooks and
+`../ke-engineer-leba/references/permission-workbook-intake.md` for interpretation.
+Preserve App/Record/Field separation, typed recipients, protected fields and
+O/X legend. Include separate Groups (group/parent declarations) and Users
+(identity and explicit group memberships) sheets in the same workbook.
+Synthetic examples are teaching rows, not approved permissions.
+Use a versioned copy and clear examples for blank intake; do not invent policy.
 
 ## HTML standard
 

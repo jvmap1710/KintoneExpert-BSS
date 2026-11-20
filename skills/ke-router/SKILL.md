@@ -102,6 +102,12 @@ becomes a `demo` workspace such as `projects/abcd-ot-poc/`, display name
 
 ## Route requests
 
+Structure/Database Design template creation or BA review uses the BA's
+`../ke-ba-teo/references/database-design-v3.md` and document writer for XLSX.
+An explicit build from an accepted workbook routes directly to LeBa with that
+same reading contract; do not force another BA round. This consolidated
+Structure format does not replace the separate Workflow/Permissions formats.
+
 Native Kintone plug-in solution-selection advice routes to LauDe with
 `../ke-sa-laude/references/native-plugin-catalog.md`; an explicit install or
 configuration task routes to LeBa using

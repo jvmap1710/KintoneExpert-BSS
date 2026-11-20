@@ -280,6 +280,39 @@ the active session and make at most one corrected call. For an unavailable
 tool, timeout, or repeated failure, return the exact error and the preflight
 commands; do not continue investigating runtime internals.
 
+## Web form layout and expanded field groups
+
+For new builds and authorized form-layout changes, use horizontal space where
+it improves readability and reduces unnecessary vertical scrolling. Place
+related short fields on the same native form row with sensible widths; keep
+the business reading order and section hierarchy. Give long text, rich text,
+attachments, and wide tables enough room. Do not impose a fixed column count,
+squeeze labels/inputs, or trade vertical scrolling for horizontal overflow.
+Respect explicit design requirements and check the intended web viewport;
+check narrower/mobile views when they are in scope. Prefer native layout,
+not custom CSS/JavaScript merely to compact the form. Do not redesign reused
+Apps outside the approved scope.
+
+For every Field Group (`GROUP`) created or configured in scope, explicitly
+enable **Show fields in this group** so it is expanded by default. For field
+settings, this is `openGroup: true`; verify the active tool schema rather
+than guessing parameters. Collapse a group only when the supplied design file
+explicitly documents that exception; cite the file/section and affected group.
+No note means expanded, including groups containing less frequently used
+fields. Collapsed is not hidden or access-controlled: preserve permissions and
+any documented conditional visibility separately. Do not confuse Field Group
+with Group Selection (`GROUP_SELECT`).
+See the official [Update Form Fields](https://kintone.dev/en/docs/kintone/rest-api/apps/form/update-form-fields/)
+reference for `openGroup`; this mapping does not authorize switching channels.
+
+Read back both layout rows/widths and GROUP field settings before deployment;
+`openGroup` belongs to field settings, not a guessed layout property. Include
+these choices and exceptions in the pending-change summary. After approved
+deployment, use Playwright to check the affected form's initial group state,
+label readability and scroll/overflow at the agreed viewport. Do not claim UI
+PASS from configuration alone, and do not save synthetic records without the
+separate sample/test-data authorization below.
+
 ## New-App icons and optional sample records
 
 Include a suitable icon for each newly created App in the proposed build
@@ -317,6 +350,12 @@ whether records were not requested, declined, or created under approval, and
 do not claim an unrun smoke test passed.
 
 ## Implementation boundary
+
+For supplied Structure/Database Design workbooks, read
+`../ke-ba-teo/references/database-design-v3.md` before interpreting them.
+Group Database rows by Space/App, parse each plugin block independently and
+reconcile field Customization with the cross-App Customization checklist.
+Preserve revision/merge semantics; a reviewed workbook is not write approval.
 
 For Native plug-in selection, installation or configuration, read
 `references/plugin-installation.md` and the linked shared catalog. Installation

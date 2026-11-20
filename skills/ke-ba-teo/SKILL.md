@@ -29,6 +29,11 @@ confidential and do not change it. Follow
 
 ## Collect and analyse
 
+For Structure/Database Design workbook intake or creation, follow
+`references/database-design-v3.md`. New workbooks consolidate Apps in Database
+and use the six-sheet v3 structure, not one sheet per App. Read field-level
+Customization together with the project Customization checklist.
+
 When evaluating Native plug-ins for business rules, read
 `../ke-sa-laude/references/native-plugin-advisory.md` and the relevant catalog
 entry. Keep business outcomes and acceptance criteria independent of the

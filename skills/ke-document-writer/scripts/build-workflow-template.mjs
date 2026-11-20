@@ -26,8 +26,16 @@ function cell(sheet, c, r, text, header = false) {
     'alignment.wrapText': 'true', 'alignment.vertical': 'top' });
 }
 const guide = '01_HuongDan';
+const headers = ['Assignees', 'Status before taking action', 'Conditions to take this action', 'Action Name', 'Status After Action Taken', 'Business Rules làm rõ bổ sung', 'Xử lý kèm theo (config bằng standard function/plugin native của Kintone)', 'Xử lý kèm theo (customize bổ sung bằng javascript)'];
+const widths = [30, 26, 43, 29, 26, 53, 48, 65];
 const definitions = [
-  ['02_Workflow', 'WORKFLOW — App: … | Luồng: … | Trạng thái ban đầu: … | Draft — chờ BA review', ['Assignees', 'Status before taking action', 'Conditions to take this action', 'Action Name', 'Status After Action Taken', 'Business Rules làm rõ bổ sung', 'Xử lý kèm theo (config bằng standard function/plugin native của Kintone)', 'Xử lý kèm theo (customize bổ sung bằng javascript)'], [30, 26, 43, 29, 26, 53, 48, 65]],
+  ['02_Workflow', 'WORKFLOW — App: … | Luồng: … | Trạng thái ban đầu: … | Draft — chờ BA review', 'Mỗi dòng một chuyển bước • Rules cùng dòng • Tên nghiệp vụ, không cần mã • Chưa rõ: ghi Chưa chốt', [], 'Workflow', 29],
+  ['03_ViDu_GiaLap', 'VÍ DỤ GIẢ LẬP — REQUEST | Chỉ minh họa, không phải baseline nghiệp vụ', 'App: Request mẫu | Luồng: Xử lý Request | Trạng thái ban đầu: Nháp | Chỉ là dữ liệu minh họa', [
+    ['Người yêu cầu', 'Nháp', 'Người yêu cầu đã điền đủ thông tin cần thiết.', 'Gửi yêu cầu', 'Chờ duyệt', 'Gửi yêu cầu bắt đầu quy trình xem xét trong ví dụ này.'],
+    ['Người duyệt', 'Chờ duyệt', 'Người duyệt bắt đầu kiểm tra yêu cầu.', 'Bắt đầu xem xét', 'Đang xem xét', 'Trạng thái riêng giúp nhận biết yêu cầu đang được xử lý.'],
+    ['Người duyệt', 'Đang xem xét', 'Yêu cầu đáp ứng tiêu chí xem xét.', 'Phê duyệt', 'Đã duyệt', 'Đã duyệt là trạng thái kết thúc trong ví dụ.'],
+    ['Người duyệt', 'Đang xem xét', 'Cần người yêu cầu bổ sung hoặc làm rõ thông tin.', 'Trả lại để bổ sung', 'Nháp', 'Người yêu cầu có thể sửa rồi gửi lại.'],
+  ], 'WorkflowExample', 8],
 ];
 for (const name of [guide, ...definitions.map(d => d[0])]) {
   commands.push({ command: 'add', parent: '/', type: 'sheet', props: { name } });
@@ -52,23 +60,23 @@ for (const [r, text] of paragraphs) {
   set(guide, `A${r}:F${r}`, { merge: 'true' }); cell(guide, 0, r, text, r === 1);
   set(guide, `row[${r}]`, { height: r === 1 ? '32' : '40' });
 }
-for (const [name, title, headers, widths] of definitions) {
-  for (const [r, text] of [[1, title], [2, 'Mỗi dòng một chuyển bước • Rules cùng dòng • Tên nghiệp vụ, không cần mã • Chưa rõ: ghi Chưa chốt']]) {
+for (const [name, title, subtitle, rows, tableName, lastRow] of definitions) {
+  for (const [r, text] of [[1, title], [2, subtitle]]) {
     set(name, `A${r}:${col(headers.length - 1)}${r}`, { merge: 'true' });
     cell(name, 0, r, text, r === 1); set(name, `row[${r}]`, { height: '32' });
   }
   widths.forEach((w, c) => set(name, `col[${col(c)}]`, { width: String(w) }));
   headers.forEach((h, c) => cell(name, c, 4, h, true));
   set(name, 'row[4]', { height: '68' });
-  for (let r = 5; r <= 29; r++) {
-    headers.forEach((_, c) => cell(name, c, r, ''));
-    set(name, `row[${r}]`, { height: '42' });
+  for (let r = 5; r <= lastRow; r++) {
+    headers.forEach((_, c) => cell(name, c, r, rows[r - 5]?.[c] ?? ''));
+    set(name, `row[${r}]`, { height: name === '02_Workflow' ? '42' : '58' });
   }
   commands.push({ command: 'set', path: `/${name}`, props: {
     freeze: 'C5', zoom: '80', printTitleRows: '1:4',
   } });
   commands.push({ command: 'add', parent: `/${name}`, type: 'table', props: {
-    name: 'Workflow', ref: 'A4:H29', style: 'light1', showRowStripes: 'true',
+    name: tableName, ref: `A4:H${lastRow}`, style: 'light1', showRowStripes: 'true',
   } });
 }
 commands.push({ command: 'remove', path: '/Sheet1' });

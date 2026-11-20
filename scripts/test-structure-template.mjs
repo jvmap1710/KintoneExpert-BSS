@@ -1,0 +1,2 @@
+import {check} from './test-design-template-common.mjs';
+await check('KE-BA-Structure-Template-v3.xlsx',['Danh sách app','Database','Plug-in','Views','Customization','Value List'],['Field Code','Customization Description','Data Transfer Plug-in','Conditional Display Plug-in','Table Numbering Plug-in','Advanced Lookup Plug-in','Table Lookup Plug-in','Related Records Auto-Calculation Plug-in','Calculate and Fill Plug-in','Conditional Table Summation Plug-in','Process Management History Plug-in']);

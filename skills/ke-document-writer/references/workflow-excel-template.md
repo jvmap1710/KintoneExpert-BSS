@@ -1,6 +1,9 @@
 # BA Workflow and Business Rules workbook
 
-The packaged blank asset is `assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`.
+The packaged asset is `assets/KE-BA-Workflow-BusinessRules-Template-vi.xlsx`.
+It includes a blank input sheet and a clearly labelled synthetic sample sheet.
+Use the sample to understand filling conventions, not as customer requirements;
+omit it from a customer final baseline unless explicitly retained as guidance.
 It is generated independently of customer workbooks. Never put customer
 examples, diagrams, comments, hidden sheets, or customer data in this shared
 asset.
@@ -12,7 +15,8 @@ from scratch. Preserve its eight-column layout, brown-orange headers (`A6511B`),
 white header text, Calibri font, wrapping, filters and frozen panes. Expand row
 heights for filled content and duplicate the workflow sheet for additional
 workflows. Change the style only if the user explicitly requests it. Customer
-sample rows and diagrams are not part of the reusable blank template.
+sample rows and diagrams are not part of the reusable template; only explicitly
+synthetic teaching examples may be packaged.
 
 Copy the blank asset to a new versioned path in the selected project's
 `output/`; never edit the shipped asset or silently overwrite a prior or

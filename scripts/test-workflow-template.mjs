@@ -27,9 +27,16 @@ for (let i = 0; i < bytes.readUInt16LE(end + 10); i++) {
 }
 const xml = buffer => buffer.toString().replace(/(<\/?)[A-Za-z_][\w.-]*:/gu, '$1');
 const workbook = xml(entries.get('xl/workbook.xml'));
-assert.deepEqual([...workbook.matchAll(/<sheet\s[^>]*name="([^"]+)"/gu)].map(m => m[1]), ['01_HuongDan', '02_Workflow']);
+assert.deepEqual([...workbook.matchAll(/<sheet\s[^>]*name="([^"]+)"/gu)].map(m => m[1]), ['01_HuongDan', '02_Workflow', '03_ViDu_GiaLap']);
 assert(!/state="(?:hidden|veryHidden)"/u.test(workbook));
-let inputSheets = 0;
+let workflowSheets = 0;
+let blankSheets = 0;
+let sampleSheets = 0;
+const orderedHeaders = [
+  'Assignees', 'Status before taking action', 'Conditions to take this action', 'Action Name',
+  'Status After Action Taken', 'Business Rules làm rõ bổ sung',
+  'standard function/plugin native', 'customize bổ sung bằng javascript',
+];
 for (const [name, content] of entries) {
   assert(!/media\/|externalLinks\/|comments|vbaProject/iu.test(name), `Unexpected embedded content: ${name}`);
   if (!name.endsWith('.xml')) continue;
@@ -38,19 +45,44 @@ for (const [name, content] of entries) {
   assert(!/<f(?:\s|>)/u.test(text), 'Unexpected executable formula');
   if (!name.startsWith('xl/worksheets/')) continue;
   if (text.includes('Status before taking action')) {
-    inputSheets++;
+    workflowSheets++;
     assert(text.includes('Assignees') && text.includes('Business Rules làm rõ bổ sung'));
     assert(text.includes('standard function/plugin native') && text.includes('customize bổ sung bằng javascript'));
-    for (const match of text.matchAll(/<c\b[^>]*\br="([A-Z]+)(\d+)"[^>]*>([\s\S]*?)<\/c>/gu)) {
-      if (+match[2] < 5 || +match[2] > 29) continue;
-      assert(!/<v>[^<]+<\/v>|<t(?:\s[^>]*)?>[^<]+<\/t>/u.test(match[3]), `Nonblank BA input ${match[1]}${match[2]}`);
+    let lastHeaderIndex = -1;
+    for (const header of orderedHeaders) {
+      const index = text.indexOf(header);
+      assert(index > lastHeaderIndex, `Workflow header order changed in ${name}: ${header}`);
+      lastHeaderIndex = index;
+    }
+    if (text.includes('Draft — chờ BA review')) {
+      blankSheets++;
+      for (const match of text.matchAll(/<c\b[^>]*\br="([A-Z]+)(\d+)"[^>]*>([\s\S]*?)<\/c>/gu)) {
+        if (+match[2] < 5 || +match[2] > 29) continue;
+        assert(!/<v>[^<]+<\/v>|<t(?:\s[^>]*)?>[^<]+<\/t>/u.test(match[3]), `Nonblank BA input ${match[1]}${match[2]}`);
+      }
+    } else if (text.includes('Chỉ là dữ liệu minh họa')) {
+      sampleSheets++;
+      for (const example of ['Người yêu cầu', 'Người duyệt', 'Gửi yêu cầu', 'Bắt đầu xem xét', 'Phê duyệt', 'Trả lại để bổ sung']) {
+        assert(text.includes(example), `Missing synthetic workflow example content: ${example}`);
+      }
+      for (let row = 5; row <= 8; row++) {
+        for (const col of ['G', 'H']) {
+          const match = text.match(new RegExp(`<c\\b[^>]*\\br="${col}${row}"[^>]*>([\\s\\S]*?)<\\/c>`, 'u'));
+          assert(match && !/<v>[^<]+<\/v>|<t(?:\s[^>]*)?>[^<]+<\/t>/u.test(match[1]), `Example implementation cell ${col}${row} must stay blank`);
+        }
+      }
+    } else {
+      assert.fail(`Unrecognized workflow sheet in ${name}`);
     }
   }
 }
-assert.equal(inputSheets, 1, 'Workflow input sheet must be checked');
+assert.equal(workflowSheets, 2, 'Exactly one blank workflow input and one synthetic example are expected');
+assert.equal(blankSheets, 1, 'The 25-row BA input sheet must remain blank');
+assert.equal(sampleSheets, 1, 'One clearly labeled synthetic sample sheet is expected');
 const tables = [...entries].filter(([name]) => /^xl\/tables\/[^/]+\.xml$/u.test(name));
-assert.equal(tables.length, 1, 'One native editable workflow table');
-assert(xml(tables[0][1]).includes('ref="A4:H29"'), 'Eight columns and 25 blank input rows');
+assert.equal(tables.length, 2, 'One native table per blank/sample workflow sheet');
+const tableRefs = tables.map(([, content]) => xml(content).match(/ref="([^"]+)"/u)?.[1]).sort();
+assert.deepEqual(tableRefs, ['A4:H29', 'A4:H8'], 'Blank input remains 25 rows and sample has 4 transitions');
 // Installer must carry exact binary bytes, not just mention the asset path.
 const cli = await readFile(path.join(root, 'dist/ke-installer.mjs'), 'utf8');
 const embedded = cli.match(/const embeddedPayload = "([A-Za-z0-9+/=]+)"/u);
@@ -58,4 +90,4 @@ assert(embedded, 'Build installer before testing packaged asset');
 const payload = JSON.parse(gunzipSync(Buffer.from(embedded[1], 'base64')).toString());
 assert.equal(payload.find(record => record.path === asset)?.content, bytes.toString('base64'), 'Installer must preserve exact XLSX bytes');
 assert(!payload.some(record => /TicketSample|ticket-workflow-review|\.build\.json|\/input\/.+\.(?:pdf|html|xlsx)/iu.test(record.path)), 'Customer material must not be packaged');
-console.log('PASS: clean guide + 8-column workflow template; blank native table; no customer source, images, macros, formulas or external links; installer asset present.');
+console.log('PASS: clean guide + blank 8-column workflow input + four-row synthetic sample; no customer source, images, macros, formulas or external links; installer asset present.');

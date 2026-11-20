@@ -1,0 +1,2 @@
+import {check} from './test-design-template-common.mjs';
+await check('KE-BA-Permissions-Template-vi.xlsx',['Groups','Users','Apps','Records','Fields'],['Group Code','Parent Group Code','User Code / Login Name','Group Codes','demo_processing; demo_readers','Requested Operation','Type','User, Group, or Department','Target Records / Condition','Priority','Field','View','Edit','Delete','Group','O','X','chưa xác định']);
